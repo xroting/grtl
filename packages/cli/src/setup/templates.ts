@@ -20,12 +20,59 @@ Choose one command:
 
 Pass the complete engineering question. Add filters such as \`--tool\`,
 \`--tool-version\`, \`--target\`, \`--interface\`, or \`--tag\` when known.
-If authentication fails, set \`GRTL_API_KEY\`.`;
+If authentication fails, set \`GRTL_API_KEY\` or \`GENRTL_API_KEY\` in the
+coding agent's environment.`;
 
 const CURSOR_FRONTMATTER = `---\nalwaysApply: true\n---\n\n`;
 const CODEX_CLI_SANDBOX_GUIDANCE = `Run GenRTL CLI requests outside Codex's default sandbox. If a GenRTL CLI command fails with DNS or network errors such as ENOTFOUND, host resolution failures, or fetch failed, rerun it outside the sandbox instead of retrying inside the sandbox.`;
 
 export type RuleMode = "mcp" | "cli";
+
+const MCP_SKILL = `---
+name: genrtl-mcp
+description: Use GenRTL MCP tools for grounded RTL design, verification, lint, CDC, synthesis, compile, and debugging knowledge.
+---
+
+# GenRTL MCP
+
+Use this skill when an RTL engineering task needs grounded GenRTL knowledge.
+
+Choose exactly one MCP tool:
+
+- \`genrtl_knowledge_search\` for cross-domain RTL questions.
+- \`genrtl_spec2rtl_search\` for requirements, protocols, control logic, or algorithm-to-RTL work.
+- \`genrtl_verification_search\` for testbenches and verification.
+- \`genrtl_debug_search\` for lint, CDC, compile, synthesis, or RTL bugs.
+
+Pass the complete engineering question in \`query\`. Add \`filters\`, \`top_k\`,
+\`min_score\`, or \`workspace_id\` only when useful.
+`;
+
+const CLI_SKILL = `---
+name: genrtl-cli
+description: Use the grtl CLI for grounded RTL design, verification, lint, CDC, synthesis, compile, and debugging knowledge.
+---
+
+# GenRTL CLI
+
+Use this skill when an RTL engineering task needs grounded GenRTL knowledge and
+the GenRTL MCP server is not configured.
+
+Choose exactly one command:
+
+- \`grtl knowledge-search "<query>" --json\` for cross-domain RTL questions.
+- \`grtl spec2rtl-search "<query>" --json\` for requirements, protocols, control logic, or algorithm-to-RTL work.
+- \`grtl verification-search "<query>" --json\` for testbenches and verification.
+- \`grtl debug-search "<query>" --json\` for lint, CDC, compile, synthesis, or RTL bugs.
+
+Pass the complete engineering question. Add filters such as \`--tool\`,
+\`--tool-version\`, \`--target\`, \`--interface\`, or \`--tag\` only when useful.
+The CLI requires \`GRTL_API_KEY\` or \`GENRTL_API_KEY\` in its environment.
+`;
+
+export function getSkillContent(mode: RuleMode): string {
+  return mode === "mcp" ? MCP_SKILL : CLI_SKILL;
+}
 
 async function fetchRule(filename: string, fallback: string): Promise<string> {
   for (const base of GITHUB_RAW_URLS) {

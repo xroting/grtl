@@ -4,7 +4,7 @@ import figlet from "figlet";
 import { registerSetupCommand } from "./commands/setup.js";
 import { registerKnowledgeCommands } from "./commands/knowledge.js";
 import { maybeShowUpgradeNotice, registerUpgradeCommand } from "./commands/upgrade.js";
-import { setMcpBaseUrl } from "./setup/http-agents.js";
+import { setMcpBaseUrl } from "./setup/agents.js";
 import { setBaseUrl } from "./utils/knowledge-api.js";
 import { VERSION } from "./constants.js";
 
@@ -38,8 +38,8 @@ program
     `
 Examples:
   ${brand.dim("# Configure GenRTL for your coding agent")}
-  ${brand.primary("GRTL_API_KEY=your_key npx @genrtl/grtl setup --cursor")}
-  ${brand.primary("GRTL_API_KEY=your_key npx @genrtl/grtl setup --codex --project")}
+  ${brand.primary("npx @genrtl/grtl setup --cli --codex --project")}
+  ${brand.primary("GRTL_API_KEY=your_key npx @genrtl/grtl setup --mcp --codex --project")}
 
   ${brand.dim("# Search the same four tools exposed by the GenRTL MCP server")}
   ${brand.primary('npx @genrtl/grtl knowledge-search "AXI stream backpressure design"')}

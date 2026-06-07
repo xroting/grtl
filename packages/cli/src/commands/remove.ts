@@ -59,7 +59,7 @@ const CHECKBOX_THEME = {
 const GENRTL_SECTION_MARKER = "<!-- genrtl -->";
 const MODE_SKILLS: Record<UninstallMode, readonly string[]> = {
   mcp: ["genrtl-mcp"],
-  cli: ["find-docs"],
+  cli: ["genrtl-cli", "find-docs"],
 };
 
 const MODE_LABELS: Record<UninstallMode, string> = {
@@ -247,6 +247,17 @@ async function hasSkill(agentName: SetupAgent, scope: Scope, skillName: string):
   return pathExists(join(skillsDir, skillName));
 }
 
+async function hasModeSkill(
+  agentName: SetupAgent,
+  scope: Scope,
+  mode: UninstallMode
+): Promise<boolean> {
+  for (const skillName of MODE_SKILLS[mode]) {
+    if (await hasSkill(agentName, scope, skillName)) return true;
+  }
+  return false;
+}
+
 async function detectAvailableModes(agents: SetupAgent[], scope: Scope): Promise<UninstallMode[]> {
   let hasMcpArtifacts = false;
   let hasCliArtifacts = false;
@@ -256,8 +267,8 @@ async function detectAvailableModes(agents: SetupAgent[], scope: Scope): Promise
     hasMcpArtifacts =
       hasMcpArtifacts ||
       (await hasMcpConfig(agent, scope)) ||
-      (await hasSkill(agent, scope, MODE_SKILLS.mcp[0]));
-    hasCliArtifacts = hasCliArtifacts || (await hasSkill(agent, scope, MODE_SKILLS.cli[0]));
+      (await hasModeSkill(agent, scope, "mcp"));
+    hasCliArtifacts = hasCliArtifacts || (await hasModeSkill(agent, scope, "cli"));
     hasRuleArtifacts = hasRuleArtifacts || (await hasRule(agent, scope));
   }
 
@@ -276,8 +287,8 @@ async function hasAnyGenRTLArtifacts(agent: SetupAgent, scope: Scope): Promise<b
   return (
     (await hasMcpConfig(agent, scope)) ||
     (await hasRule(agent, scope)) ||
-    (await hasSkill(agent, scope, MODE_SKILLS.mcp[0])) ||
-    (await hasSkill(agent, scope, MODE_SKILLS.cli[0]))
+    (await hasModeSkill(agent, scope, "mcp")) ||
+    (await hasModeSkill(agent, scope, "cli"))
   );
 }
 

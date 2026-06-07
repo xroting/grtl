@@ -12,5 +12,5 @@ Pass the user's complete engineering question. Add filters such as `--tool`,
 Do not include API keys, credentials, proprietary source code, or personal data
 in the query.
 
-If authentication fails, ask the user to set `GRTL_API_KEY` or run
-`grtl setup --api-key <key>`.
+If authentication fails, ask the user to set `GRTL_API_KEY` or
+`GENRTL_API_KEY` in the coding agent's environment.

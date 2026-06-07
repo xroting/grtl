@@ -1,7 +1,7 @@
 {
   "name": "@genrtl/grtl",
-  "version": "0.1.1",
-  "description": "CLI for GenRTL RTL engineering knowledge and MCP setup",
+  "version": "0.2.0",
+  "description": "CLI, MCP, and coding-agent Skills for GenRTL RTL engineering knowledge",
   "type": "module",
   "bin": {
     "grtl": "dist/index.js"

@@ -19,7 +19,7 @@ vi.stubGlobal(
   })
 );
 
-import { getRuleContent } from "../setup/templates.js";
+import { getRuleContent, getSkillContent } from "../setup/templates.js";
 import {
   mergeServerEntry,
   removeServerEntry,
@@ -72,6 +72,27 @@ describe("getRuleContent", () => {
         return Promise.resolve({ ok: false });
       })
     );
+  });
+});
+
+describe("getSkillContent", () => {
+  test("builds a CLI skill that invokes all four grtl commands", () => {
+    const content = getSkillContent("cli");
+    expect(content).toContain("name: genrtl-cli");
+    expect(content).toContain("grtl knowledge-search");
+    expect(content).toContain("grtl spec2rtl-search");
+    expect(content).toContain("grtl verification-search");
+    expect(content).toContain("grtl debug-search");
+    expect(content).toContain("GRTL_API_KEY");
+  });
+
+  test("builds an MCP skill that invokes all four GenRTL tools", () => {
+    const content = getSkillContent("mcp");
+    expect(content).toContain("name: genrtl-mcp");
+    expect(content).toContain("genrtl_knowledge_search");
+    expect(content).toContain("genrtl_spec2rtl_search");
+    expect(content).toContain("genrtl_verification_search");
+    expect(content).toContain("genrtl_debug_search");
   });
 });
 
@@ -881,6 +902,22 @@ describe("agent config integration", () => {
         type: "http",
         url: "https://genrtl.com/api/mcp",
         headers: { Authorization: "Bearer sk-test-123" },
+      });
+    });
+
+    test("uses bearer_token_env_var when setup reads an environment key", () => {
+      const entry = agent.mcp.buildEntry(
+        {
+          mode: "api-key",
+          apiKey: "gtr_test_example",
+          apiKeyEnvVar: "GRTL_API_KEY",
+        },
+        "http"
+      );
+      expect(entry).toEqual({
+        type: "http",
+        url: "https://genrtl.com/api/mcp",
+        bearer_token_env_var: "GRTL_API_KEY",
       });
     });
 

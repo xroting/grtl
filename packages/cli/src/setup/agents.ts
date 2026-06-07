@@ -9,6 +9,7 @@ export type Transport = "http" | "stdio";
 export interface AuthOptions {
   mode: AuthMode;
   apiKey?: string;
+  apiKeyEnvVar?: "GRTL_API_KEY" | "GENRTL_API_KEY";
 }
 
 export const SETUP_AGENT_NAMES: Record<SetupAgent, string> = {
@@ -197,10 +198,17 @@ const agents: Record<SetupAgent, AgentConfig> = {
       projectPaths: [join(".codex", "config.toml")],
       globalPaths: [join(homedir(), ".codex", "config.toml")],
       configKey: "mcp_servers",
-      buildEntry: (auth, transport) =>
-        transport === "stdio"
-          ? stdioEntry(auth)
-          : withHeaders({ type: "http", url: mcpUrl(auth) }, auth),
+      buildEntry: (auth, transport) => {
+        if (transport === "stdio") return stdioEntry(auth);
+        if (auth.mode === "api-key" && auth.apiKeyEnvVar) {
+          return {
+            type: "http",
+            url: mcpUrl(auth),
+            bearer_token_env_var: auth.apiKeyEnvVar,
+          };
+        }
+        return withHeaders({ type: "http", url: mcpUrl(auth) }, auth);
+      },
     },
     rule: {
       kind: "append",
