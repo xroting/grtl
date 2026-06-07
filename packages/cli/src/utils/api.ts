@@ -17,7 +17,7 @@ import type {
 import { downloadSkillFromGitHub, getSkillFromGitHub } from "./github.js";
 import { VERSION } from "../constants.js";
 
-let baseUrl = "https://www.genrtl.com";
+let baseUrl = "https://genrtl.com";
 
 export function getBaseUrl(): string {
   return baseUrl;

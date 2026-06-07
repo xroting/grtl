@@ -145,7 +145,7 @@ async function upgradeCommand(options: UpgradeOptions): Promise<void> {
   if (plan.needsExplicitVersion) {
     log.info(`You're using an ephemeral runner (${plan.installMethod}).`);
     log.info(`Use ${pc.cyan(plan.displayCommand)} to run the latest version immediately.`);
-    log.info(`Or install globally with ${pc.cyan("npm install -g grtl@latest")}.`);
+    log.info(`Or install globally with ${pc.cyan("npm install -g @genrtl/grtl@latest")}.`);
     return;
   }
 

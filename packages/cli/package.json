@@ -1,6 +1,6 @@
 {
-  "name": "grtl",
-  "version": "0.1.0",
+  "name": "@genrtl/grtl",
+  "version": "0.1.1",
   "description": "CLI for GenRTL RTL engineering knowledge and MCP setup",
   "type": "module",
   "bin": {
@@ -63,7 +63,7 @@
   "bugs": {
     "url": "https://github.com/xroting/grtl/issues"
   },
-  "homepage": "https://www.genrtl.com",
+  "homepage": "https://genrtl.com",
   "publishConfig": {
     "access": "public"
   },

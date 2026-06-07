@@ -10,7 +10,7 @@ Command-line client for the GenRTL RTL engineering knowledge service.
 ## Installation
 
 ```bash
-npm install --global grtl
+npm install --global @genrtl/grtl
 ```
 
 Set the API key in your environment:
@@ -83,7 +83,7 @@ not commit project-level MCP configuration containing a real key.
 The default endpoint is:
 
 ```text
-https://www.genrtl.com/api/mcp
+https://genrtl.com/api/mcp
 ```
 
 Use `--base-url` for another deployment:
@@ -97,10 +97,10 @@ grtl --base-url http://localhost:3005 debug-search "compile error"
 
 ```bash
 pnpm install
-pnpm --filter grtl lint:check
-pnpm --filter grtl typecheck
-pnpm --filter grtl test
-pnpm --filter grtl build
+pnpm --filter @genrtl/grtl lint:check
+pnpm --filter @genrtl/grtl typecheck
+pnpm --filter @genrtl/grtl test
+pnpm --filter @genrtl/grtl build
 ```
 
 This project is derived from Upstash Context7 and retains its MIT license.

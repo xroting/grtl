@@ -42,7 +42,7 @@ export interface HttpAgentConfig {
   };
 }
 
-let mcpBaseUrl = "https://www.genrtl.com/api/mcp";
+let mcpBaseUrl = "https://genrtl.com/api/mcp";
 
 export function setMcpBaseUrl(url: string): void {
   const normalized = url.replace(/\/+$/, "");

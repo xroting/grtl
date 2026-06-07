@@ -100,8 +100,10 @@ describe("detectInstallMethod", () => {
 
 describe("getUpgradePlan", () => {
   test("returns explicit runner commands for ephemeral installs", () => {
-    expect(getUpgradePlan("npx").displayCommand).toBe("npx grtl@latest <command>");
-    expect(getUpgradePlan("pnpm-dlx").displayCommand).toBe("pnpm dlx grtl@latest <command>");
+    expect(getUpgradePlan("npx").displayCommand).toBe("npx @genrtl/grtl@latest <command>");
+    expect(getUpgradePlan("pnpm-dlx").displayCommand).toBe(
+      "pnpm dlx @genrtl/grtl@latest <command>"
+    );
   });
 
   test("does not auto-run upgrade plans for unknown installs", () => {

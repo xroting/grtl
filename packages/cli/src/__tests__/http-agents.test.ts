@@ -11,14 +11,14 @@ describe("public HTTP MCP agent configurations", () => {
   const literalAuth: HttpAuthOptions = { apiKey: "gtr_test" };
 
   afterEach(() => {
-    setMcpBaseUrl("https://www.genrtl.com");
+    setMcpBaseUrl("https://genrtl.com");
   });
 
   test("all supported agents use the hosted MCP endpoint and bearer authentication", () => {
     for (const name of ALL_AGENT_NAMES) {
       const entry = getAgent(name).mcp.buildEntry(literalAuth);
       const endpoint = entry.url ?? entry.httpUrl ?? entry.serverUrl;
-      expect(endpoint).toBe("https://www.genrtl.com/api/mcp");
+      expect(endpoint).toBe("https://genrtl.com/api/mcp");
       expect(entry.headers).toEqual({ Authorization: "Bearer gtr_test" });
     }
   });
@@ -31,7 +31,7 @@ describe("public HTTP MCP agent configurations", () => {
 
     expect(entry).toEqual({
       type: "http",
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
       bearer_token_env_var: "GRTL_API_KEY",
     });
   });

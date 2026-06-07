@@ -78,11 +78,11 @@ describe("getRuleContent", () => {
 describe("mergeServerEntry", () => {
   test("adds server to empty config", () => {
     const { config, alreadyExists } = mergeServerEntry({}, "mcpServers", "genrtl", {
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
     });
     expect(alreadyExists).toBe(false);
     expect((config.mcpServers as Record<string, unknown>).genrtl).toEqual({
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
     });
   });
 
@@ -91,7 +91,7 @@ describe("mergeServerEntry", () => {
       { mcpServers: { other: { url: "https://other.com" } } },
       "mcpServers",
       "genrtl",
-      { url: "https://www.genrtl.com/api/mcp" }
+      { url: "https://genrtl.com/api/mcp" }
     );
     const servers = config.mcpServers as Record<string, unknown>;
     expect(servers.genrtl).toBeTruthy();
@@ -117,13 +117,13 @@ describe("mergeServerEntry", () => {
       },
     };
     const { config, alreadyExists } = mergeServerEntry(existing, "mcpServers", "genrtl", {
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
       headers: { key: "new-key" },
     });
     expect(alreadyExists).toBe(true);
     const servers = config.mcpServers as Record<string, unknown>;
     expect(servers.genrtl).toEqual({
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
       headers: { key: "new-key" },
     });
     expect(servers.other).toEqual({ url: "https://other.com" });
@@ -132,26 +132,26 @@ describe("mergeServerEntry", () => {
   test("overwrites existing server entry with different auth mode", () => {
     const existing = {
       mcpServers: {
-        genrtl: { url: "https://www.genrtl.com/api/mcp", headers: { "x-api-key": "old" } },
+        genrtl: { url: "https://genrtl.com/api/mcp", headers: { "x-api-key": "old" } },
       },
     };
     const { config, alreadyExists } = mergeServerEntry(existing, "mcpServers", "genrtl", {
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
     });
     expect(alreadyExists).toBe(true);
     expect((config.mcpServers as Record<string, unknown>).genrtl).toEqual({
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
     });
   });
 
   test("works with opencode configKey 'mcp'", () => {
     const { config } = mergeServerEntry({}, "mcp", "genrtl", {
       type: "remote",
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
     });
     expect((config.mcp as Record<string, unknown>).genrtl).toEqual({
       type: "remote",
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
     });
   });
 });
@@ -161,7 +161,7 @@ describe("removeServerEntry", () => {
     const { config, removed } = removeServerEntry(
       {
         mcpServers: {
-          genrtl: { url: "https://www.genrtl.com/api/mcp" },
+          genrtl: { url: "https://genrtl.com/api/mcp" },
           other: { url: "https://other.com" },
         },
       },
@@ -181,7 +181,7 @@ describe("removeServerEntry", () => {
     const { config, removed } = removeServerEntry(
       {
         mcpServers: {
-          genrtl: { url: "https://www.genrtl.com/api/mcp" },
+          genrtl: { url: "https://genrtl.com/api/mcp" },
         },
         theme: "dark",
       },
@@ -207,7 +207,7 @@ describe("removeServerEntry", () => {
       theme: "dark",
       mcpServers: {
         alpha: { url: "https://alpha.com" },
-        genrtl: { url: "https://www.genrtl.com/api/mcp", headers: { key: "secret" } },
+        genrtl: { url: "https://genrtl.com/api/mcp", headers: { key: "secret" } },
         omega: { url: "https://omega.com" },
       },
       telemetry: { enabled: true },
@@ -249,7 +249,7 @@ describe("readJsonConfig / writeJsonConfig", () => {
 
   test("roundtrip write then read preserves data", async () => {
     const path = join(tempDir, "sub", "dir", "config.json");
-    const data = { mcpServers: { genrtl: { url: "https://www.genrtl.com/api/mcp" } } };
+    const data = { mcpServers: { genrtl: { url: "https://genrtl.com/api/mcp" } } };
 
     await writeJsonConfig(path, data);
     const result = await readJsonConfig(path);
@@ -329,15 +329,15 @@ describe("TOML config", () => {
 
   test("buildTomlServerBlock generates correct TOML", () => {
     const block = buildTomlServerBlock("genrtl", {
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
     });
     expect(block).toContain("[mcp_servers.genrtl]");
-    expect(block).toContain('url = "https://www.genrtl.com/api/mcp"');
+    expect(block).toContain('url = "https://genrtl.com/api/mcp"');
   });
 
   test("buildTomlServerBlock includes http_headers", () => {
     const block = buildTomlServerBlock("genrtl", {
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
       headers: { Authorization: "Bearer sk-test" },
     });
     expect(block).toContain("[mcp_servers.genrtl]");
@@ -360,18 +360,18 @@ describe("TOML config", () => {
   test("appendTomlServer appends to empty file", async () => {
     const path = join(tempDir, "config.toml");
     const { alreadyExists } = await appendTomlServer(path, "genrtl", {
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
     });
     expect(alreadyExists).toBe(false);
     const content = await readFile(path, "utf-8");
     expect(content).toContain("[mcp_servers.genrtl]");
-    expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
+    expect(content).toContain('url = "https://genrtl.com/api/mcp"');
   });
 
   test("appendTomlServer preserves existing config", async () => {
     const path = join(tempDir, "config.toml");
     await writeFile(path, 'model = "gpt-5"\n\n[mcp_servers.other]\nurl = "https://other.com"\n');
-    await appendTomlServer(path, "genrtl", { url: "https://www.genrtl.com/api/mcp" });
+    await appendTomlServer(path, "genrtl", { url: "https://genrtl.com/api/mcp" });
     const content = await readFile(path, "utf-8");
     expect(content).toContain('model = "gpt-5"');
     expect(content).toContain("[mcp_servers.other]");
@@ -380,9 +380,9 @@ describe("TOML config", () => {
 
   test("appendTomlServer is idempotent", async () => {
     const path = join(tempDir, "config.toml");
-    await appendTomlServer(path, "genrtl", { url: "https://www.genrtl.com/api/mcp" });
+    await appendTomlServer(path, "genrtl", { url: "https://genrtl.com/api/mcp" });
     const { alreadyExists } = await appendTomlServer(path, "genrtl", {
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
     });
     expect(alreadyExists).toBe(true);
     const content = await readFile(path, "utf-8");
@@ -393,12 +393,12 @@ describe("TOML config", () => {
     const path = join(tempDir, "config.toml");
     await appendTomlServer(path, "genrtl", { url: "https://old.com" });
     const { alreadyExists } = await appendTomlServer(path, "genrtl", {
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
     });
     expect(alreadyExists).toBe(true);
     const content = await readFile(path, "utf-8");
     expect(content.match(/\[mcp_servers\.genrtl\]/g)?.length).toBe(1);
-    expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
+    expect(content).toContain('url = "https://genrtl.com/api/mcp"');
     expect(content).not.toContain("https://old.com");
   });
 
@@ -408,9 +408,9 @@ describe("TOML config", () => {
       path,
       '[mcp_servers.genrtl]\nurl = "https://old.com"\n\n[mcp_servers.other]\nurl = "https://other.com"\n'
     );
-    await appendTomlServer(path, "genrtl", { url: "https://www.genrtl.com/api/mcp" });
+    await appendTomlServer(path, "genrtl", { url: "https://genrtl.com/api/mcp" });
     const content = await readFile(path, "utf-8");
-    expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
+    expect(content).toContain('url = "https://genrtl.com/api/mcp"');
     expect(content).not.toContain("https://old.com");
     expect(content).toContain("[mcp_servers.other]");
     expect(content).toContain('url = "https://other.com"');
@@ -423,12 +423,12 @@ describe("TOML config", () => {
       'model = "gpt-5"\n\n[mcp_servers.genrtl]\nurl = "https://old.com"\n\n[some_other_section]\nkey = "value"\n'
     );
     await appendTomlServer(path, "genrtl", {
-      url: "https://www.genrtl.com/api/mcp",
+      url: "https://genrtl.com/api/mcp",
       headers: { "x-api-key": "sk-new" },
     });
     const content = await readFile(path, "utf-8");
     expect(content).toContain('model = "gpt-5"');
-    expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
+    expect(content).toContain('url = "https://genrtl.com/api/mcp"');
     expect(content).toContain("[mcp_servers.genrtl.http_headers]");
     expect(content).toContain('x-api-key = "sk-new"');
     expect(content).not.toContain("https://old.com");
@@ -472,7 +472,7 @@ describe("TOML config", () => {
     const path = join(tempDir, "config.toml");
     await writeFile(
       path,
-      'model = "gpt-5"\n\n[mcp_servers.genrtl]\nurl = "https://www.genrtl.com/api/mcp"\n\n[mcp_servers.other]\nurl = "https://other.com"\n',
+      'model = "gpt-5"\n\n[mcp_servers.genrtl]\nurl = "https://genrtl.com/api/mcp"\n\n[mcp_servers.other]\nurl = "https://other.com"\n',
       "utf-8"
     );
 
@@ -490,7 +490,7 @@ describe("TOML config", () => {
     const path = join(tempDir, "config.toml");
     await writeFile(
       path,
-      '[mcp_servers.genrtl]\nurl = "https://www.genrtl.com/api/mcp"\n\n[mcp_servers.genrtl.http_headers]\nAuthorization = "Bearer sk-test"\n\n[settings]\nmodel = "gpt-5"\n',
+      '[mcp_servers.genrtl]\nurl = "https://genrtl.com/api/mcp"\n\n[mcp_servers.genrtl.http_headers]\nAuthorization = "Bearer sk-test"\n\n[settings]\nmodel = "gpt-5"\n',
       "utf-8"
     );
 
@@ -508,7 +508,7 @@ describe("TOML config", () => {
     const path = join(tempDir, "config.toml");
     await writeFile(
       path,
-      '[mcp_servers.genrtl]\nurl = "https://www.genrtl.com/api/mcp"\n\n[mcp_servers.genrtl.http_headers]\nAuthorization = "Bearer sk-test"\n\n[mcp_servers.other]\nurl = "https://other.com"\n\n[mcp_servers.other.http_headers]\nX_API_KEY = "keep-me"\n\n[settings]\nmodel = "gpt-5"\n',
+      '[mcp_servers.genrtl]\nurl = "https://genrtl.com/api/mcp"\n\n[mcp_servers.genrtl.http_headers]\nAuthorization = "Bearer sk-test"\n\n[mcp_servers.other]\nurl = "https://other.com"\n\n[mcp_servers.other.http_headers]\nX_API_KEY = "keep-me"\n\n[settings]\nmodel = "gpt-5"\n',
       "utf-8"
     );
 
@@ -631,7 +631,7 @@ describe("agent config integration", () => {
       const entry = agent.mcp.buildEntry(apiKeyAuth, "http");
       expect(entry).toEqual({
         type: "http",
-        url: "https://www.genrtl.com/api/mcp",
+        url: "https://genrtl.com/api/mcp",
         headers: { Authorization: "Bearer sk-test-123" },
       });
     });
@@ -640,7 +640,7 @@ describe("agent config integration", () => {
       const entry = agent.mcp.buildEntry(oauthAuth, "http");
       expect(entry).toEqual({
         type: "http",
-        url: "https://www.genrtl.com/api/mcp",
+        url: "https://genrtl.com/api/mcp",
       });
     });
 
@@ -680,7 +680,7 @@ describe("agent config integration", () => {
       const servers = result.mcpServers as Record<string, unknown>;
       expect(servers.genrtl).toEqual({
         type: "http",
-        url: "https://www.genrtl.com/api/mcp",
+        url: "https://genrtl.com/api/mcp",
         headers: { Authorization: "Bearer sk-test-123" },
       });
     });
@@ -704,7 +704,7 @@ describe("agent config integration", () => {
       const result = await readJsonConfig(path);
       expect((result.mcpServers as Record<string, unknown>).genrtl).toEqual({
         type: "http",
-        url: "https://www.genrtl.com/api/mcp",
+        url: "https://genrtl.com/api/mcp",
         headers: { Authorization: "Bearer sk-test-123" },
       });
     });
@@ -716,7 +716,7 @@ describe("agent config integration", () => {
     test("buildEntry with api-key produces correct shape (no type field)", () => {
       const entry = agent.mcp.buildEntry(apiKeyAuth, "http");
       expect(entry).toEqual({
-        url: "https://www.genrtl.com/api/mcp",
+        url: "https://genrtl.com/api/mcp",
         headers: { Authorization: "Bearer sk-test-123" },
       });
       expect(entry).not.toHaveProperty("type");
@@ -725,7 +725,7 @@ describe("agent config integration", () => {
     test("buildEntry with oauth produces correct shape", () => {
       const entry = agent.mcp.buildEntry(oauthAuth, "http");
       expect(entry).toEqual({
-        url: "https://www.genrtl.com/api/mcp",
+        url: "https://genrtl.com/api/mcp",
       });
     });
 
@@ -742,7 +742,7 @@ describe("agent config integration", () => {
 
       const result = await readJsonConfig(path);
       expect((result.mcpServers as Record<string, unknown>).genrtl).toEqual({
-        url: "https://www.genrtl.com/api/mcp",
+        url: "https://genrtl.com/api/mcp",
       });
     });
 
@@ -765,7 +765,7 @@ describe("agent config integration", () => {
       const result = await readJsonConfig(path);
       const servers = result.mcpServers as Record<string, unknown>;
       expect(servers.genrtl).toEqual({
-        url: "https://www.genrtl.com/api/mcp",
+        url: "https://genrtl.com/api/mcp",
         headers: { Authorization: "Bearer sk-test-123" },
       });
       expect(servers.other).toEqual({ url: "https://other.com" });
@@ -779,7 +779,7 @@ describe("agent config integration", () => {
       const entry = agent.mcp.buildEntry(apiKeyAuth, "http");
       expect(entry).toEqual({
         type: "remote",
-        url: "https://www.genrtl.com/api/mcp",
+        url: "https://genrtl.com/api/mcp",
         enabled: true,
         headers: { Authorization: "Bearer sk-test-123" },
       });
@@ -789,7 +789,7 @@ describe("agent config integration", () => {
       const entry = agent.mcp.buildEntry(oauthAuth, "http");
       expect(entry).toEqual({
         type: "remote",
-        url: "https://www.genrtl.com/api/mcp",
+        url: "https://genrtl.com/api/mcp",
         enabled: true,
       });
     });
@@ -815,7 +815,7 @@ describe("agent config integration", () => {
       expect(result.$schema).toBe("https://opencode.ai/config.json");
       expect((result.mcp as Record<string, unknown>).genrtl).toEqual({
         type: "remote",
-        url: "https://www.genrtl.com/api/mcp",
+        url: "https://genrtl.com/api/mcp",
         enabled: true,
         headers: { Authorization: "Bearer sk-test-123" },
       });
@@ -840,7 +840,7 @@ describe("agent config integration", () => {
       const result = await readJsonConfig(path);
       expect((result.mcp as Record<string, unknown>).genrtl).toEqual({
         type: "remote",
-        url: "https://www.genrtl.com/api/mcp",
+        url: "https://genrtl.com/api/mcp",
         enabled: true,
       });
     });
@@ -879,7 +879,7 @@ describe("agent config integration", () => {
       const entry = agent.mcp.buildEntry(apiKeyAuth, "http");
       expect(entry).toEqual({
         type: "http",
-        url: "https://www.genrtl.com/api/mcp",
+        url: "https://genrtl.com/api/mcp",
         headers: { Authorization: "Bearer sk-test-123" },
       });
     });
@@ -888,7 +888,7 @@ describe("agent config integration", () => {
       const entry = agent.mcp.buildEntry(oauthAuth, "http");
       expect(entry).toEqual({
         type: "http",
-        url: "https://www.genrtl.com/api/mcp",
+        url: "https://genrtl.com/api/mcp",
       });
     });
 
@@ -904,7 +904,7 @@ describe("agent config integration", () => {
       const content = await readFile(path, "utf-8");
       expect(content).toContain("[mcp_servers.genrtl]");
       expect(content).toContain('type = "http"');
-      expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
+      expect(content).toContain('url = "https://genrtl.com/api/mcp"');
       expect(content).toContain("[mcp_servers.genrtl.http_headers]");
       expect(content).toContain('Authorization = "Bearer sk-test-123"');
     });
@@ -915,7 +915,7 @@ describe("agent config integration", () => {
 
       const content = await readFile(path, "utf-8");
       expect(content).toContain("[mcp_servers.genrtl]");
-      expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
+      expect(content).toContain('url = "https://genrtl.com/api/mcp"');
       expect(content).not.toContain("http_headers");
     });
 
@@ -931,7 +931,7 @@ describe("agent config integration", () => {
       expect(alreadyExists).toBe(true);
       const content = await readFile(path, "utf-8");
       expect(content.match(/\[mcp_servers\.genrtl\]/g)?.length).toBe(1);
-      expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
+      expect(content).toContain('url = "https://genrtl.com/api/mcp"');
       expect(content).not.toContain("mcp/oauth");
       expect(content).toContain('Authorization = "Bearer sk-test-123"');
     });
@@ -947,7 +947,7 @@ describe("agent config integration", () => {
       const content = await readFile(path, "utf-8");
       expect(content).toContain("[mcp_servers.other]");
       expect(content).toContain('url = "https://other.com"');
-      expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
+      expect(content).toContain('url = "https://genrtl.com/api/mcp"');
       expect(content).not.toContain("https://old.com");
     });
   });
@@ -958,7 +958,7 @@ describe("agent config integration", () => {
     test("buildEntry with api-key uses httpUrl", () => {
       const entry = agent.mcp.buildEntry(apiKeyAuth, "http");
       expect(entry).toEqual({
-        httpUrl: "https://www.genrtl.com/api/mcp",
+        httpUrl: "https://genrtl.com/api/mcp",
         headers: { Authorization: "Bearer sk-test-123" },
       });
       expect(entry).not.toHaveProperty("url");
@@ -967,7 +967,7 @@ describe("agent config integration", () => {
     test("buildEntry with oauth uses httpUrl without headers", () => {
       const entry = agent.mcp.buildEntry(oauthAuth, "http");
       expect(entry).toEqual({
-        httpUrl: "https://www.genrtl.com/api/mcp",
+        httpUrl: "https://genrtl.com/api/mcp",
       });
     });
 
@@ -991,7 +991,7 @@ describe("agent config integration", () => {
       const result = await readJsonConfig(path);
       expect(result.theme).toBe("dark");
       expect((result.mcpServers as Record<string, unknown>).genrtl).toEqual({
-        httpUrl: "https://www.genrtl.com/api/mcp",
+        httpUrl: "https://genrtl.com/api/mcp",
         headers: { Authorization: "Bearer sk-test-123" },
       });
     });
@@ -1014,7 +1014,7 @@ describe("agent config integration", () => {
 
       const result = await readJsonConfig(path);
       expect((result.mcpServers as Record<string, unknown>).genrtl).toEqual({
-        httpUrl: "https://www.genrtl.com/api/mcp",
+        httpUrl: "https://genrtl.com/api/mcp",
         headers: { Authorization: "Bearer sk-test-123" },
       });
     });
@@ -1038,8 +1038,8 @@ describe("agent config integration", () => {
       const oauthEntry = agent.mcp.buildEntry(oauthAuth, "http");
 
       const urlKey = name === "gemini" ? "httpUrl" : name === "antigravity" ? "serverUrl" : "url";
-      expect(apiEntry[urlKey]).toBe("https://www.genrtl.com/api/mcp");
-      expect(oauthEntry[urlKey]).toBe("https://www.genrtl.com/api/mcp");
+      expect(apiEntry[urlKey]).toBe("https://genrtl.com/api/mcp");
+      expect(oauthEntry[urlKey]).toBe("https://genrtl.com/api/mcp");
     });
 
     test.each(ALL_AGENT_NAMES)("%s buildEntry includes headers only for api-key auth", (name) => {
@@ -1155,7 +1155,7 @@ describe("agent config integration", () => {
     });
 
     test("returns false for HTTP entry", () => {
-      expect(isStdioGenRTLEntry({ url: "https://www.genrtl.com/api/mcp" })).toBe(false);
+      expect(isStdioGenRTLEntry({ url: "https://genrtl.com/api/mcp" })).toBe(false);
     });
 
     test("returns false for unrelated stdio package", () => {
@@ -1285,11 +1285,11 @@ describe("agent config integration", () => {
       const path = join(tempDir, "config.toml");
       await writeFile(
         path,
-        '[mcp_servers.genrtl]\ntype = "http"\nurl = "https://www.genrtl.com/api/mcp"\n\n[mcp_servers.genrtl.http_headers]\nAuthorization = "Bearer k"\n',
+        '[mcp_servers.genrtl]\ntype = "http"\nurl = "https://genrtl.com/api/mcp"\n\n[mcp_servers.genrtl.http_headers]\nAuthorization = "Bearer k"\n',
         "utf-8"
       );
       const entry = await readTomlServerEntry(path, "genrtl");
-      expect(entry).toEqual({ type: "http", url: "https://www.genrtl.com/api/mcp" });
+      expect(entry).toEqual({ type: "http", url: "https://genrtl.com/api/mcp" });
     });
 
     test("round-trips through patchStdioApiKey + appendTomlServer", async () => {

@@ -13,10 +13,10 @@ Pass the complete engineering question in \`query\`. Add filters only when usefu
 const FALLBACK_CLI = `Use the \`grtl\` CLI for grounded RTL engineering knowledge.
 
 Choose one command:
-- \`npx grtl@latest knowledge-search "<query>"\`
-- \`npx grtl@latest spec2rtl-search "<query>"\`
-- \`npx grtl@latest verification-search "<query>"\`
-- \`npx grtl@latest debug-search "<query>"\`
+- \`npx @genrtl/grtl@latest knowledge-search "<query>"\`
+- \`npx @genrtl/grtl@latest spec2rtl-search "<query>"\`
+- \`npx @genrtl/grtl@latest verification-search "<query>"\`
+- \`npx @genrtl/grtl@latest debug-search "<query>"\`
 
 Pass the complete engineering question. Add filters such as \`--tool\`,
 \`--tool-version\`, \`--target\`, \`--interface\`, or \`--tag\` when known.

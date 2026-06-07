@@ -4,11 +4,13 @@ import { buildKnowledgeSearchInput } from "../commands/knowledge.js";
 import { callGenrtlKnowledgeTool, setBaseUrl } from "../utils/knowledge-api.js";
 
 describe("GenRTL knowledge commands", () => {
+  const validTestKey = `gtr_test_${"a".repeat(43)}`;
+
   afterEach(() => {
     vi.unstubAllGlobals();
     delete process.env.GRTL_API_KEY;
     delete process.env.GENRTL_API_KEY;
-    setBaseUrl("https://www.genrtl.com");
+    setBaseUrl("https://genrtl.com");
   });
 
   test("maps CLI options to the MCP tool input schema", () => {
@@ -39,7 +41,7 @@ describe("GenRTL knowledge commands", () => {
   });
 
   test("calls the requested MCP tool and returns structured content", async () => {
-    process.env.GRTL_API_KEY = "gtr_test_example";
+    process.env.GRTL_API_KEY = `  ${validTestKey}  `;
     const structuredContent = {
       summary: "One match",
       matched_cards: [],
@@ -61,11 +63,11 @@ describe("GenRTL knowledge commands", () => {
     ).resolves.toEqual(structuredContent);
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "https://www.genrtl.com/api/mcp",
+      "https://genrtl.com/api/mcp",
       expect.objectContaining({
         method: "POST",
         headers: expect.objectContaining({
-          Authorization: "Bearer gtr_test_example",
+          Authorization: `Bearer ${validTestKey}`,
           "MCP-Protocol-Version": "2025-06-18",
         }),
       })
@@ -80,5 +82,44 @@ describe("GenRTL knowledge commands", () => {
         arguments: { query: "CDC warning" },
       },
     });
+  });
+
+  test("rejects a truncated API key before sending a request", async () => {
+    process.env.GENRTL_API_KEY = "gtr_live_truncated...";
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      callGenrtlKnowledgeTool("genrtl_spec2rtl_search", { query: "AD7606 controller" })
+    ).rejects.toThrow("Invalid GenRTL API key format");
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  test("includes the backend authentication error code", async () => {
+    process.env.GRTL_API_KEY = validTestKey;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            jsonrpc: "2.0",
+            id: 1,
+            result: {
+              isError: true,
+              content: [{ type: "text", text: "Invalid or revoked API key" }],
+              structuredContent: {
+                error: "Invalid or revoked API key",
+                code: "INVALID_API_KEY",
+              },
+            },
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } }
+        )
+      )
+    );
+
+    await expect(
+      callGenrtlKnowledgeTool("genrtl_debug_search", { query: "CDC warning" })
+    ).rejects.toThrow("Invalid or revoked API key (INVALID_API_KEY)");
   });
 });

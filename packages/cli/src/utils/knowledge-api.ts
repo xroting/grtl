@@ -5,7 +5,7 @@ import type {
   KnowledgeSearchResponse,
 } from "../types.js";
 
-let baseUrl = "https://www.genrtl.com";
+let baseUrl = "https://genrtl.com";
 
 export function setBaseUrl(url: string): void {
   baseUrl = url.replace(/\/+$/, "");
@@ -16,7 +16,17 @@ function getMcpEndpoint(): string {
 }
 
 function getApiKey(): string | undefined {
-  return process.env.GRTL_API_KEY || process.env.GENRTL_API_KEY;
+  return [process.env.GRTL_API_KEY, process.env.GENRTL_API_KEY]
+    .map((value) => value?.trim())
+    .find((value): value is string => Boolean(value));
+}
+
+function validateApiKey(apiKey: string): void {
+  if (!/^gtr_(?:live|test)_[A-Za-z0-9_-]{32,128}$/.test(apiKey)) {
+    throw new Error(
+      "Invalid GenRTL API key format. Use the full key shown once when it was created; it must start with gtr_live_ or gtr_test_."
+    );
+  }
 }
 
 function getMcpErrorMessage(content: unknown): string | undefined {
@@ -33,6 +43,15 @@ function getMcpErrorMessage(content: unknown): string | undefined {
   return item?.text;
 }
 
+function getStructuredMcpError(content: unknown): { error?: string; code?: string } | undefined {
+  if (!content || typeof content !== "object") return undefined;
+  const errorContent = content as { error?: unknown; code?: unknown };
+  return {
+    error: typeof errorContent.error === "string" ? errorContent.error : undefined,
+    code: typeof errorContent.code === "string" ? errorContent.code : undefined,
+  };
+}
+
 export async function callGenrtlKnowledgeTool(
   toolName: GenrtlKnowledgeToolName,
   input: KnowledgeSearchInput
@@ -41,6 +60,7 @@ export async function callGenrtlKnowledgeTool(
   if (!apiKey) {
     throw new Error("Authentication required. Set GRTL_API_KEY or GENRTL_API_KEY.");
   }
+  validateApiKey(apiKey);
 
   const response = await fetch(getMcpEndpoint(), {
     method: "POST",
@@ -64,7 +84,7 @@ export async function callGenrtlKnowledgeTool(
     result?: {
       isError?: boolean;
       content?: unknown;
-      structuredContent?: KnowledgeSearchResponse;
+      structuredContent?: KnowledgeSearchResponse | { error?: string; code?: string };
     };
   } | null;
 
@@ -78,10 +98,15 @@ export async function callGenrtlKnowledgeTool(
   const result = payload?.result;
   if (!result) throw new Error("GenRTL MCP returned an empty result.");
   if (result.isError) {
-    throw new Error(getMcpErrorMessage(result.content) || "GenRTL knowledge search failed.");
+    const structuredError = getStructuredMcpError(result.structuredContent);
+    const message =
+      structuredError?.error ||
+      getMcpErrorMessage(result.content) ||
+      "GenRTL knowledge search failed.";
+    throw new Error(structuredError?.code ? `${message} (${structuredError.code})` : message);
   }
   if (!result.structuredContent) {
     throw new Error("GenRTL MCP response did not include structured knowledge results.");
   }
-  return result.structuredContent;
+  return result.structuredContent as KnowledgeSearchResponse;
 }

@@ -25,7 +25,7 @@ export const AUTH_MODE_LABELS: Record<AuthMode, string> = {
   "api-key": "API Key",
 };
 
-let mcpBaseUrl = "https://www.genrtl.com/api/mcp";
+let mcpBaseUrl = "https://genrtl.com/api/mcp";
 export const STDIO_PACKAGE = "@upstash/genrtl-mcp";
 
 export function setMcpBaseUrl(url: string): void {
