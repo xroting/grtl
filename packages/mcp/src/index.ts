@@ -31,7 +31,7 @@ const program = new Command()
   .version(SERVER_VERSION, "-v, --version", "output the current version")
   .option("--transport <stdio|http>", "transport type", "stdio")
   .option("--port <number>", "port for HTTP transport", DEFAULT_PORT.toString())
-  .option("--api-key <key>", "API key for authentication (or set CONTEXT7_API_KEY env var)")
+  .option("--api-key <key>", "API key for authentication (or set GENRTL_API_KEY env var)")
   .allowUnknownOption() // let MCP Inspector / other wrappers pass through extra flags
   .parse(process.argv);
 
@@ -136,14 +136,14 @@ function getClientIp(req: express.Request): string | undefined {
 function createMcpServer() {
   const server = new McpServer(
     {
-      name: "Context7",
+      name: "GenRTL",
       version: SERVER_VERSION,
-      websiteUrl: "https://context7.com",
+      websiteUrl: "https://genrtl.com",
       description:
-        "Context7 provides up-to-date documentation and code examples for libraries and frameworks.",
+        "GenRTL provides up-to-date documentation and code examples for libraries and frameworks.",
       icons: [
         {
-          src: "https://context7.com/context7-icon-green.png",
+          src: "https://genrtl.com/genrtl-icon-green.png",
           mimeType: "image/png",
         },
       ],
@@ -158,13 +158,13 @@ Do not use for: refactoring, writing scripts from scratch, debugging business lo
   server.registerTool(
     "resolve-library-id",
     {
-      title: "Resolve Context7 Library ID",
-      description: `Resolves a package/product name to a Context7-compatible library ID and returns matching libraries.
+      title: "Resolve GenRTL Library ID",
+      description: `Resolves a package/product name to a GenRTL-compatible library ID and returns matching libraries.
 
-You MUST call this function before 'Query Documentation' tool to obtain a valid Context7-compatible library ID UNLESS the user explicitly provides a library ID in the format '/org/project' or '/org/project/version' in their query.
+You MUST call this function before 'Query Documentation' tool to obtain a valid GenRTL-compatible library ID UNLESS the user explicitly provides a library ID in the format '/org/project' or '/org/project/version' in their query.
 
 Each result includes:
-- Library ID: Context7-compatible identifier (format: /org/project)
+- Library ID: GenRTL-compatible identifier (format: /org/project)
 - Name: Library or package name
 - Description: Short summary
 - Code Snippets: Number of available code examples
@@ -196,12 +196,12 @@ IMPORTANT: Do not call this tool more than 3 times per question. If you cannot f
         query: z
           .string()
           .describe(
-            "The question or task you need help with. This is used to rank library results by relevance to what the user is trying to accomplish. The query is sent to the Context7 API for processing. Do not include any sensitive or confidential information such as API keys, passwords, credentials, personal data, or proprietary code in your query."
+            "The question or task you need help with. This is used to rank library results by relevance to what the user is trying to accomplish. The query is sent to the GenRTL API for processing. Do not include any sensitive or confidential information such as API keys, passwords, credentials, personal data, or proprietary code in your query."
           ),
         libraryName: z
           .string()
           .describe(
-            "Library name to search for and retrieve a Context7-compatible library ID. Use the official library name with proper punctuation — e.g., 'Next.js' instead of 'nextjs', 'Customer.io' instead of 'customerio', 'Three.js' instead of 'threejs'."
+            "Library name to search for and retrieve a GenRTL-compatible library ID. Use the official library name with proper punctuation — e.g., 'Next.js' instead of 'nextjs', 'Customer.io' instead of 'customerio', 'Three.js' instead of 'threejs'."
           ),
       },
       annotations: {
@@ -244,21 +244,21 @@ IMPORTANT: Do not call this tool more than 3 times per question. If you cannot f
     "query-docs",
     {
       title: "Query Documentation",
-      description: `Retrieves and queries up-to-date documentation and code examples from Context7 for any programming library or framework.
+      description: `Retrieves and queries up-to-date documentation and code examples from GenRTL for any programming library or framework.
 
-You must call 'Resolve Context7 Library ID' tool first to obtain the exact Context7-compatible library ID required to use this tool, UNLESS the user explicitly provides a library ID in the format '/org/project' or '/org/project/version' in their query.
+You must call 'Resolve GenRTL Library ID' tool first to obtain the exact GenRTL-compatible library ID required to use this tool, UNLESS the user explicitly provides a library ID in the format '/org/project' or '/org/project/version' in their query.
 
 Do not call this tool more than 3 times per question.`,
       inputSchema: {
         libraryId: z
           .string()
           .describe(
-            "Exact Context7-compatible library ID (e.g., '/mongodb/docs', '/vercel/next.js', '/supabase/supabase', '/vercel/next.js/v14.3.0-canary.87') retrieved from 'resolve-library-id' or directly from user query in the format '/org/project' or '/org/project/version'."
+            "Exact GenRTL-compatible library ID (e.g., '/mongodb/docs', '/vercel/next.js', '/supabase/supabase', '/vercel/next.js/v14.3.0-canary.87') retrieved from 'resolve-library-id' or directly from user query in the format '/org/project' or '/org/project/version'."
           ),
         query: z
           .string()
           .describe(
-            "The question or task you need help with. Be specific and include relevant details. Good: 'How to set up authentication with JWT in Express.js' or 'React useEffect cleanup function examples'. Bad: 'auth' or 'hooks'. The query is sent to the Context7 API for processing. Do not include any sensitive or confidential information such as API keys, passwords, credentials, personal data, or proprietary code in your query."
+            "The question or task you need help with. Be specific and include relevant details. Good: 'How to set up authentication with JWT in Express.js' or 'React useEffect cleanup function examples'. Bad: 'auth' or 'hooks'. The query is sent to the GenRTL API for processing. Do not include any sensitive or confidential information such as API keys, passwords, credentials, personal data, or proprietary code in your query."
           ),
       },
       annotations: {
@@ -299,7 +299,7 @@ const GLOBAL_ALIASES: AliasMap = {
 // `resolve-library-id`, so we only rewrite it on `query-docs` calls).
 const TOOL_ALIASES: Record<string, AliasMap> = {
   "query-docs": {
-    libraryId: ["context7CompatibleLibraryID", "libraryID", "libraryName"],
+    libraryId: ["genrtlCompatibleLibraryID", "libraryID", "libraryName"],
   },
 };
 
@@ -353,7 +353,7 @@ async function main() {
       res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,DELETE");
       res.setHeader(
         "Access-Control-Allow-Headers",
-        "Content-Type, MCP-Session-Id, MCP-Protocol-Version, X-Context7-API-Key, Context7-API-Key, X-API-Key, Authorization"
+        "Content-Type, MCP-Session-Id, MCP-Protocol-Version, X-GenRTL-API-Key, GenRTL-API-Key, X-API-Key, Authorization"
       );
       res.setHeader("Access-Control-Expose-Headers", "MCP-Session-Id");
 
@@ -383,9 +383,9 @@ async function main() {
     const extractApiKey = (req: express.Request): string | undefined => {
       return (
         extractBearerToken(req.headers.authorization) ||
-        extractHeaderValue(req.headers["context7-api-key"]) ||
+        extractHeaderValue(req.headers["genrtl-api-key"]) ||
         extractHeaderValue(req.headers["x-api-key"]) ||
-        extractHeaderValue(req.headers["context7_api_key"]) ||
+        extractHeaderValue(req.headers["genrtl_api_key"]) ||
         extractHeaderValue(req.headers["x_api_key"])
       );
     };
@@ -625,14 +625,14 @@ async function main() {
 
       httpServer.once("listening", () => {
         console.error(
-          `Context7 Documentation MCP Server v${SERVER_VERSION} running on HTTP at http://localhost:${port}/mcp`
+          `GenRTL Documentation MCP Server v${SERVER_VERSION} running on HTTP at http://localhost:${port}/mcp`
         );
       });
     };
 
     startServer(initialPort);
   } else {
-    stdioApiKey = cliOptions.apiKey || process.env.CONTEXT7_API_KEY;
+    stdioApiKey = cliOptions.apiKey || process.env.GENRTL_API_KEY;
     stdioSessionId = randomUUID();
 
     process.stdin.on("end", () => process.exit(0));
@@ -657,7 +657,7 @@ async function main() {
     installTransportArgAliasing(transport);
     await server.connect(transport);
 
-    console.error(`Context7 Documentation MCP Server v${SERVER_VERSION} running on stdio`);
+    console.error(`GenRTL Documentation MCP Server v${SERVER_VERSION} running on stdio`);
   }
 }
 

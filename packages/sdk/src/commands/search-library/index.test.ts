@@ -1,7 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { SearchLibraryCommand } from "./index";
 import { newHttpClient } from "../../utils/test-utils";
-import { Context7 } from "../../client";
+import { GenRTL } from "../../client";
 
 const httpClient = newHttpClient();
 
@@ -24,8 +24,8 @@ describe("SearchLibraryCommand", () => {
   });
 
   test("should search for a library using client", async () => {
-    const client = new Context7({
-      apiKey: process.env.CONTEXT7_API_KEY || process.env.API_KEY!,
+    const client = new GenRTL({
+      apiKey: process.env.GENRTL_API_KEY || process.env.API_KEY!,
     });
 
     const result = await client.searchLibrary("I need to build a UI", "react");

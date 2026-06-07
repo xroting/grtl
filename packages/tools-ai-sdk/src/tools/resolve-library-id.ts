@@ -1,13 +1,13 @@
 import { tool } from "ai";
 import { z } from "zod";
-import { Context7 } from "@upstash/context7-sdk";
+import { GenRTL } from "@upstash/genrtl-sdk";
 import { RESOLVE_LIBRARY_ID_DESCRIPTION } from "@prompts";
-import type { Context7ToolsConfig } from "./types";
+import type { GenRTLToolsConfig } from "./types";
 
 /**
- * Tool to resolve a library name to a Context7-compatible library ID.
+ * Tool to resolve a library name to a GenRTL-compatible library ID.
  *
- * Can be called with or without configuration. Uses CONTEXT7_API_KEY environment
+ * Can be called with or without configuration. Uses GENRTL_API_KEY environment
  * variable for authentication when no API key is provided.
  *
  * @param config Optional configuration options
@@ -15,7 +15,7 @@ import type { Context7ToolsConfig } from "./types";
  *
  * @example
  * ```typescript
- * import { resolveLibraryId, queryDocs } from '@upstash/context7-tools-ai-sdk';
+ * import { resolveLibraryId, queryDocs } from '@upstash/genrtl-tools-ai-sdk';
  * import { generateText, stepCountIs } from 'ai';
  * import { openai } from '@ai-sdk/openai';
  *
@@ -30,9 +30,9 @@ import type { Context7ToolsConfig } from "./types";
  * });
  * ```
  */
-export function resolveLibraryId(config: Context7ToolsConfig = {}) {
+export function resolveLibraryId(config: GenRTLToolsConfig = {}) {
   const { apiKey } = config;
-  const getClient = () => new Context7({ apiKey });
+  const getClient = () => new GenRTL({ apiKey });
 
   return tool({
     description: RESOLVE_LIBRARY_ID_DESCRIPTION,
@@ -45,7 +45,7 @@ export function resolveLibraryId(config: Context7ToolsConfig = {}) {
       libraryName: z
         .string()
         .describe(
-          "Library name to search for and retrieve a Context7-compatible library ID. Use the official library name with proper punctuation — e.g., 'Next.js' instead of 'nextjs', 'Customer.io' instead of 'customerio', 'Three.js' instead of 'threejs'."
+          "Library name to search for and retrieve a GenRTL-compatible library ID. Use the official library name with proper punctuation — e.g., 'Next.js' instead of 'nextjs', 'Customer.io' instead of 'customerio', 'Three.js' instead of 'threejs'."
         ),
     }),
     execute: async ({ query, libraryName }: { query: string; libraryName: string }) => {

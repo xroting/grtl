@@ -2,18 +2,18 @@
 title: Troubleshooting
 ---
 
-This guide helps you resolve common issues when setting up or using Context7 MCP.
+This guide helps you resolve common issues when setting up or using GenRTL MCP.
 
 ## Quick Checklist
 
 - Confirm Node.js v18+ is installed (`node --version`)
-- Update to the latest Context7 MCP package (`@upstash/context7-mcp@latest`)
-- Verify connectivity with `curl https://mcp.context7.com/ping`
+- Update to the latest GenRTL MCP package (`@upstash/genrtl-mcp@latest`)
+- Verify connectivity with `curl https://mcp.genrtl.com/ping`
 - Add your API key to the configuration if you hit rate limits
 - Enable debug logs (`DEBUG=*`) before collecting support information
 
 <Tip>
-  **Skip Node.js issues entirely**: Use the remote server connection instead of local npx. Most MCP clients support connecting to `https://mcp.context7.com/mcp` directly, which requires no local Node.js installation. See [All MCP Clients](/resources/all-clients) for configuration examples.
+  **Skip Node.js issues entirely**: Use the remote server connection instead of local npx. Most MCP clients support connecting to `https://mcp.genrtl.com/mcp` directly, which requires no local Node.js installation. See [All MCP Clients](/resources/all-clients) for configuration examples.
 </Tip>
 
 ## Common Fixes
@@ -25,9 +25,9 @@ Add `@latest` to ensure you're using the most recent version:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp@latest", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp@latest", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -40,9 +40,9 @@ If you encounter `ERR_MODULE_NOT_FOUND`, try `bunx` or `deno` instead of `npx`:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "bunx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -51,9 +51,9 @@ If you encounter `ERR_MODULE_NOT_FOUND`, try `bunx` or `deno` instead of `npx`:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "deno",
-      "args": ["run", "--allow-env=NO_DEPRECATION,TRACE_DEPRECATION", "--allow-net", "npm:@upstash/context7-mcp"]
+      "args": ["run", "--allow-env=NO_DEPRECATION,TRACE_DEPRECATION", "--allow-net", "npm:@upstash/genrtl-mcp"]
     }
   }
 }
@@ -66,9 +66,9 @@ For `Error: Cannot find module 'uriTemplate.js'`, use the `--experimental-vm-mod
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "--node-options=--experimental-vm-modules", "@upstash/context7-mcp@1.0.6"]
+      "args": ["-y", "--node-options=--experimental-vm-modules", "@upstash/genrtl-mcp@1.0.6"]
     }
   }
 }
@@ -81,9 +81,9 @@ Use the `--experimental-fetch` flag:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "--node-options=--experimental-fetch", "@upstash/context7-mcp"]
+      "args": ["-y", "--node-options=--experimental-fetch", "@upstash/genrtl-mcp"]
     }
   }
 }
@@ -104,10 +104,10 @@ On Windows, some users may encounter request timeout errors with the default con
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "C:\\Program Files\\nodejs\\node.exe",
       "args": [
-        "C:\\Users\\yourname\\AppData\\Roaming\\npm\\node_modules\\@upstash\\context7-mcp\\dist\\index.js",
+        "C:\\Users\\yourname\\AppData\\Roaming\\npm\\node_modules\\@upstash\\genrtl-mcp\\dist\\index.js",
         "--transport",
         "stdio",
         "--api-key",
@@ -123,9 +123,9 @@ Alternatively, use this configuration with `cmd`:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "cmd",
-      "args": ["/c", "npx", "-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["/c", "npx", "-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -140,10 +140,10 @@ On macOS, some users may encounter the same request timeout errors. Use the full
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "/Users/yourname/.nvm/versions/node/v22.14.0/bin/node",
       "args": [
-        "/Users/yourname/.nvm/versions/node/v22.14.0/lib/node_modules/@upstash/context7-mcp/dist/index.js",
+        "/Users/yourname/.nvm/versions/node/v22.14.0/lib/node_modules/@upstash/genrtl-mcp/dist/index.js",
         "--transport",
         "stdio",
         "--api-key",
@@ -165,16 +165,16 @@ On macOS, some users may encounter the same request timeout errors. Use the full
 
 If you encounter rate limit errors:
 
-- **Get an API key**: Sign up at [context7.com/dashboard](https://context7.com/dashboard) for higher rate limits
+- **Get an API key**: Sign up at [genrtl.com/dashboard](https://genrtl.com/dashboard) for higher rate limits
 - **Add the API key to your configuration**:
 
 ```json
 {
   "mcpServers": {
-    "context7": {
-      "url": "https://mcp.context7.com/mcp",
+    "genrtl": {
+      "url": "https://mcp.genrtl.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+        "GENRTL_API_KEY": "YOUR_API_KEY"
       }
     }
   }
@@ -185,7 +185,7 @@ If you encounter rate limit errors:
 
 If you see `401 Unauthorized` errors:
 
-1. **Verify your API key** is correct and starts with `ctx7sk`
+1. **Verify your API key** is correct and starts with `grtlsk`
 2. **Check the header format** - ensure the API key is properly set:
 
 For HTTP transport:
@@ -193,7 +193,7 @@ For HTTP transport:
 ```json
 {
   "headers": {
-    "CONTEXT7_API_KEY": "YOUR_API_KEY"
+    "GENRTL_API_KEY": "YOUR_API_KEY"
   }
 }
 ```
@@ -202,7 +202,7 @@ For stdio transport:
 
 ```json
 {
-  "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+  "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
 }
 ```
 
@@ -212,7 +212,7 @@ If you get `404 Not Found` errors:
 
 1. **Verify the library ID** format is correct: `/owner/repo` or `/owner/repo/version`
 2. **Search for the library** first using `resolve-library-id` tool
-3. **Check if the library exists** at [context7.com](https://context7.com)
+3. **Check if the library exists** at [genrtl.com](https://genrtl.com)
 
 ## MCP Client-Specific Issues
 
@@ -231,12 +231,12 @@ If you get `404 Not Found` errors:
 ### Claude Code
 
 - Verify the MCP server is added correctly with `claude mcp list`
-- Check logs with `claude mcp logs context7`
+- Check logs with `claude mcp logs genrtl`
 - Try removing and re-adding the server
 
 ## Configure HTTPS Proxy
 
-If you're behind a corporate proxy, configure Context7 to route through it.
+If you're behind a corporate proxy, configure GenRTL to route through it.
 
 ### Set Environment Variables
 
@@ -282,9 +282,9 @@ Add proxy directly to your MCP configuration:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"],
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"],
       "env": {
         "https_proxy": "http://proxy.example.com:8080",
         "HTTPS_PROXY": "http://proxy.example.com:8080"
@@ -297,7 +297,7 @@ Add proxy directly to your MCP configuration:
 Both lowercase and uppercase environment variables are supported.
 
 <Tip>
-  After updating proxy settings, run `curl https://mcp.context7.com/ping` to confirm outbound
+  After updating proxy settings, run `curl https://mcp.genrtl.com/ping` to confirm outbound
   connectivity before restarting your IDE.
 </Tip>
 
@@ -310,9 +310,9 @@ Add debug output to your configuration:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"],
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"],
       "env": {
         "DEBUG": "*"
       }
@@ -326,17 +326,17 @@ Add debug output to your configuration:
 Test your setup independently:
 
 ```bash
-npx -y @modelcontextprotocol/inspector npx @upstash/context7-mcp
+npx -y @modelcontextprotocol/inspector npx @upstash/genrtl-mcp
 ```
 
-This opens an interactive inspector to test Context7 tools.
+This opens an interactive inspector to test GenRTL tools.
 
 ### Check Server Status
 
 Test that the remote server is reachable:
 
 ```bash
-curl https://mcp.context7.com/ping
+curl https://mcp.genrtl.com/ping
 ```
 
 Expected response: `{"status": "ok", "message": "pong"}`
@@ -345,7 +345,7 @@ Expected response: `{"status": "ok", "message": "pong"}`
 
 If these solutions don't resolve your issue:
 
-1. **Check GitHub Issues**: Search for similar problems at [github.com/upstash/context7/issues](https://github.com/upstash/context7/issues)
+1. **Check GitHub Issues**: Search for similar problems at [github.com/upstash/genrtl/issues](https://github.com/upstash/genrtl/issues)
 2. **Create a new issue**: Include your:
    - Operating system and version
    - Node.js version (`node --version`)
@@ -357,6 +357,6 @@ If these solutions don't resolve your issue:
 ## Additional Resources
 
 - [Getting Started Guide](/overview)
-- [Installation Instructions](https://github.com/upstash/context7#installation)
+- [Installation Instructions](https://github.com/upstash/genrtl#installation)
 - [API Documentation](/api-guide)
 - [Security & Privacy](/resources/security)

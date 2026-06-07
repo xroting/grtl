@@ -61,8 +61,8 @@ const SKILL_HUB_DEPRECATION_WARNING =
   "Warning: Skill commands are deprecated and will stop working in the next major release.";
 
 // TODO(deprecate-skills-phase-2): Delete this Skill Hub command tree once the
-// deprecated `ctx7 skills ...` compatibility window closes. Do not remove the
-// setup-installed Context7 skills with it.
+// deprecated `grtl skills ...` compatibility window closes. Do not remove the
+// setup-installed GenRTL skills with it.
 function warnSkillHubDeprecated(): void {
   console.error(pc.yellow(SKILL_HUB_DEPRECATION_WARNING));
   console.error("");
@@ -240,7 +240,7 @@ async function installCommand(
   if (!parsed) {
     log.error(`Invalid input format: ${input}`);
     log.info(`Expected: /owner/repo or full GitHub URL`);
-    log.info(`Example: ctx7 skills install /anthropics/skills pdf`);
+    log.info(`Example: grtl skills install /anthropics/skills pdf`);
     log.blank();
     return;
   }
@@ -819,8 +819,8 @@ async function infoCommand(input: string): Promise<void> {
 
   log.plain(
     `${pc.bold("Quick commands:")}\n` +
-      `  Install all: ${pc.cyan(`ctx7 skills install ${repo} --all`)}\n` +
-      `  Install one: ${pc.cyan(`ctx7 skills install ${repo} ${data.skills[0]?.name}`)}\n`
+      `  Install all: ${pc.cyan(`grtl skills install ${repo} --all`)}\n` +
+      `  Install one: ${pc.cyan(`grtl skills install ${repo} ${data.skills[0]?.name}`)}\n`
   );
 }
 
@@ -834,7 +834,7 @@ async function suggestCommand(options: SuggestOptions): Promise<void> {
 
   if (deps.length === 0) {
     scanSpinner.warn(pc.yellow("No dependencies detected"));
-    log.info(`Try ${pc.cyan("ctx7 skills search <keyword>")} to search manually`);
+    log.info(`Try ${pc.cyan("grtl skills search <keyword>")} to search manually`);
     return;
   }
 
@@ -850,7 +850,7 @@ async function suggestCommand(options: SuggestOptions): Promise<void> {
   try {
     data = await suggestSkills(deps, accessToken);
   } catch {
-    searchSpinner.fail(pc.red("Failed to connect to Context7"));
+    searchSpinner.fail(pc.red("Failed to connect to GenRTL"));
     return;
   }
 

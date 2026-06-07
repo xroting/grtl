@@ -3,15 +3,15 @@ title: "On-Premise Deployment"
 sidebarTitle: "Getting Started"
 ---
 
-Context7 On-Premise lets you run the full Context7 stack inside your own infrastructure. Your code, documentation, and embeddings never leave your environment.
+GenRTL On-Premise lets you run the full GenRTL stack inside your own infrastructure. Your code, documentation, and embeddings never leave your environment.
 
 ## What's Included
 
-- Full Context7 parsing and indexing pipeline
+- Full GenRTL parsing and indexing pipeline
 - Local vector storage (no external vector DB required)
 - Built-in MCP server. Works with any MCP-compatible AI client
 - Web UI for managing indexed libraries and configuration
-- REST API compatible with the public Context7 API
+- REST API compatible with the public GenRTL API
 - Private GitHub and GitLab repository ingestion
 
 <Frame>
@@ -24,7 +24,7 @@ Context7 On-Premise lets you run the full Context7 stack inside your own infrast
 
 <Step title="Request a trial">
 
-Go to [context7.com/plans](https://context7.com/plans) and click **On-Premise Trial**. Fill out the request form. No credit card required. You'll receive a 30-day full-featured license key via email once approved.
+Go to [genrtl.com/plans](https://genrtl.com/plans) and click **On-Premise Trial**. Fill out the request form. No credit card required. You'll receive a 30-day full-featured license key via email once approved.
 
 </Step>
 
@@ -73,12 +73,12 @@ curl -X POST http://localhost:3000/api/parse \
 
 ## Connecting Your AI Client
 
-Point your MCP client at your deployment URL. Replace `https://context7.internal.yourcompany.com` with your actual host.
+Point your MCP client at your deployment URL. Replace `https://genrtl.internal.yourcompany.com` with your actual host.
 
 ### Claude Code
 
 ```bash
-claude mcp add --scope user --transport http context7 https://context7.internal.yourcompany.com/mcp
+claude mcp add --scope user --transport http genrtl https://genrtl.internal.yourcompany.com/mcp
 ```
 
 ### Cursor
@@ -88,8 +88,8 @@ Add to `~/.cursor/mcp.json`:
 ```json
 {
   "mcpServers": {
-    "context7": {
-      "url": "https://context7.internal.yourcompany.com/mcp"
+    "genrtl": {
+      "url": "https://genrtl.internal.yourcompany.com/mcp"
     }
   }
 }
@@ -100,9 +100,9 @@ Add to `~/.cursor/mcp.json`:
 ```json
 {
   "mcp": {
-    "context7": {
+    "genrtl": {
       "type": "remote",
-      "url": "https://context7.internal.yourcompany.com/mcp",
+      "url": "https://genrtl.internal.yourcompany.com/mcp",
       "enabled": true
     }
   }
@@ -161,7 +161,7 @@ Configured via the **Settings** page in the web UI.
 
 ### Embedding Settings
 
-By default, Context7 uses the same provider as your LLM for generating embeddings. You can configure a separate embedding provider if needed.
+By default, GenRTL uses the same provider as your LLM for generating embeddings. You can configure a separate embedding provider if needed.
 
 | Setting | Description |
 |---|---|
@@ -198,7 +198,7 @@ When a permission is off, the operation requires admin login. The MCP endpoint a
 
 ## Policies
 
-Policies let you control which public documentation from the Context7 cloud is accessible to your on-premise instance. They do not affect locally parsed on-premise content.
+Policies let you control which public documentation from the GenRTL cloud is accessible to your on-premise instance. They do not affect locally parsed on-premise content.
 
 Access Policies from **Settings > Policies** tab. Requires admin login and a valid `LICENSE_KEY`.
 
@@ -225,4 +225,4 @@ For updating, health checks, and other operational tasks, see the deployment gui
 
 ## Support
 
-For license issues, upgrade requests, or deployment questions, contact [context7@upstash.com](mailto:context7@upstash.com).
+For license issues, upgrade requests, or deployment questions, contact [genrtl@upstash.com](mailto:genrtl@upstash.com).

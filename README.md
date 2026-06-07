@@ -128,7 +128,7 @@ For Cursor, it generates or updates an MCP configuration similar to:
 {
   "mcpServers": {
     "genrtl-knowledge": {
-      "url": "https://genrtl.com/api/mcp",
+      "url": "https://www.genrtl.com/api/mcp",
       "headers": {
         "Authorization": "Bearer gtr_live_your_api_key_here"
       }
@@ -149,7 +149,7 @@ If you prefer manual configuration, add this MCP server to Cursor:
 {
   "mcpServers": {
     "genrtl-knowledge": {
-      "url": "https://genrtl.com/api/mcp",
+      "url": "https://www.genrtl.com/api/mcp",
       "headers": {
         "Authorization": "Bearer gtr_live_your_api_key_here"
       }
@@ -244,59 +244,29 @@ $env:GRTL_API_KEY="gtr_live_your_api_key_here"
 
 ---
 
-### `grtl doctor`
+### GenRTL knowledge search
 
-Check your local environment and MCP configuration.
-
-```bash
-grtl doctor
-```
-
-It checks:
-
-* Node.js version
-* npm availability
-* GenRTL API key
-* MCP configuration
-* Network access to GenRTL MCP endpoint
-
----
-
-### `grtl ask`
-
-Query the GenRTL knowledge service directly from the terminal.
+The CLI exposes the same four tools as the GenRTL MCP server:
 
 ```bash
-grtl ask "How should I synchronize a single-bit control signal across clock domains?"
+grtl knowledge-search "How should AXI stream backpressure be implemented?"
+grtl spec2rtl-search "Implement an APB register block with byte enables"
+grtl verification-search "Create a self-checking async FIFO testbench"
+grtl debug-search "Explain this Vivado CDC warning and suggest a safe fix"
 ```
 
----
-
-### `grtl mcp`
-
-Start a local MCP bridge process.
+The exact MCP tool names are also valid CLI commands:
 
 ```bash
-grtl mcp
+grtl genrtl_knowledge_search "<query>"
+grtl genrtl_spec2rtl_search "<query>"
+grtl genrtl_verification_search "<query>"
+grtl genrtl_debug_search "<query>"
 ```
 
-This is useful when your MCP client expects a local command-based MCP server.
-
-Example local MCP configuration:
-
-```json
-{
-  "mcpServers": {
-    "genrtl-knowledge": {
-      "command": "grtl",
-      "args": ["mcp"],
-      "env": {
-        "GRTL_API_KEY": "gtr_live_your_api_key_here"
-      }
-    }
-  }
-}
-```
+Use `--json` for structured output. Filters include `--domain`, `--tool`,
+`--tool-version`, `--error-type`, `--severity`, `--interface`, `--target`,
+`--tag`, `--top-k`, `--min-score`, and `--workspace-id`.
 
 ---
 
@@ -308,7 +278,7 @@ Recommended for Cursor:
 {
   "mcpServers": {
     "genrtl-knowledge": {
-      "url": "https://genrtl.com/api/mcp",
+      "url": "https://www.genrtl.com/api/mcp",
       "headers": {
         "Authorization": "Bearer gtr_live_your_api_key_here"
       }
@@ -322,30 +292,6 @@ Use remote MCP mode when:
 * You want the simplest setup
 * Your GenRTL MCP server is already deployed
 * You do not need to run a local bridge process
-
----
-
-## Local MCP Bridge Mode
-
-Use local bridge mode when:
-
-* Your MCP client only supports command-based servers
-* You need local environment control
-* You want to proxy requests through a local CLI process
-
-```json
-{
-  "mcpServers": {
-    "genrtl-knowledge": {
-      "command": "grtl",
-      "args": ["mcp"],
-      "env": {
-        "GRTL_API_KEY": "gtr_live_your_api_key_here"
-      }
-    }
-  }
-}
-```
 
 ---
 
@@ -452,19 +398,13 @@ grtl login
 
 ### Cursor does not show GenRTL tools
 
-Try:
-
-```bash
-grtl doctor
-```
-
-Then check:
+Check:
 
 1. Cursor MCP configuration is valid JSON
 2. The MCP server name is `genrtl-knowledge`
 3. The API key is valid
 4. Cursor has been restarted or MCP servers have been reloaded
-5. `https://genrtl.com/api/mcp` is reachable from your machine
+5. `https://www.genrtl.com/api/mcp` is reachable from your machine
 
 ---
 
@@ -533,8 +473,8 @@ Test:
 
 ```bash
 grtl --version
-grtl setup
-grtl doctor
+grtl --help
+grtl debug-search --help
 ```
 
 ---

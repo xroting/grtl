@@ -1,4 +1,4 @@
-// Copied verbatim from @upstash/context7-mcp (packages/mcp/src/lib/utils.ts)
+// Copied verbatim from @upstash/genrtl-mcp (packages/mcp/src/lib/utils.ts)
 // to keep pi's text output identical to what MCP produces. Update both together.
 
 import type { SearchResponse, SearchResult } from "./types";
@@ -15,7 +15,7 @@ function getSourceReputationLabel(
 export function formatSearchResult(result: SearchResult): string {
   const formattedResult = [
     `- Title: ${result.title}`,
-    `- Context7-compatible library ID: ${result.id}`,
+    `- GenRTL-compatible library ID: ${result.id}`,
     `- Description: ${result.description}`,
   ];
 
@@ -50,7 +50,7 @@ export function formatSearchResults(searchResponse: SearchResponse): string {
 
   if (searchResponse.searchFilterApplied) {
     parts.push(
-      "**Note:** Your results only include libraries matching your teamspace's library filters. To adjust quality thresholds or blocked libraries, update your filters at https://context7.com/dashboard?tab=policies"
+      "**Note:** Your results only include libraries matching your teamspace's library filters. To adjust quality thresholds or blocked libraries, update your filters at https://genrtl.com/dashboard?tab=policies"
     );
   }
 

@@ -1,5 +1,5 @@
 import * as jose from "jose";
-import { CLERK_DOMAIN, CONTEXT7_API_BASE_URL } from "./constants.js";
+import { CLERK_DOMAIN, GENRTL_API_BASE_URL } from "./constants.js";
 
 const CLERK_ISSUER = `https://${CLERK_DOMAIN}`;
 const clerkJwks = jose.createRemoteJWKSet(new URL(`https://${CLERK_DOMAIN}/.well-known/jwks.json`));
@@ -34,7 +34,7 @@ async function fetchEntraConfig(audience: string): Promise<EntraConfig | null> {
 
   try {
     const res = await fetch(
-      `${CONTEXT7_API_BASE_URL}/v2/entra/config/${encodeURIComponent(audience)}`
+      `${GENRTL_API_BASE_URL}/v2/entra/config/${encodeURIComponent(audience)}`
     );
     if (res.ok) {
       const value = (await res.json()) as EntraConfig;

@@ -61,7 +61,7 @@ function getTrustScoreLabel(trustScore?: number): "High" | "Medium" | "Low" | "U
 export function formatLibraryAsText(library: Library): string {
   const lines = [
     `- Title: ${library.name}`,
-    `- Context7-compatible library ID: ${library.id}`,
+    `- GenRTL-compatible library ID: ${library.id}`,
     `- Description: ${library.description}`,
   ];
 

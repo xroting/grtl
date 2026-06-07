@@ -147,7 +147,7 @@ function getGitHubHeaders(): Record<string, string> {
   const ghToken = getGitHubToken();
   return {
     Accept: "application/vnd.github.v3+json",
-    "User-Agent": "context7-cli",
+    "User-Agent": "genrtl-cli",
     ...(ghToken && { Authorization: `token ${ghToken}` }),
   };
 }
@@ -181,7 +181,7 @@ type GitHubSkillsResult =
   | { status: "error"; error: string };
 
 // TODO(deprecate-skills-phase-2): Remove direct GitHub Skill Hub fallback when
-// deprecated `ctx7 skills install/info` commands are deleted.
+// deprecated `grtl skills install/info` commands are deleted.
 export async function listSkillsFromGitHub(project: string): Promise<GitHubSkillsResult> {
   try {
     const parts = project.split("/").filter(Boolean);

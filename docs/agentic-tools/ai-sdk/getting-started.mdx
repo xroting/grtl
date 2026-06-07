@@ -1,17 +1,17 @@
 ---
 title: "Getting Started"
 sidebarTitle: "Getting Started"
-description: "Add Context7 documentation tools to your Vercel AI SDK applications"
+description: "Add GenRTL documentation tools to your Vercel AI SDK applications"
 ---
 
-`@upstash/context7-tools-ai-sdk` provides [Vercel AI SDK](https://sdk.vercel.ai/) compatible tools and agents that give your AI applications access to up-to-date library documentation.
+`@upstash/genrtl-tools-ai-sdk` provides [Vercel AI SDK](https://sdk.vercel.ai/) compatible tools and agents that give your AI applications access to up-to-date library documentation.
 
-When building AI-powered applications with the Vercel AI SDK, your models often need accurate information about libraries and frameworks. Instead of relying on potentially outdated training data, Context7 tools let your AI fetch current documentation on-demand, ensuring responses include correct API usage, current best practices, and working code examples.
+When building AI-powered applications with the Vercel AI SDK, your models often need accurate information about libraries and frameworks. Instead of relying on potentially outdated training data, GenRTL tools let your AI fetch current documentation on-demand, ensuring responses include correct API usage, current best practices, and working code examples.
 
 The package gives you two ways to integrate:
 
 1. **Individual tools** (`resolveLibraryId` and `queryDocs`) that you add to your existing `generateText` or `streamText` calls
-2. **A pre-built agent** (`Context7Agent`) that handles the entire documentation lookup workflow automatically
+2. **A pre-built agent** (`GenRTLAgent`) that handles the entire documentation lookup workflow automatically
 
 Both approaches work with any AI provider supported by the Vercel AI SDK, including OpenAI, Anthropic, Google, and others.
 
@@ -19,19 +19,19 @@ Both approaches work with any AI provider supported by the Vercel AI SDK, includ
 
 <CodeGroup>
 ```bash npm
-npm install @upstash/context7-tools-ai-sdk
+npm install @upstash/genrtl-tools-ai-sdk
 ```
 
 ```bash pnpm
-pnpm add @upstash/context7-tools-ai-sdk
+pnpm add @upstash/genrtl-tools-ai-sdk
 ```
 
 ```bash yarn
-yarn add @upstash/context7-tools-ai-sdk
+yarn add @upstash/genrtl-tools-ai-sdk
 ```
 
 ```bash bun
-bun add @upstash/context7-tools-ai-sdk
+bun add @upstash/genrtl-tools-ai-sdk
 ```
 
 </CodeGroup>
@@ -40,15 +40,15 @@ bun add @upstash/context7-tools-ai-sdk
 
 You'll need:
 
-1. A Context7 API key from the [Context7 Dashboard](https://context7.com/dashboard)
+1. A GenRTL API key from the [GenRTL Dashboard](https://genrtl.com/dashboard)
 2. An AI provider SDK (e.g., `@ai-sdk/openai`, `@ai-sdk/anthropic`)
 
 ## Configuration
 
-Set your Context7 API key as an environment variable:
+Set your GenRTL API key as an environment variable:
 
 ```bash
-CONTEXT7_API_KEY=ctx7sk-...
+GENRTL_API_KEY=grtlsk-...
 ```
 
 The tools and agents will automatically use this key.
@@ -60,7 +60,7 @@ The tools and agents will automatically use this key.
 The simplest way to add documentation lookup to your AI application:
 
 ```typescript
-import { resolveLibraryId, queryDocs } from "@upstash/context7-tools-ai-sdk";
+import { resolveLibraryId, queryDocs } from "@upstash/genrtl-tools-ai-sdk";
 import { generateText, stepCountIs } from "ai";
 import { openai } from "@ai-sdk/openai";
 
@@ -77,15 +77,15 @@ const { text } = await generateText({
 console.log(text);
 ```
 
-### Using the Context7 Agent
+### Using the GenRTL Agent
 
 For a more streamlined experience, use the pre-configured agent:
 
 ```typescript
-import { Context7Agent } from "@upstash/context7-tools-ai-sdk";
+import { GenRTLAgent } from "@upstash/genrtl-tools-ai-sdk";
 import { anthropic } from "@ai-sdk/anthropic";
 
-const agent = new Context7Agent({
+const agent = new GenRTLAgent({
   model: anthropic("claude-sonnet-4-20250514"),
 });
 
@@ -101,7 +101,7 @@ console.log(text);
 For streaming responses:
 
 ```typescript
-import { resolveLibraryId, queryDocs } from "@upstash/context7-tools-ai-sdk";
+import { resolveLibraryId, queryDocs } from "@upstash/genrtl-tools-ai-sdk";
 import { streamText, stepCountIs } from "ai";
 import { openai } from "@ai-sdk/openai";
 
@@ -125,7 +125,7 @@ for await (const chunk of textStream) {
 You can also pass the API key directly if needed:
 
 ```typescript
-import { resolveLibraryId, queryDocs } from "@upstash/context7-tools-ai-sdk";
+import { resolveLibraryId, queryDocs } from "@upstash/genrtl-tools-ai-sdk";
 
 const tools = {
   resolveLibraryId: resolveLibraryId({ apiKey: "your-api-key" }),
@@ -137,7 +137,7 @@ const tools = {
 
 The tools follow a two-step workflow:
 
-1. **`resolveLibraryId`** - Searches Context7's database to find the correct library ID for a given query (e.g., "react" → `/reactjs/react.dev`)
+1. **`resolveLibraryId`** - Searches GenRTL's database to find the correct library ID for a given query (e.g., "react" → `/reactjs/react.dev`)
 
 2. **`queryDocs`** - Fetches documentation for the resolved library using the user's query to retrieve relevant content
 
@@ -151,12 +151,12 @@ The AI model orchestrates these tools automatically based on the user's prompt, 
     icon="magnifying-glass"
     href="/agentic-tools/ai-sdk/tools/resolve-library-id"
   >
-    Search for libraries and get Context7-compatible IDs
+    Search for libraries and get GenRTL-compatible IDs
   </Card>
   <Card title="queryDocs" icon="book" href="/agentic-tools/ai-sdk/tools/query-docs">
     Fetch documentation for a specific library
   </Card>
-  <Card title="Context7Agent" icon="robot" href="/agentic-tools/ai-sdk/agents/context7-agent">
+  <Card title="GenRTLAgent" icon="robot" href="/agentic-tools/ai-sdk/agents/genrtl-agent">
     Use the pre-built documentation agent
   </Card>
 </CardGroup>

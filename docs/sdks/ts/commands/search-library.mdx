@@ -51,9 +51,9 @@ Returns `Library[]` - an array of library objects.
 
 <RequestExample>
 ```typescript Basic Search
-import { Context7 } from "@upstash/context7-sdk";
+import { GenRTL } from "@upstash/genrtl-sdk";
 
-const client = new Context7();
+const client = new GenRTL();
 
 const libraries = await client.searchLibrary(
   "I need to build a UI",
@@ -67,9 +67,9 @@ libraries.forEach((library) => {
 ```
 
 ```typescript Selecting Best Library
-import { Context7 } from "@upstash/context7-sdk";
+import { GenRTL } from "@upstash/genrtl-sdk";
 
-const client = new Context7();
+const client = new GenRTL();
 
 const libraries = await client.searchLibrary(
   "I want to build a web app",
@@ -84,9 +84,9 @@ console.log(`Available snippets: ${best.totalSnippets}`);
 ```
 
 ```typescript Error Handling
-import { Context7, Context7Error } from "@upstash/context7-sdk";
+import { GenRTL, GenRTLError } from "@upstash/genrtl-sdk";
 
-const client = new Context7();
+const client = new GenRTL();
 
 try {
   const libraries = await client.searchLibrary("query", "express");
@@ -97,7 +97,7 @@ try {
     console.log(`Found ${libraries.length} libraries`);
   }
 } catch (error) {
-  if (error instanceof Context7Error) {
+  if (error instanceof GenRTLError) {
     console.error("API Error:", error.message);
   } else {
     throw error;
@@ -131,9 +131,9 @@ if (library.versions) {
 ### Full Workflow
 
 ```typescript
-import { Context7 } from "@upstash/context7-sdk";
+import { GenRTL } from "@upstash/genrtl-sdk";
 
-const client = new Context7();
+const client = new GenRTL();
 
 const libraries = await client.searchLibrary(
   "I want to build a React app",

@@ -1,1 +1,1 @@
-export { Context7Agent, type Context7AgentConfig } from "./context7";
+export { GenRTLAgent, type GenRTLAgentConfig } from "./genrtl";

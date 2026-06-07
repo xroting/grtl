@@ -56,9 +56,9 @@ const CHECKBOX_THEME = {
   },
 };
 
-const CONTEXT7_SECTION_MARKER = "<!-- context7 -->";
+const GENRTL_SECTION_MARKER = "<!-- genrtl -->";
 const MODE_SKILLS: Record<UninstallMode, readonly string[]> = {
-  mcp: ["context7-mcp"],
+  mcp: ["genrtl-mcp"],
   cli: ["find-docs"],
 };
 
@@ -71,7 +71,7 @@ export function registerRemoveCommand(program: Command): void {
   program
     .command("remove")
     .alias("uninstall")
-    .description("Remove Context7 setup from your AI coding agent")
+    .description("Remove GenRTL setup from your AI coding agent")
     .option("--claude", "Remove from Claude Code")
     .option("--cursor", "Remove from Cursor")
     .option("--opencode", "Remove from OpenCode")
@@ -112,7 +112,7 @@ async function promptAgents(detected: SetupAgent[]): Promise<SetupAgent[] | null
   try {
     return await checkboxWithHover(
       {
-        message: "Which agents do you want to remove Context7 setup from?",
+        message: "Which agents do you want to remove GenRTL setup from?",
         choices,
         loop: false,
         theme: CHECKBOX_THEME,
@@ -133,7 +133,7 @@ async function promptModes(modes: UninstallMode[]): Promise<UninstallMode[] | nu
   try {
     return await checkboxWithHover(
       {
-        message: "Which Context7 setup modes do you want to remove?",
+        message: "Which GenRTL setup modes do you want to remove?",
         choices,
         loop: false,
         theme: CHECKBOX_THEME,
@@ -154,7 +154,7 @@ async function resolveAgents(options: UninstallOptions, scope: Scope): Promise<S
 
   if (detected.length === 0) {
     log.warn(
-      "No Context7 setup detected. Pass --claude, --cursor, --opencode, --codex, --antigravity, or --gemini."
+      "No GenRTL setup detected. Pass --claude, --cursor, --opencode, --codex, --antigravity, or --gemini."
     );
     return [];
   }
@@ -201,7 +201,7 @@ async function hasMcpConfig(agentName: SetupAgent, scope: Scope): Promise<boolea
   const mcpPath = await resolveMcpPath(candidates);
 
   if (mcpPath.endsWith(".toml")) {
-    return readTomlServerExists(mcpPath, "context7");
+    return readTomlServerExists(mcpPath, "genrtl");
   }
 
   let existing: Record<string, unknown>;
@@ -214,9 +214,7 @@ async function hasMcpConfig(agentName: SetupAgent, scope: Scope): Promise<boolea
     return false;
   }
   const section = existing[agent.mcp.configKey];
-  return (
-    !!section && typeof section === "object" && !Array.isArray(section) && "context7" in section
-  );
+  return !!section && typeof section === "object" && !Array.isArray(section) && "genrtl" in section;
 }
 
 async function hasRule(agentName: SetupAgent, scope: Scope): Promise<boolean> {
@@ -234,7 +232,7 @@ async function hasRule(agentName: SetupAgent, scope: Scope): Promise<boolean> {
 
   try {
     const existing = await readFile(filePath, "utf-8");
-    return existing.includes(CONTEXT7_SECTION_MARKER);
+    return existing.includes(GENRTL_SECTION_MARKER);
   } catch {
     return false;
   }
@@ -274,7 +272,7 @@ async function detectAvailableModes(agents: SetupAgent[], scope: Scope): Promise
   return modes;
 }
 
-async function hasAnyContext7Artifacts(agent: SetupAgent, scope: Scope): Promise<boolean> {
+async function hasAnyGenRTLArtifacts(agent: SetupAgent, scope: Scope): Promise<boolean> {
   return (
     (await hasMcpConfig(agent, scope)) ||
     (await hasRule(agent, scope)) ||
@@ -287,7 +285,7 @@ async function detectConfiguredAgents(scope: Scope): Promise<SetupAgent[]> {
   const detected: SetupAgent[] = [];
 
   for (const agent of ALL_AGENT_NAMES) {
-    if (await hasAnyContext7Artifacts(agent, scope)) {
+    if (await hasAnyGenRTLArtifacts(agent, scope)) {
       detected.push(agent);
     }
   }
@@ -336,12 +334,12 @@ async function uninstallMcp(agentName: SetupAgent, scope: Scope): Promise<Cleanu
 
   try {
     if (mcpPath.endsWith(".toml")) {
-      const { removed } = await removeTomlServer(mcpPath, "context7");
+      const { removed } = await removeTomlServer(mcpPath, "genrtl");
       return { status: removed ? "removed" : "not found", path: mcpPath };
     }
 
     const existing = await readJsonConfig(mcpPath);
-    const { config, removed } = removeServerEntry(existing, agent.mcp.configKey, "context7");
+    const { config, removed } = removeServerEntry(existing, agent.mcp.configKey, "genrtl");
     if (removed) {
       await writeJsonConfig(mcpPath, config);
     }
@@ -375,11 +373,11 @@ async function uninstallRule(agentName: SetupAgent, scope: Scope): Promise<Clean
 
   try {
     const existing = await readFile(filePath, "utf-8");
-    if (!existing.includes(CONTEXT7_SECTION_MARKER)) {
+    if (!existing.includes(GENRTL_SECTION_MARKER)) {
       return { status: "not found", path: filePath };
     }
 
-    const escapedMarker = CONTEXT7_SECTION_MARKER.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const escapedMarker = GENRTL_SECTION_MARKER.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const updated = existing
       .replace(new RegExp(`\\n?${escapedMarker}\\n[\\s\\S]*?${escapedMarker}\\n?`, "m"), "")
       .replace(/\n{3,}/g, "\n\n")
@@ -497,7 +495,7 @@ function printResults(results: AgentCleanupResult[], modes: UninstallMode[]): vo
   if (hasVisibleResults) {
     log.blank();
   } else {
-    log.plain(`  ${pc.dim("No matching Context7 setup was found to remove.")}`);
+    log.plain(`  ${pc.dim("No matching GenRTL setup was found to remove.")}`);
     log.blank();
   }
 }
@@ -512,7 +510,7 @@ async function removeCommand(options: UninstallOptions): Promise<void> {
   if (modes.length === 0) return;
 
   log.blank();
-  const spinner = ora("Removing Context7 setup...").start();
+  const spinner = ora("Removing GenRTL setup...").start();
 
   const results: AgentCleanupResult[] = [];
   for (const agentName of agents) {
@@ -520,7 +518,7 @@ async function removeCommand(options: UninstallOptions): Promise<void> {
     results.push(await uninstallAgent(agentName, scope, modes));
   }
 
-  spinner.succeed("Context7 cleanup complete");
+  spinner.succeed("GenRTL cleanup complete");
   printResults(results, modes);
 
   trackEvent("remove", { agents, scope, modes });

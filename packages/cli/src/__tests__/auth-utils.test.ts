@@ -1,4 +1,5 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
+import { join } from "path";
 
 vi.mock("os", () => ({ homedir: () => "/fake-home", default: { homedir: () => "/fake-home" } }));
 
@@ -14,7 +15,7 @@ vi.mock("fs", () => {
 });
 
 vi.mock("../constants.js", () => ({ CLI_CLIENT_ID: "test-client-id" }));
-vi.mock("../utils/api.js", () => ({ getBaseUrl: () => "https://test.context7.com" }));
+vi.mock("../utils/api.js", () => ({ getBaseUrl: () => "https://test.genrtl.com" }));
 
 import * as fs from "fs";
 import {
@@ -29,8 +30,8 @@ import {
 } from "../utils/auth.js";
 
 const mfs = vi.mocked(fs);
-const CREDENTIALS_PATH = "/fake-home/.context7/credentials.json";
-const CONFIG_DIR_PATH = "/fake-home/.context7";
+const CONFIG_DIR_PATH = join("/fake-home", ".genrtl");
+const CREDENTIALS_PATH = join(CONFIG_DIR_PATH, "credentials.json");
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -209,7 +210,7 @@ describe("getValidAccessToken", () => {
     expect(result).toBe("new-tok");
 
     expect(fetch).toHaveBeenCalledWith(
-      "https://test.context7.com/api/oauth/token",
+      "https://test.genrtl.com/api/oauth/token",
       expect.objectContaining({
         method: "POST",
         body: expect.stringContaining("grant_type=refresh_token"),
@@ -304,12 +305,12 @@ describe("pollDeviceToken", () => {
       vi.fn().mockResolvedValue({
         ok: true,
         status: 200,
-        json: () => Promise.resolve({ access_token: "ctx7sk-x", token_type: "bearer" }),
+        json: () => Promise.resolve({ access_token: "grtlsk-x", token_type: "bearer" }),
       })
     );
     const result = await pollDeviceToken("https://t", "c", "dc");
     expect(result.status).toBe("approved");
-    expect(result.tokens?.access_token).toBe("ctx7sk-x");
+    expect(result.tokens?.access_token).toBe("grtlsk-x");
   });
 
   test.each([

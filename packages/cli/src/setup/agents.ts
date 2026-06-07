@@ -25,8 +25,13 @@ export const AUTH_MODE_LABELS: Record<AuthMode, string> = {
   "api-key": "API Key",
 };
 
-const MCP_BASE_URL = "https://mcp.context7.com";
-export const STDIO_PACKAGE = "@upstash/context7-mcp";
+let mcpBaseUrl = "https://www.genrtl.com/api/mcp";
+export const STDIO_PACKAGE = "@upstash/genrtl-mcp";
+
+export function setMcpBaseUrl(url: string): void {
+  const normalized = url.replace(/\/+$/, "");
+  mcpBaseUrl = normalized.endsWith("/api/mcp") ? normalized : `${normalized}/api/mcp`;
+}
 
 function stdioArgs(auth: AuthOptions): string[] {
   const args = ["-y", STDIO_PACKAGE];
@@ -79,13 +84,13 @@ export interface AgentConfig {
   };
 }
 
-function mcpUrl(auth: AuthOptions): string {
-  return auth.mode === "oauth" ? `${MCP_BASE_URL}/mcp/oauth` : `${MCP_BASE_URL}/mcp`;
+function mcpUrl(_auth: AuthOptions): string {
+  return mcpBaseUrl;
 }
 
 function withHeaders(base: Record<string, unknown>, auth: AuthOptions): Record<string, unknown> {
   if (auth.mode === "api-key" && auth.apiKey) {
-    return { ...base, headers: { CONTEXT7_API_KEY: auth.apiKey } };
+    return { ...base, headers: { Authorization: `Bearer ${auth.apiKey}` } };
   }
   return base;
 }
@@ -109,10 +114,10 @@ const agents: Record<SetupAgent, AgentConfig> = {
       kind: "file",
       dir: (scope) =>
         scope === "global" ? join(claudeConfigDir(), "rules") : join(".claude", "rules"),
-      filename: "context7.md",
+      filename: "genrtl.md",
     },
     skill: {
-      name: "context7-mcp",
+      name: "genrtl-mcp",
       dir: (scope) =>
         scope === "global" ? join(claudeConfigDir(), "skills") : join(".claude", "skills"),
     },
@@ -138,10 +143,10 @@ const agents: Record<SetupAgent, AgentConfig> = {
       kind: "file",
       dir: (scope) =>
         scope === "global" ? join(homedir(), ".cursor", "rules") : join(".cursor", "rules"),
-      filename: "context7.mdc",
+      filename: "genrtl.mdc",
     },
     skill: {
-      name: "context7-mcp",
+      name: "genrtl-mcp",
       dir: (scope) =>
         scope === "global" ? join(homedir(), ".cursor", "skills") : join(".cursor", "skills"),
     },
@@ -172,10 +177,10 @@ const agents: Record<SetupAgent, AgentConfig> = {
       kind: "append",
       file: (scope) =>
         scope === "global" ? join(homedir(), ".config", "opencode", "AGENTS.md") : "AGENTS.md",
-      sectionMarker: "<!-- context7 -->",
+      sectionMarker: "<!-- genrtl -->",
     },
     skill: {
-      name: "context7-mcp",
+      name: "genrtl-mcp",
       dir: (scope) =>
         scope === "global" ? join(homedir(), ".agents", "skills") : join(".agents", "skills"),
     },
@@ -200,10 +205,10 @@ const agents: Record<SetupAgent, AgentConfig> = {
     rule: {
       kind: "append",
       file: (scope) => (scope === "global" ? join(homedir(), ".codex", "AGENTS.md") : "AGENTS.md"),
-      sectionMarker: "<!-- context7 -->",
+      sectionMarker: "<!-- genrtl -->",
     },
     skill: {
-      name: "context7-mcp",
+      name: "genrtl-mcp",
       dir: (scope) =>
         scope === "global" ? join(homedir(), ".agents", "skills") : join(".agents", "skills"),
     },
@@ -230,10 +235,10 @@ const agents: Record<SetupAgent, AgentConfig> = {
     rule: {
       kind: "append",
       file: (scope) => (scope === "global" ? join(homedir(), ".gemini", "GEMINI.md") : "GEMINI.md"),
-      sectionMarker: "<!-- context7 -->",
+      sectionMarker: "<!-- genrtl -->",
     },
     skill: {
-      name: "context7-mcp",
+      name: "genrtl-mcp",
       dir: (scope) =>
         scope === "global" ? join(homedir(), ".agent", "skills") : join(".agent", "skills"),
     },
@@ -256,10 +261,10 @@ const agents: Record<SetupAgent, AgentConfig> = {
     rule: {
       kind: "append",
       file: (scope) => (scope === "global" ? join(homedir(), ".gemini", "GEMINI.md") : "GEMINI.md"),
-      sectionMarker: "<!-- context7 -->",
+      sectionMarker: "<!-- genrtl -->",
     },
     skill: {
-      name: "context7-mcp",
+      name: "genrtl-mcp",
       dir: (scope) =>
         scope === "global" ? join(homedir(), ".gemini", "skills") : join(".gemini", "skills"),
     },

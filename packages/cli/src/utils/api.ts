@@ -10,22 +10,106 @@ import type {
   GenerateStreamEvent,
   SkillQuotaResponse,
   ContextResponse,
+  GenrtlKnowledgeToolName,
+  KnowledgeSearchInput,
+  KnowledgeSearchResponse,
 } from "../types.js";
 import { downloadSkillFromGitHub, getSkillFromGitHub } from "./github.js";
 import { VERSION } from "../constants.js";
 
-let baseUrl = "https://context7.com";
+let baseUrl = "https://www.genrtl.com";
 
 export function getBaseUrl(): string {
   return baseUrl;
 }
 
 export function setBaseUrl(url: string): void {
-  baseUrl = url;
+  baseUrl = url.replace(/\/+$/, "");
+}
+
+function getGenrtlApiKey(accessToken?: string): string | undefined {
+  return process.env.GRTL_API_KEY || process.env.GENRTL_API_KEY || accessToken;
+}
+
+function getMcpEndpoint(): string {
+  return baseUrl.endsWith("/api/mcp") ? baseUrl : `${baseUrl}/api/mcp`;
+}
+
+function getMcpErrorMessage(content: unknown): string | undefined {
+  if (!Array.isArray(content)) return undefined;
+  const text = content.find(
+    (item) =>
+      item &&
+      typeof item === "object" &&
+      "type" in item &&
+      item.type === "text" &&
+      "text" in item &&
+      typeof item.text === "string"
+  ) as { text?: string } | undefined;
+  return text?.text;
+}
+
+export async function callGenrtlKnowledgeTool(
+  toolName: GenrtlKnowledgeToolName,
+  input: KnowledgeSearchInput,
+  accessToken?: string
+): Promise<KnowledgeSearchResponse> {
+  const apiKey = getGenrtlApiKey(accessToken);
+  if (!apiKey) {
+    throw new Error("Authentication required. Set GRTL_API_KEY or GENRTL_API_KEY.");
+  }
+
+  const response = await fetch(getMcpEndpoint(), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+      "MCP-Protocol-Version": "2025-06-18",
+      "X-GenRTL-Source": "cli",
+      "X-GenRTL-Client-Version": VERSION,
+    },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "tools/call",
+      params: {
+        name: toolName,
+        arguments: input,
+      },
+    }),
+  });
+
+  const payload = (await response.json().catch(() => null)) as {
+    error?: { message?: string; data?: { code?: string } };
+    result?: {
+      isError?: boolean;
+      content?: unknown;
+      structuredContent?: KnowledgeSearchResponse;
+    };
+  } | null;
+
+  if (!response.ok || payload?.error) {
+    const message =
+      payload?.error?.message || `GenRTL MCP request failed with HTTP ${response.status}`;
+    const code = payload?.error?.data?.code;
+    throw new Error(code ? `${message} (${code})` : message);
+  }
+
+  const result = payload?.result;
+  if (!result) {
+    throw new Error("GenRTL MCP returned an empty result.");
+  }
+  if (result.isError) {
+    throw new Error(getMcpErrorMessage(result.content) || "GenRTL knowledge search failed.");
+  }
+  if (!result.structuredContent) {
+    throw new Error("GenRTL MCP response did not include structured knowledge results.");
+  }
+  return result.structuredContent;
 }
 
 // TODO(deprecate-skills-phase-2): Remove the Skill Hub API helpers in this file
-// when deprecated `ctx7 skills ...` commands are deleted.
+// when deprecated `grtl skills ...` commands are deleted.
 export async function listProjectSkills(project: string): Promise<ListSkillsResponse> {
   const params = new URLSearchParams({ project });
   const response = await fetch(`${baseUrl}/api/v2/skills?${params}`);
@@ -266,12 +350,12 @@ async function handleGenerateResponse(
 
 function getAuthHeaders(accessToken?: string): Record<string, string> {
   const headers: Record<string, string> = {
-    "X-Context7-Source": "cli",
-    "X-Context7-Client-IDE": "ctx7-cli",
-    "X-Context7-Client-Version": VERSION,
-    "X-Context7-Transport": "cli",
+    "X-GenRTL-Source": "cli",
+    "X-GenRTL-Client-IDE": "grtl-cli",
+    "X-GenRTL-Client-Version": VERSION,
+    "X-GenRTL-Transport": "cli",
   };
-  const apiKey = process.env.CONTEXT7_API_KEY;
+  const apiKey = getGenrtlApiKey();
   if (apiKey) {
     headers["Authorization"] = `Bearer ${apiKey}`;
   } else if (accessToken) {

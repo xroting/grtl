@@ -1,16 +1,16 @@
 ---
 title: Claude Code
-description: Using Context7 with Claude Code
+description: Using GenRTL with Claude Code
 ---
 
-Context7 integrates with Claude Code to provide current library documentation instead of relying on training data. Claude Code supports skills, agents, and commands that make documentation lookups more powerful.
+GenRTL integrates with Claude Code to provide current library documentation instead of relying on training data. Claude Code supports skills, agents, and commands that make documentation lookups more powerful.
 
 ## Installation
 
-Run the setup command to configure Context7 for Claude Code:
+Run the setup command to configure GenRTL for Claude Code:
 
 ```bash
-npx ctx7 setup --claude
+npx grtl setup --claude
 ```
 
 This flow authenticates via OAuth, generates an API key, and installs the appropriate skill. You can choose between CLI or MCP mode.
@@ -19,42 +19,42 @@ This flow authenticates via OAuth, generates an API key, and installs the approp
 If you're setting up Claude Code on a remote server, headless VM, or over SSH, use an existing API key instead:
 
 ```bash
-npx ctx7 setup --claude --api-key YOUR_API_KEY
+npx grtl setup --claude --api-key YOUR_API_KEY
 ```
 
-The default OAuth flow redirects back to `localhost`, which only works when the browser can reach the same machine that's running `ctx7 setup`.
+The default OAuth flow redirects back to `localhost`, which only works when the browser can reach the same machine that's running `grtl setup`.
 </Tip>
 
-Create or manage API keys in the [Context7 dashboard](https://context7.com/dashboard). For manual MCP installation or other configuration options, see [All MCP Clients](/resources/all-clients).
+Create or manage API keys in the [GenRTL dashboard](https://genrtl.com/dashboard). For manual MCP installation or other configuration options, see [All MCP Clients](/resources/all-clients).
 
 ---
 
-## Using Context7
+## Using GenRTL
 
-With `ctx7 setup`, a skill is installed that triggers automatically when you ask about libraries — no need to say "use context7". You can also invoke it explicitly:
+With `grtl setup`, a skill is installed that triggers automatically when you ask about libraries — no need to say "use genrtl". You can also invoke it explicitly:
 
 ```
-use context7 to show me how to set up middleware in Next.js 15
-use context7 for Prisma query examples with relations
-use context7 for the Supabase syntax for row-level security
+use genrtl to show me how to set up middleware in Next.js 15
+use genrtl for Prisma query examples with relations
+use genrtl for the Supabase syntax for row-level security
 ```
 
 If you know the library ID, use it directly to skip resolution:
 
 ```
-use context7 with /supabase/supabase for authentication docs
-use context7 with /vercel/next.js for app router setup
+use genrtl with /supabase/supabase for authentication docs
+use genrtl with /vercel/next.js for app router setup
 ```
 
 <Tip>
-With the [Context7 plugin](#the-context7-plugin) installed, you get additional agents and commands on top of the skill.
+With the [GenRTL plugin](#the-genrtl-plugin) installed, you get additional agents and commands on top of the skill.
 </Tip>
 
 ---
 
-## The Context7 Plugin
+## The GenRTL Plugin
 
-The full Context7 plugin for Claude Code includes more than just the MCP server:
+The full GenRTL plugin for Claude Code includes more than just the MCP server:
 
 <CardGroup cols={2}>
 <Card title="MCP Server" icon="server">
@@ -67,26 +67,26 @@ Auto-triggers documentation lookups when you ask about libraries
 A `docs-researcher` agent for focused lookups that keep context lean
 </Card>
 <Card title="Commands" icon="terminal">
-`/context7:docs` for manual documentation queries
+`/genrtl:docs` for manual documentation queries
 </Card>
 </CardGroup>
 
 ### Installing the Plugin
 
-The plugin is available from the Context7 marketplace. Run these commands in Claude Code:
+The plugin is available from the GenRTL marketplace. Run these commands in Claude Code:
 
 ```
-/plugin marketplace add upstash/context7
-/plugin install context7-plugin@context7-marketplace
+/plugin marketplace add upstash/genrtl
+/plugin install genrtl-plugin@genrtl-marketplace
 ```
 
-This adds the Context7 marketplace and installs the plugin with skills, agents, and commands.
+This adds the GenRTL marketplace and installs the plugin with skills, agents, and commands.
 
 ### Skills
 
 #### Documentation Lookup Skill
 
-This skill triggers automatically when you ask about libraries, frameworks, or need code examples. You don't need to type "use context7" — the skill recognizes when documentation would help.
+This skill triggers automatically when you ask about libraries, frameworks, or need code examples. You don't need to type "use genrtl" — the skill recognizes when documentation would help.
 
 <AccordionGroup>
 <Accordion title="What triggers the skill">
@@ -137,13 +137,13 @@ The agent uses the same tools (`resolve-library-id` and `query-docs`) but runs o
 
 ### Commands
 
-#### /context7:docs
+#### /genrtl:docs
 
 Manual command for documentation lookups.
 
 **Format:**
 ```
-/context7:docs <library> [query]
+/genrtl:docs <library> [query]
 ```
 
 **Examples:**
@@ -151,15 +151,15 @@ Manual command for documentation lookups.
 <Tabs>
 <Tab title="Basic" icon="search">
 ```
-/context7:docs react hooks
-/context7:docs next.js authentication
-/context7:docs prisma relations
+/genrtl:docs react hooks
+/genrtl:docs next.js authentication
+/genrtl:docs prisma relations
 ```
 </Tab>
 <Tab title="With Library ID" icon="link">
 ```
-/context7:docs /vercel/next.js app router
-/context7:docs /supabase/supabase row level security
+/genrtl:docs /vercel/next.js app router
+/genrtl:docs /supabase/supabase row level security
 ```
 
 Using a library ID directly skips the resolution step.

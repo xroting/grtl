@@ -1,4 +1,4 @@
-import { Context7Error } from "@error";
+import { GenRTLError } from "@error";
 
 type CacheSetting =
   | "default"
@@ -9,7 +9,7 @@ type CacheSetting =
   | "reload"
   | false;
 
-export type Context7Request = {
+export type GenRTLRequest = {
   path?: string[];
   /**
    * Request body will be serialized to json
@@ -34,13 +34,13 @@ export type TxtResponseHeaders = {
   totalTokens: number;
 };
 
-export type Context7Response<TResult> = {
+export type GenRTLResponse<TResult> = {
   result?: TResult;
   headers?: TxtResponseHeaders;
 };
 
 export type Requester = {
-  request: <TResult = unknown>(req: Context7Request) => Promise<Context7Response<TResult>>;
+  request: <TResult = unknown>(req: GenRTLRequest) => Promise<GenRTLResponse<TResult>>;
 };
 
 export type RetryConfig =
@@ -121,7 +121,7 @@ export class HttpClient implements Requester {
           };
   }
 
-  public async request<TResult>(req: Context7Request): Promise<Context7Response<TResult>> {
+  public async request<TResult>(req: GenRTLRequest): Promise<GenRTLResponse<TResult>> {
     const method = req.method || "POST";
 
     let url = [this.baseUrl, ...(req.path ?? [])].join("/");
@@ -170,7 +170,7 @@ export class HttpClient implements Requester {
 
     if (!res.ok) {
       const errorBody = (await res.json()) as { error?: string; message?: string };
-      throw new Context7Error(errorBody.error || errorBody.message || res.statusText);
+      throw new GenRTLError(errorBody.error || errorBody.message || res.statusText);
     }
 
     const contentType = res.headers.get("content-type");
@@ -186,12 +186,12 @@ export class HttpClient implements Requester {
   }
 
   private extractTxtResponseHeaders(headers: Headers): TxtResponseHeaders | undefined {
-    const page = headers.get("x-context7-page");
-    const limit = headers.get("x-context7-limit");
-    const totalPages = headers.get("x-context7-total-pages");
-    const hasNext = headers.get("x-context7-has-next");
-    const hasPrev = headers.get("x-context7-has-prev");
-    const totalTokens = headers.get("x-context7-total-tokens");
+    const page = headers.get("x-genrtl-page");
+    const limit = headers.get("x-genrtl-limit");
+    const totalPages = headers.get("x-genrtl-total-pages");
+    const hasNext = headers.get("x-genrtl-has-next");
+    const hasPrev = headers.get("x-genrtl-has-prev");
+    const totalTokens = headers.get("x-genrtl-total-tokens");
 
     if (!page || !limit || !totalPages || !hasNext || !hasPrev || !totalTokens) {
       return undefined;

@@ -2,7 +2,7 @@ import { Command } from "@commands/command";
 import type { Library, SearchLibraryOptions } from "@commands/types";
 import type { ApiSearchResponse } from "./types";
 import type { Requester } from "@http";
-import { Context7Error } from "@error";
+import { GenRTLError } from "@error";
 import { formatLibrary, formatLibrariesAsText } from "@utils/format";
 
 const DEFAULT_TYPE = "json";
@@ -12,7 +12,7 @@ export class SearchLibraryCommand extends Command<Library[] | string> {
 
   constructor(query: string, libraryName: string, options?: SearchLibraryOptions) {
     if (!query || !libraryName) {
-      throw new Context7Error("query and libraryName are required");
+      throw new GenRTLError("query and libraryName are required");
     }
 
     const queryParams: Record<string, string | number | undefined> = {};
@@ -33,7 +33,7 @@ export class SearchLibraryCommand extends Command<Library[] | string> {
     });
 
     if (result === undefined) {
-      throw new Context7Error("Request did not return a result");
+      throw new GenRTLError("Request did not return a result");
     }
 
     const libraries = result.results.map(formatLibrary);

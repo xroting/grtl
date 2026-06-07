@@ -1,29 +1,29 @@
 import type {
-  Context7Config,
+  GenRTLConfig,
   GetContextOptions,
   SearchLibraryOptions,
   Library,
   Documentation,
 } from "@commands/types";
-import { Context7Error } from "@error";
+import { GenRTLError } from "@error";
 import { HttpClient } from "@http";
 import { SearchLibraryCommand, GetContextCommand } from "@commands/index";
 
-const DEFAULT_BASE_URL = "https://context7.com/api";
-const API_KEY_PREFIX = "ctx7sk";
+const DEFAULT_BASE_URL = "https://genrtl.com/api";
+const API_KEY_PREFIX = "grtlsk";
 
 export type * from "@commands/types";
 export * from "@error";
 
-export class Context7 {
+export class GenRTL {
   private httpClient: HttpClient;
 
-  constructor(config: Context7Config = {}) {
-    const apiKey = config.apiKey || process.env.CONTEXT7_API_KEY;
+  constructor(config: GenRTLConfig = {}) {
+    const apiKey = config.apiKey || process.env.GENRTL_API_KEY;
 
     if (!apiKey) {
-      throw new Context7Error(
-        "API key is required. Pass it in the config or set CONTEXT7_API_KEY environment variable."
+      throw new GenRTLError(
+        "API key is required. Pass it in the config or set GENRTL_API_KEY environment variable."
       );
     }
 
@@ -117,7 +117,7 @@ export class Context7 {
   /**
    * Get documentation context for a library
    * @param query The user's question or task
-   * @param libraryId Context7 library ID (e.g., "/facebook/react")
+   * @param libraryId GenRTL library ID (e.g., "/facebook/react")
    * @param options Response format options
    * @returns Documentation as Documentation[] (json, default) or string (txt)
    */

@@ -173,7 +173,7 @@ dist
 
 .mcp.json
 .cursor
-!plugins/cursor/context7/.cursor
+!plugins/cursor/genrtl/.cursor
 .opencode
 .claude
 .agents

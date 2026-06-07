@@ -7,11 +7,11 @@ const pkg = JSON.parse(readFileSync(join(__dirname, "../../package.json"), "utf-
 
 export const SERVER_VERSION: string = pkg.version;
 
-const CONTEXT7_BASE_URL = "https://context7.com";
-const MCP_RESOURCE_URL = "https://mcp.context7.com";
+const GENRTL_BASE_URL = "https://genrtl.com";
+const MCP_RESOURCE_URL = "https://mcp.genrtl.com";
 
-export const CLERK_DOMAIN = "clerk.context7.com";
-export const CONTEXT7_API_BASE_URL = process.env.CONTEXT7_API_URL || `${CONTEXT7_BASE_URL}/api`;
+export const CLERK_DOMAIN = "clerk.genrtl.com";
+export const GENRTL_API_BASE_URL = process.env.GENRTL_API_URL || `${GENRTL_BASE_URL}/api`;
 export const RESOURCE_URL = process.env.RESOURCE_URL || MCP_RESOURCE_URL;
-export const AUTH_SERVER_URL = process.env.AUTH_SERVER_URL || CONTEXT7_BASE_URL;
+export const AUTH_SERVER_URL = process.env.AUTH_SERVER_URL || GENRTL_BASE_URL;
 export const OPENAI_APPS_CHALLENGE_TOKEN = process.env.OPENAI_APPS_CHALLENGE_TOKEN;

@@ -1,7 +1,7 @@
 {
-  "name": "@upstash/context7-tools-ai-sdk",
+  "name": "@upstash/genrtl-tools-ai-sdk",
   "version": "0.2.3",
-  "description": "Context7 tools for Vercel AI SDK",
+  "description": "GenRTL tools for Vercel AI SDK",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -29,12 +29,12 @@
     "clean": "rm -rf dist"
   },
   "peerDependencies": {
-    "@upstash/context7-sdk": ">=0.3.0",
+    "@upstash/genrtl-sdk": ">=0.3.0",
     "ai": ">=6.0.0",
     "zod": ">=4.0.0"
   },
   "devDependencies": {
-    "@upstash/context7-sdk": "workspace:*",
+    "@upstash/genrtl-sdk": "workspace:*",
     "ai": "^6.0.5",
     "zod": "^4.3.4",
     "@ai-sdk/amazon-bedrock": "^4.0.9",
@@ -46,11 +46,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/upstash/context7.git",
+    "url": "git+https://github.com/upstash/genrtl.git",
     "directory": "packages/tools-ai-sdk"
   },
   "keywords": [
-    "context7",
+    "genrtl",
     "ai-sdk",
     "vercel",
     "documentation",
@@ -60,9 +60,9 @@
   "author": "Upstash",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/upstash/context7/issues"
+    "url": "https://github.com/upstash/genrtl/issues"
   },
-  "homepage": "https://github.com/upstash/context7#readme",
+  "homepage": "https://github.com/upstash/genrtl#readme",
   "publishConfig": {
     "access": "public"
   }

@@ -1,14 +1,14 @@
 import { HttpClient } from "@http";
 
 export function newHttpClient(): HttpClient {
-  const apiKey = process.env.CONTEXT7_API_KEY || process.env.API_KEY;
+  const apiKey = process.env.GENRTL_API_KEY || process.env.API_KEY;
 
   if (!apiKey) {
-    throw new Error("CONTEXT7_API_KEY or API_KEY environment variable is required for tests");
+    throw new Error("GENRTL_API_KEY or API_KEY environment variable is required for tests");
   }
 
   return new HttpClient({
-    baseUrl: process.env.CONTEXT7_BASE_URL || "https://context7.com/api",
+    baseUrl: process.env.GENRTL_BASE_URL || "https://genrtl.com/api",
     headers: {
       Authorization: `Bearer ${apiKey}`,
     },

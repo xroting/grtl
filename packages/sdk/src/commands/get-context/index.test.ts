@@ -1,7 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { GetContextCommand } from "./index";
 import { newHttpClient } from "../../utils/test-utils";
-import { Context7 } from "../../client";
+import { GenRTL } from "../../client";
 import type { Documentation } from "@commands/types";
 
 const httpClient = newHttpClient();
@@ -35,8 +35,8 @@ describe("GetContextCommand", () => {
   });
 
   test("should get library context as JSON using client (default)", async () => {
-    const client = new Context7({
-      apiKey: process.env.CONTEXT7_API_KEY || process.env.API_KEY!,
+    const client = new GenRTL({
+      apiKey: process.env.GENRTL_API_KEY || process.env.API_KEY!,
     });
 
     const result = await client.getContext("How to use hooks", "/facebook/react");
@@ -52,8 +52,8 @@ describe("GetContextCommand", () => {
   });
 
   test("should get library context as text using client with type: txt", async () => {
-    const client = new Context7({
-      apiKey: process.env.CONTEXT7_API_KEY || process.env.API_KEY!,
+    const client = new GenRTL({
+      apiKey: process.env.GENRTL_API_KEY || process.env.API_KEY!,
     });
 
     const result = await client.getContext("How to use hooks", "/facebook/react", {

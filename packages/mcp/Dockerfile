@@ -9,7 +9,7 @@ COPY packages/mcp ./packages/mcp
 RUN pnpm install --frozen-lockfile
 
 # Build the mcp package
-RUN pnpm --filter @upstash/context7-mcp build
+RUN pnpm --filter @upstash/genrtl-mcp build
 
 # ----- Production Stage -----
 FROM node:lts-alpine
@@ -19,7 +19,7 @@ WORKDIR /app
 # Install production dependencies only
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages/mcp/package.json ./packages/mcp/
-RUN pnpm install --frozen-lockfile --prod --filter @upstash/context7-mcp
+RUN pnpm install --frozen-lockfile --prod --filter @upstash/genrtl-mcp
 
 # Copy built files from builder
 COPY --from=builder /app/packages/mcp/dist ./packages/mcp/dist

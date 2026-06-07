@@ -1,15 +1,15 @@
 ---
 title: "resolveLibraryId"
 sidebarTitle: "resolveLibraryId"
-description: "Search for libraries and resolve them to Context7-compatible IDs"
+description: "Search for libraries and resolve them to GenRTL-compatible IDs"
 ---
 
-The `resolveLibraryId` tool searches Context7's library database and returns matching results with their Context7-compatible library IDs. This is typically the first step in a documentation lookup workflow.
+The `resolveLibraryId` tool searches GenRTL's library database and returns matching results with their GenRTL-compatible library IDs. This is typically the first step in a documentation lookup workflow.
 
 ## Usage
 
 ```typescript
-import { resolveLibraryId } from "@upstash/context7-tools-ai-sdk";
+import { resolveLibraryId } from "@upstash/genrtl-tools-ai-sdk";
 import { generateText, stepCountIs } from "ai";
 import { openai } from "@ai-sdk/openai";
 
@@ -26,17 +26,17 @@ const { text } = await generateText({
 ## Configuration
 
 ```typescript
-resolveLibraryId(config?: Context7ToolsConfig)
+resolveLibraryId(config?: GenRTLToolsConfig)
 ```
 
 ### Parameters
 
-<ParamField path="config" type="Context7ToolsConfig" optional>
+<ParamField path="config" type="GenRTLToolsConfig" optional>
   Configuration options for the tool.
 
   <Expandable title="properties">
     <ParamField path="apiKey" type="string" optional>
-      Context7 API key. If not provided, uses the `CONTEXT7_API_KEY` environment variable.
+      GenRTL API key. If not provided, uses the `GENRTL_API_KEY` environment variable.
     </ParamField>
   </Expandable>
 </ParamField>
@@ -50,7 +50,7 @@ Returns an AI SDK `tool` that can be used with `generateText`, `streamText`, or 
 When the AI model calls this tool, it:
 
 1. Takes a `query` and `libraryName` parameter from the model
-2. Searches Context7's database for matching libraries
+2. Searches GenRTL's database for matching libraries
 3. Returns formatted results including:
    - Library ID (e.g., `/reactjs/react.dev`)
    - Title and description
@@ -76,7 +76,7 @@ On success, the tool returns the search results as plain text, formatted for eas
 
 ```
 - Title: React Documentation
-- Context7-compatible library ID: /reactjs/react.dev
+- GenRTL-compatible library ID: /reactjs/react.dev
 - Description: The library for web and native user interfaces
 - Code Snippets: 1250
 - Trust Score: High
@@ -84,7 +84,7 @@ On success, the tool returns the search results as plain text, formatted for eas
 - Versions: 19.0.0, 18.3.1, 18.2.0
 ----------
 - Title: React Native
-- Context7-compatible library ID: /facebook/react-native
+- GenRTL-compatible library ID: /facebook/react-native
 - Description: A framework for building native applications using React
 - Code Snippets: 890
 - Trust Score: High
@@ -103,7 +103,7 @@ No libraries found matching "unknown-lib". Try a different search term or check 
 ### Basic Usage
 
 ```typescript
-import { resolveLibraryId, queryDocs } from "@upstash/context7-tools-ai-sdk";
+import { resolveLibraryId, queryDocs } from "@upstash/genrtl-tools-ai-sdk";
 import { generateText, stepCountIs } from "ai";
 import { openai } from "@ai-sdk/openai";
 
@@ -124,17 +124,17 @@ console.log(text);
 ### With Custom API Key
 
 ```typescript
-import { resolveLibraryId } from "@upstash/context7-tools-ai-sdk";
+import { resolveLibraryId } from "@upstash/genrtl-tools-ai-sdk";
 
 const tool = resolveLibraryId({
-  apiKey: process.env.CONTEXT7_API_KEY,
+  apiKey: process.env.GENRTL_API_KEY,
 });
 ```
 
 ### Inspecting Tool Calls
 
 ```typescript
-import { resolveLibraryId } from "@upstash/context7-tools-ai-sdk";
+import { resolveLibraryId } from "@upstash/genrtl-tools-ai-sdk";
 import { generateText, stepCountIs } from "ai";
 import { openai } from "@ai-sdk/openai";
 
@@ -171,4 +171,4 @@ The tool's description instructs the AI model to select libraries based on:
 ## Related
 
 - [queryDocs](/agentic-tools/ai-sdk/tools/query-docs) - Fetch documentation using the resolved library ID
-- [Context7Agent](/agentic-tools/ai-sdk/agents/context7-agent) - Pre-built agent that handles the full workflow
+- [GenRTLAgent](/agentic-tools/ai-sdk/agents/genrtl-agent) - Pre-built agent that handles the full workflow

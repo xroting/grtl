@@ -22,7 +22,7 @@ interface UpgradeOptions {
 export function registerUpgradeCommand(program: Command): void {
   program
     .command("upgrade")
-    .description("Check for a newer ctx7 version and upgrade when possible")
+    .description("Check for a newer grtl version and upgrade when possible")
     .option("-y, --yes", "Run the suggested upgrade command without prompting")
     .option("--check", "Only check for updates without running the upgrade command")
     .action(async (options: UpgradeOptions) => {
@@ -103,7 +103,7 @@ export async function maybeShowUpgradeNotice(
   if (!info.upgradePlan.canRun) {
     log.box([
       `${pc.white(pc.bold("Update available:"))} ${pc.green(pc.bold(`v${info.currentVersion}`))} ${pc.dim("->")} ${pc.green(pc.bold(`v${info.latestVersion}`))}`,
-      `${pc.white("Run")} ${pc.yellow(pc.bold("ctx7 upgrade"))} ${pc.white("for update steps")}`,
+      `${pc.white("Run")} ${pc.yellow(pc.bold("grtl upgrade"))} ${pc.white("for update steps")}`,
       `${pc.white("Or run")} ${pc.yellow(info.upgradePlan.displayCommand)}`,
     ]);
     await markUpdateNotificationShown(info.latestVersion);
@@ -113,7 +113,7 @@ export async function maybeShowUpgradeNotice(
 
   log.box([
     `${pc.white(pc.bold("Update available:"))} ${pc.green(pc.bold(`v${info.currentVersion}`))} ${pc.dim("->")} ${pc.green(pc.bold(`v${info.latestVersion}`))}`,
-    `${pc.white("Run")} ${pc.yellow(pc.bold("ctx7 upgrade"))} ${pc.white("to update now")}`,
+    `${pc.white("Run")} ${pc.yellow(pc.bold("grtl upgrade"))} ${pc.white("to update now")}`,
     `${pc.white("Or run")} ${pc.yellow(info.upgradePlan.displayCommand)}`,
   ]);
   await markUpdateNotificationShown(info.latestVersion);
@@ -133,7 +133,7 @@ async function upgradeCommand(options: UpgradeOptions): Promise<void> {
   }
 
   if (!info.updateAvailable) {
-    log.success(`ctx7 is up to date (${pc.bold(`v${VERSION}`)})`);
+    log.success(`grtl is up to date (${pc.bold(`v${VERSION}`)})`);
     return;
   }
 
@@ -145,7 +145,7 @@ async function upgradeCommand(options: UpgradeOptions): Promise<void> {
   if (plan.needsExplicitVersion) {
     log.info(`You're using an ephemeral runner (${plan.installMethod}).`);
     log.info(`Use ${pc.cyan(plan.displayCommand)} to run the latest version immediately.`);
-    log.info(`Or install globally with ${pc.cyan("npm install -g ctx7@latest")}.`);
+    log.info(`Or install globally with ${pc.cyan("npm install -g grtl@latest")}.`);
     return;
   }
 
@@ -179,7 +179,7 @@ async function upgradeCommand(options: UpgradeOptions): Promise<void> {
   if (exitCode === 0) {
     log.blank();
     log.success("Upgrade complete.");
-    log.info(`Run ${pc.cyan("ctx7 --version")} to verify the installed version.`);
+    log.info(`Run ${pc.cyan("grtl --version")} to verify the installed version.`);
     return;
   }
 

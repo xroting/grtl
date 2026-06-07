@@ -1,43 +1,30 @@
 import { Command } from "commander";
 import pc from "picocolors";
 import ora from "ora";
-import { select } from "@inquirer/prompts";
 import { mkdir, readFile, writeFile } from "fs/promises";
 import { dirname, join } from "path";
-import { randomBytes } from "crypto";
 
 import { log } from "../utils/logger.js";
 import { checkboxWithHover } from "../utils/prompts.js";
 import { trackEvent } from "../utils/tracking.js";
-import { getBaseUrl, downloadSkill } from "../utils/api.js";
-import { installSkillFiles } from "../utils/installer.js";
-import { performLogin } from "./auth.js";
-import { saveTokens, getValidAccessToken } from "../utils/auth.js";
 import {
   type SetupAgent,
-  type AuthOptions,
-  type Transport,
+  type HttpAuthOptions,
   SETUP_AGENT_NAMES,
-  AUTH_MODE_LABELS,
   ALL_AGENT_NAMES,
   getAgent,
   detectAgents,
-} from "../setup/agents.js";
-import { customizeSkillFilesForAgent, getRuleContent } from "../setup/templates.js";
+} from "../setup/http-agents.js";
+import { getRuleContent } from "../setup/templates.js";
 import {
   readJsonConfig,
   mergeServerEntry,
   writeJsonConfig,
   resolveMcpPath,
   appendTomlServer,
-  readTomlServerEntry,
-  isStdioContext7Entry,
-  patchStdioApiKey,
-  getJsonServerEntry,
 } from "../setup/mcp-writer.js";
 
 type Scope = "global" | "project";
-type SetupMode = "mcp" | "cli";
 
 interface SetupOptions {
   claude?: boolean;
@@ -49,20 +36,12 @@ interface SetupOptions {
   project?: boolean;
   yes?: boolean;
   apiKey?: string;
-  oauth?: boolean;
-  cli?: boolean;
-  mcp?: boolean;
-  stdio?: boolean;
-}
-
-function resolveTransport(options: SetupOptions): Transport {
-  return options.stdio ? "stdio" : "http";
 }
 
 const CHECKBOX_THEME = {
   style: {
     highlight: (text: string) => pc.green(text),
-    disabledChoice: (text: string) => ` ${pc.dim("◯")} ${pc.dim(text)}`,
+    disabledChoice: (text: string) => ` ${pc.dim("-")} ${pc.dim(text)}`,
   },
 };
 
@@ -77,131 +56,50 @@ function getSelectedAgents(options: SetupOptions): SetupAgent[] {
   return agents;
 }
 
+export function resolveSetupAuth(
+  options: Pick<SetupOptions, "apiKey">
+): HttpAuthOptions | undefined {
+  if (options.apiKey) return { apiKey: options.apiKey };
+  if (process.env.GRTL_API_KEY) {
+    return { apiKey: process.env.GRTL_API_KEY, apiKeyEnvVar: "GRTL_API_KEY" };
+  }
+  if (process.env.GENRTL_API_KEY) {
+    return { apiKey: process.env.GENRTL_API_KEY, apiKeyEnvVar: "GENRTL_API_KEY" };
+  }
+  return undefined;
+}
+
 export function registerSetupCommand(program: Command): void {
   program
     .command("setup")
-    .description("Set up Context7 for your AI coding agent")
-    .option("--claude", "Set up for Claude Code")
-    .option("--cursor", "Set up for Cursor")
-    .option("--antigravity", "Set up for Antigravity (.agent/skills)")
-    .option("--opencode", "Set up for OpenCode")
-    .option("--codex", "Set up for Codex")
-    .option("--gemini", "Set up for Gemini CLI")
-    .option("--mcp", "Set up MCP server mode")
-    .option("--cli", "Set up CLI + Skills mode (no MCP server)")
-    .option("-p, --project", "Configure for current project instead of globally")
-    .option("-y, --yes", "Skip confirmation prompts")
-    .option("--api-key <key>", "Use API key authentication")
-    .option("--oauth", "Use OAuth endpoint (IDE handles auth flow)")
-    .option("--stdio", "Configure the MCP server as a local stdio process (default: HTTP)")
+    .description("Configure the hosted GenRTL HTTP MCP server for a coding agent")
+    .option("--claude", "Set up Claude Code")
+    .option("--cursor", "Set up Cursor")
+    .option("--antigravity", "Set up Antigravity")
+    .option("--opencode", "Set up OpenCode")
+    .option("--codex", "Set up Codex")
+    .option("--gemini", "Set up Gemini CLI")
+    .option("-p, --project", "Configure the current project instead of the user profile")
+    .option("-y, --yes", "Use all detected agents without prompting")
+    .option("--api-key <key>", "GenRTL API key (prefer the GRTL_API_KEY environment variable)")
     .action(async (options: SetupOptions) => {
       await setupCommand(options);
     });
 }
 
-async function authenticateAndGenerateKey(): Promise<string | null> {
-  const accessToken = (await getValidAccessToken()) ?? (await performLogin());
-
-  if (!accessToken) return null;
-
-  const spinner = ora("Configuring authentication...").start();
-
-  try {
-    const response = await fetch(`${getBaseUrl()}/api/dashboard/api-keys`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name: `ctx7-cli-${randomBytes(3).toString("hex")}` }),
-    });
-
-    if (!response.ok) {
-      const err = (await response.json().catch(() => ({}))) as { message?: string; error?: string };
-      spinner.fail("Authentication failed");
-      log.error(err.message || err.error || `HTTP ${response.status}`);
-      return null;
-    }
-
-    const result = (await response.json()) as { data: { apiKey: string } };
-    spinner.succeed("Authenticated");
-    return result.data.apiKey;
-  } catch (err) {
-    spinner.fail("Authentication failed");
-    log.error(err instanceof Error ? err.message : String(err));
-    return null;
-  }
-}
-
-async function resolveAuth(options: SetupOptions): Promise<AuthOptions | null> {
-  if (options.apiKey) return { mode: "api-key", apiKey: options.apiKey };
-  if (options.oauth) return { mode: "oauth" };
-
-  const apiKey = await authenticateAndGenerateKey();
-  if (!apiKey) return null;
-  return { mode: "api-key", apiKey };
-}
-
-async function resolveMode(options: SetupOptions): Promise<SetupMode> {
-  if (options.cli) return "cli";
-  if (options.mcp || options.yes || options.oauth || options.stdio) return "mcp";
-
-  return select<SetupMode>({
-    message: "How should your agent access Context7?",
-    choices: [
-      {
-        name: `MCP server\n    ${pc.dim("Agent calls Context7 tools via MCP protocol to retrieve up-to-date library docs")}`,
-        value: "mcp" as SetupMode,
-      },
-      {
-        name: `CLI + Skills\n    ${pc.dim("Installs a find-docs skill that guides your agent to fetch up-to-date library docs using ")}${pc.dim(pc.bold("ctx7"))}${pc.dim(" CLI commands")}`,
-        value: "cli" as SetupMode,
-      },
-    ],
-    theme: {
-      style: {
-        highlight: (text: string) => pc.green(text),
-        answer: (text: string) => pc.green(text.split("\n")[0].trim()),
-      },
-    },
-  });
-}
-
-async function resolveCliAuth(apiKey?: string): Promise<void> {
-  if (apiKey) {
-    saveTokens({ access_token: apiKey, token_type: "bearer" });
-    log.blank();
-    log.plain(`${pc.green("✔")} Authenticated`);
-    return;
-  }
-
-  const validToken = await getValidAccessToken();
-  if (validToken) {
-    log.blank();
-    log.plain(`${pc.green("✔")} Authenticated`);
-    return;
-  }
-
-  await performLogin();
-}
-
 async function promptAgents(): Promise<SetupAgent[] | null> {
-  const choices = ALL_AGENT_NAMES.map((name) => ({
-    name: SETUP_AGENT_NAMES[name],
-    value: name,
-  }));
-
-  const message = "Which agents do you want to set up?";
-
   try {
     return await checkboxWithHover(
       {
-        message,
-        choices,
+        message: "Which agents do you want to set up?",
+        choices: ALL_AGENT_NAMES.map((name) => ({
+          name: SETUP_AGENT_NAMES[name],
+          value: name,
+        })),
         loop: false,
         theme: CHECKBOX_THEME,
       },
-      { getName: (a: SetupAgent) => SETUP_AGENT_NAMES[a] }
+      { getName: (agent: SetupAgent) => SETUP_AGENT_NAMES[agent] }
     );
   } catch {
     return null;
@@ -213,27 +111,25 @@ async function resolveAgents(options: SetupOptions, scope: Scope): Promise<Setup
   if (explicit.length > 0) return explicit;
 
   const detected = await detectAgents(scope);
-
   if (detected.length > 0 && options.yes) return detected;
+
+  if (options.yes) {
+    log.error("No supported coding agents were detected. Pass an agent flag such as --cursor.");
+    return [];
+  }
 
   log.blank();
   const selected = await promptAgents();
-  if (!selected) {
-    log.warn("Setup cancelled");
-    return [];
-  }
-  return selected;
+  if (!selected) log.warn("Setup cancelled");
+  return selected ?? [];
 }
 
-/** Install a rule for an agent, handling both "file" (standalone) and "append" (AGENTS.md) types. */
 async function installRule(
   agentName: SetupAgent,
-  mode: SetupMode,
   scope: Scope
 ): Promise<{ status: string; path: string }> {
-  const agent = getAgent(agentName);
-  const rule = agent.rule;
-  const content = await getRuleContent(mode, agentName);
+  const rule = getAgent(agentName).rule;
+  const content = await getRuleContent("mcp", agentName);
 
   if (rule.kind === "file") {
     const ruleDir =
@@ -247,53 +143,31 @@ async function installRule(
   const filePath =
     scope === "global" ? rule.file("global") : join(process.cwd(), rule.file("project"));
   const escapedMarker = rule.sectionMarker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const section = `${rule.sectionMarker}\n${content}${rule.sectionMarker}`;
+  const section = `${rule.sectionMarker}\n${content.trimEnd()}\n${rule.sectionMarker}`;
 
   let existing = "";
   try {
     existing = await readFile(filePath, "utf-8");
   } catch {
-    // File doesn't exist yet
+    // The rule file is created below.
   }
 
   if (existing.includes(rule.sectionMarker)) {
     const regex = new RegExp(`${escapedMarker}\\n[\\s\\S]*?${escapedMarker}`);
-    const updated = existing.replace(regex, section);
-    await writeFile(filePath, updated, "utf-8");
+    await writeFile(filePath, existing.replace(regex, section), "utf-8");
     return { status: "updated", path: filePath };
   }
 
   const separator =
     existing.length > 0 && !existing.endsWith("\n") ? "\n\n" : existing.length > 0 ? "\n" : "";
   await mkdir(dirname(filePath), { recursive: true });
-  await writeFile(filePath, existing + separator + section + "\n", "utf-8");
+  await writeFile(filePath, `${existing}${separator}${section}\n`, "utf-8");
   return { status: "installed", path: filePath };
-}
-
-/**
- * For stdio transport, preserve an existing `@upstash/context7-mcp` invocation
- * (e.g., `@upstash/context7-mcp@latest` or a user-pinned version) and only
- * swap the `--api-key` value. Falls back to the agent's canonical shape when
- * no existing stdio entry is detected. HTTP transport always uses the
- * canonical shape.
- */
-function resolveEntryToWrite(
-  agent: ReturnType<typeof getAgent>,
-  auth: AuthOptions,
-  transport: Transport,
-  existingEntry: Record<string, unknown> | undefined
-): Record<string, unknown> {
-  if (transport === "stdio" && existingEntry && isStdioContext7Entry(existingEntry)) {
-    const apiKey = auth.mode === "api-key" ? auth.apiKey : undefined;
-    return patchStdioApiKey(existingEntry, apiKey);
-  }
-  return agent.mcp.buildEntry(auth, transport);
 }
 
 async function setupAgent(
   agentName: SetupAgent,
-  auth: AuthOptions,
-  transport: Transport,
+  auth: HttpAuthOptions,
   scope: Scope
 ): Promise<{
   agent: string;
@@ -301,247 +175,89 @@ async function setupAgent(
   mcpPath: string;
   ruleStatus: string;
   rulePath: string;
-  skillStatus: string;
-  skillPath: string;
 }> {
   const agent = getAgent(agentName);
-
-  const mcpCandidates =
+  const candidates =
     scope === "global" || agent.mcp.projectPaths.length === 0
       ? agent.mcp.globalPaths
-      : agent.mcp.projectPaths.map((p) => join(process.cwd(), p));
-  const mcpPath = await resolveMcpPath(mcpCandidates);
+      : agent.mcp.projectPaths.map((path) => join(process.cwd(), path));
+  const mcpPath = await resolveMcpPath(candidates);
+  const entry = agent.mcp.buildEntry(auth);
 
   let mcpStatus: string;
   try {
     if (mcpPath.endsWith(".toml")) {
-      const existingTomlEntry =
-        transport === "stdio" ? await readTomlServerEntry(mcpPath, "context7") : undefined;
-      const entry = resolveEntryToWrite(agent, auth, transport, existingTomlEntry);
-      const { alreadyExists } = await appendTomlServer(mcpPath, "context7", entry);
-      mcpStatus = alreadyExists
-        ? `reconfigured with ${AUTH_MODE_LABELS[auth.mode]}`
-        : `configured with ${AUTH_MODE_LABELS[auth.mode]}`;
+      const { alreadyExists } = await appendTomlServer(mcpPath, "genrtl", entry);
+      mcpStatus = alreadyExists ? "reconfigured" : "configured";
     } else {
       const existing = await readJsonConfig(mcpPath);
-      const existingJsonEntry =
-        transport === "stdio"
-          ? getJsonServerEntry(existing, agent.mcp.configKey, "context7")
-          : undefined;
-      const entry = resolveEntryToWrite(agent, auth, transport, existingJsonEntry);
       const { config, alreadyExists } = mergeServerEntry(
         existing,
         agent.mcp.configKey,
-        "context7",
+        "genrtl",
         entry
       );
-      mcpStatus = alreadyExists
-        ? `reconfigured with ${AUTH_MODE_LABELS[auth.mode]}`
-        : `configured with ${AUTH_MODE_LABELS[auth.mode]}`;
       await writeJsonConfig(mcpPath, config);
+      mcpStatus = alreadyExists ? "reconfigured" : "configured";
     }
-  } catch (err) {
-    mcpStatus = `failed: ${err instanceof Error ? err.message : String(err)}`;
+  } catch (error) {
+    mcpStatus = `failed: ${error instanceof Error ? error.message : String(error)}`;
   }
 
   let ruleStatus: string;
-  let rulePath: string;
+  let rulePath = "";
   try {
-    const result = await installRule(agentName, "mcp", scope);
+    const result = await installRule(agentName, scope);
     ruleStatus = result.status;
     rulePath = result.path;
-  } catch (err) {
-    ruleStatus = `failed: ${err instanceof Error ? err.message : String(err)}`;
-    rulePath = "";
+  } catch (error) {
+    ruleStatus = `failed: ${error instanceof Error ? error.message : String(error)}`;
   }
 
-  const skillDir =
-    scope === "global"
-      ? agent.skill.dir("global")
-      : join(process.cwd(), agent.skill.dir("project"));
-  const skillPath = join(skillDir, agent.skill.name, "SKILL.md");
-
-  let skillStatus: string;
-  try {
-    const downloadData = await downloadSkill("/upstash/context7", agent.skill.name);
-    if (downloadData.error || downloadData.files.length === 0) {
-      throw new Error(downloadData.error || "no files");
-    }
-    await installSkillFiles(agent.skill.name, downloadData.files, skillDir);
-    skillStatus = "installed";
-  } catch (err) {
-    skillStatus = `failed: ${err instanceof Error ? err.message : String(err)}`;
-  }
-
-  return {
-    agent: agent.displayName,
-    mcpStatus,
-    mcpPath,
-    ruleStatus,
-    rulePath,
-    skillStatus,
-    skillPath,
-  };
-}
-
-async function setupMcp(agents: SetupAgent[], options: SetupOptions, scope: Scope): Promise<void> {
-  const transport = resolveTransport(options);
-  if (transport === "stdio" && options.oauth) {
-    log.error("--stdio is incompatible with --oauth (OAuth uses the hosted HTTP endpoint).");
-    return;
-  }
-
-  const auth = await resolveAuth(options);
-  if (!auth) {
-    log.warn("Setup cancelled");
-    return;
-  }
-
-  log.blank();
-  const spinner = ora("Setting up Context7...").start();
-
-  const results = [];
-  for (const agentName of agents) {
-    spinner.text = `Setting up ${getAgent(agentName).displayName}...`;
-    results.push(await setupAgent(agentName, auth, transport, scope));
-  }
-
-  spinner.succeed("Context7 setup complete");
-
-  log.blank();
-  for (const r of results) {
-    log.plain(`  ${pc.bold(r.agent)}`);
-    const mcpIcon =
-      r.mcpStatus.startsWith("configured") || r.mcpStatus.startsWith("reconfigured")
-        ? pc.green("+")
-        : pc.dim("~");
-    log.plain(`    ${mcpIcon} MCP server ${r.mcpStatus}`);
-    log.plain(`      ${pc.dim(r.mcpPath)}`);
-    const ruleIcon = r.ruleStatus === "installed" ? pc.green("+") : pc.dim("~");
-    log.plain(`    ${ruleIcon} Rule ${r.ruleStatus}`);
-    log.plain(`      ${pc.dim(r.rulePath)}`);
-    const skillIcon = r.skillStatus === "installed" ? pc.green("+") : pc.dim("~");
-    log.plain(`    ${skillIcon} Skill ${r.skillStatus}`);
-    log.plain(`      ${pc.dim(r.skillPath)}`);
-    if (r.skillStatus.includes("EACCES")) {
-      log.plain(
-        `      ${pc.yellow("tip:")} fix permissions with: ${pc.cyan(`sudo chown -R $(whoami) ${dirname(dirname(r.skillPath))}`)}`
-      );
-    }
-  }
-  log.blank();
-
-  trackEvent("setup", { agents, scope, authMode: auth.mode });
-  trackEvent("install", { skills: ["/upstash/context7/context7-mcp"], ides: agents });
-}
-
-async function setupCliAgent(
-  agentName: SetupAgent,
-  scope: Scope,
-  downloadData: { files: Array<{ path: string; content: string }> }
-): Promise<{ skillPath: string; skillStatus: string; rulePath: string; ruleStatus: string }> {
-  const agent = getAgent(agentName);
-
-  const skillDir =
-    scope === "global"
-      ? agent.skill.dir("global")
-      : join(process.cwd(), agent.skill.dir("project"));
-  let skillStatus: string;
-  try {
-    const files = customizeSkillFilesForAgent(agentName, "find-docs", downloadData.files);
-    await installSkillFiles("find-docs", files, skillDir);
-    skillStatus = "installed";
-  } catch (err) {
-    skillStatus = `failed: ${err instanceof Error ? err.message : String(err)}`;
-  }
-  const skillPath = join(skillDir, "find-docs");
-
-  let ruleStatus: string;
-  let rulePath: string;
-  try {
-    const result = await installRule(agentName, "cli", scope);
-    ruleStatus = result.status;
-    rulePath = result.path;
-  } catch (err) {
-    ruleStatus = `failed: ${err instanceof Error ? err.message : String(err)}`;
-    rulePath = "";
-  }
-
-  return { skillPath, skillStatus, rulePath, ruleStatus };
-}
-
-async function setupCli(options: SetupOptions): Promise<void> {
-  await resolveCliAuth(options.apiKey);
-
-  const scope: Scope = options.project ? "project" : "global";
-  const agents = await resolveAgents(options, scope);
-  if (agents.length === 0) return;
-
-  log.blank();
-  const spinner = ora("Downloading find-docs skill...").start();
-
-  const downloadData = await downloadSkill("/upstash/context7", "find-docs");
-  if (downloadData.error || downloadData.files.length === 0) {
-    spinner.fail(`Failed to download find-docs skill: ${downloadData.error || "no files"}`);
-    return;
-  }
-
-  spinner.succeed("Downloaded find-docs skill");
-
-  const installSpinner = ora("Installing...").start();
-  const results: Array<{
-    agent: string;
-    skillPath: string;
-    skillStatus: string;
-    rulePath: string;
-    ruleStatus: string;
-  }> = [];
-
-  for (const agentName of agents) {
-    installSpinner.text = `Setting up ${getAgent(agentName).displayName}...`;
-    const r = await setupCliAgent(agentName, scope, downloadData);
-    results.push({ agent: getAgent(agentName).displayName, ...r });
-  }
-
-  installSpinner.succeed("Context7 CLI setup complete");
-
-  log.blank();
-  for (const r of results) {
-    log.plain(`  ${pc.bold(r.agent)}`);
-    const skillIcon = r.skillStatus === "installed" ? pc.green("+") : pc.dim("~");
-    log.plain(`    ${skillIcon} Skill ${r.skillStatus}`);
-    log.plain(`      ${pc.dim(r.skillPath)}`);
-    if (r.skillStatus.includes("EACCES")) {
-      log.plain(
-        `      ${pc.yellow("tip:")} fix permissions with: ${pc.cyan(`sudo chown -R $(whoami) ${dirname(dirname(r.skillPath))}`)}`
-      );
-    }
-    const ruleIcon =
-      r.ruleStatus === "installed" || r.ruleStatus === "updated" ? pc.green("+") : pc.dim("~");
-    log.plain(`    ${ruleIcon} Rule ${r.ruleStatus}`);
-    log.plain(`      ${pc.dim(r.rulePath)}`);
-  }
-  log.blank();
-
-  trackEvent("setup", { mode: "cli" });
-  trackEvent("install", { skills: ["/upstash/context7/find-docs"], ides: agents });
+  return { agent: agent.displayName, mcpStatus, mcpPath, ruleStatus, rulePath };
 }
 
 async function setupCommand(options: SetupOptions): Promise<void> {
   trackEvent("command", { name: "setup" });
 
-  try {
-    const mode = await resolveMode(options);
-    if (mode === "mcp") {
-      const scope: Scope = options.project ? "project" : "global";
-      const agents = await resolveAgents(options, scope);
-      if (agents.length === 0) return;
-      await setupMcp(agents, options, scope);
-    } else {
-      await setupCli(options);
-    }
-  } catch (err) {
-    if (err instanceof Error && err.name === "ExitPromptError") process.exit(0);
-    throw err;
+  const auth = resolveSetupAuth(options);
+  if (!auth) {
+    log.error("Set GRTL_API_KEY or pass --api-key before running setup.");
+    process.exitCode = 1;
+    return;
   }
+
+  const scope: Scope = options.project ? "project" : "global";
+  const agents = await resolveAgents(options, scope);
+  if (agents.length === 0) return;
+
+  const spinner = ora("Configuring GenRTL MCP...").start();
+  const results = [];
+
+  for (const agentName of agents) {
+    spinner.text = `Configuring ${getAgent(agentName).displayName}...`;
+    results.push(await setupAgent(agentName, auth, scope));
+  }
+
+  const failed = results.some(
+    (result) => result.mcpStatus.startsWith("failed") || result.ruleStatus.startsWith("failed")
+  );
+  if (failed) {
+    spinner.warn("GenRTL setup completed with errors");
+    process.exitCode = 1;
+  } else {
+    spinner.succeed("GenRTL setup complete");
+  }
+
+  log.blank();
+  for (const result of results) {
+    log.plain(`  ${pc.bold(result.agent)}`);
+    log.plain(`    ${pc.green("+")} MCP server ${result.mcpStatus}`);
+    log.plain(`      ${pc.dim(result.mcpPath)}`);
+    log.plain(`    ${pc.green("+")} Rule ${result.ruleStatus}`);
+    log.plain(`      ${pc.dim(result.rulePath)}`);
+  }
+  log.blank();
+
+  trackEvent("setup", { agents, scope, authMode: "api-key" });
 }

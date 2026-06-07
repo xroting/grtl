@@ -1,0 +1,13 @@
+{
+  "name": "genrtl",
+  "version": "1.0.0",
+  "description": "Upstash GenRTL MCP server for up-to-date documentation lookup. Pull version-specific documentation and code examples directly from source repositories into your LLM context.",
+  "author": {
+    "name": "GenRTL",
+    "email": "genrtl@upstash.com",
+    "url": "https://genrtl.com"
+  },
+  "keywords": ["documentation", "mcp", "genrtl", "libraries", "frameworks"],
+  "logo": "https://genrtl.com/brand/genrtl-icon-green.svg",
+  "primaryColor": "#059669"
+}

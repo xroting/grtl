@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Context7 MCP",
+  "name": "GenRTL MCP",
   "description": "Up-to-date code docs for any prompt.",
   "colors": {
     "primary": "#10B981",
@@ -134,7 +134,7 @@
               {
                 "group": "Agents",
                 "pages": [
-                  "agentic-tools/ai-sdk/agents/context7-agent"
+                  "agentic-tools/ai-sdk/agents/genrtl-agent"
                 ]
               }
             ]
@@ -172,30 +172,30 @@
   "logo": {
     "light": "/public/logo/logo.svg",
     "dark": "/public/logo/logo-dark.svg",
-    "href": "https://context7.com"
+    "href": "https://genrtl.com"
   },
   "favicon": "/public/favicon.ico",
   "navbar": {
     "links": [
       {
         "label": "Contact",
-        "href": "https://context7.com/contact"
+        "href": "https://genrtl.com/contact"
       },
       {
         "label": "GitHub",
-        "href": "https://github.com/upstash/context7"
+        "href": "https://github.com/upstash/genrtl"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://context7.com"
+      "href": "https://genrtl.com"
     }
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/context7ai",
-      "github": "https://github.com/upstash/context7",
+      "x": "https://x.com/genrtlai",
+      "github": "https://github.com/upstash/genrtl",
       "discord": "https://upstash.com/discord"
     },
     "links": [
@@ -204,15 +204,15 @@
         "items": [
           {
             "label": "Website",
-            "href": "https://context7.com"
+            "href": "https://genrtl.com"
           },
           {
             "label": "Submit a Library",
-            "href": "https://context7.com/add-library"
+            "href": "https://genrtl.com/add-library"
           },
           {
             "label": "Dashboard",
-            "href": "https://context7.com/dashboard"
+            "href": "https://genrtl.com/dashboard"
           }
         ]
       },
@@ -221,7 +221,7 @@
         "items": [
           {
             "label": "GitHub",
-            "href": "https://github.com/upstash/context7"
+            "href": "https://github.com/upstash/genrtl"
           },
           {
             "label": "Discord",
@@ -229,7 +229,7 @@
           },
           {
             "label": "Twitter",
-            "href": "https://x.com/context7ai"
+            "href": "https://x.com/genrtlai"
           }
         ]
       }

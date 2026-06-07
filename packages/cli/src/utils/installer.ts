@@ -45,5 +45,5 @@ export async function symlinkSkill(
   } catch {}
 
   await mkdir(skillsRoot, { recursive: true });
-  await symlink(sourcePath, targetPath);
+  await symlink(sourcePath, targetPath, process.platform === "win32" ? "junction" : "dir");
 }

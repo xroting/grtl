@@ -33,7 +33,7 @@ const mockOpen = vi.fn().mockResolvedValue(undefined);
 vi.mock("open", () => ({ default: (...args: unknown[]) => mockOpen(...args) }));
 
 vi.mock("../constants.js", () => ({ CLI_CLIENT_ID: "test-client-id" }));
-vi.mock("../utils/api.js", () => ({ getBaseUrl: () => "https://test.context7.com" }));
+vi.mock("../utils/api.js", () => ({ getBaseUrl: () => "https://test.genrtl.com" }));
 
 import { registerAuthCommands, performLogin } from "../commands/auth.js";
 import { trackEvent } from "../utils/tracking.js";
@@ -191,13 +191,13 @@ describe("performLogin", () => {
     mockStartDeviceAuthorization.mockResolvedValue(authorization);
     mockPollDeviceToken.mockResolvedValue({
       status: "approved",
-      tokens: { access_token: "ctx7sk-x", token_type: "bearer" },
+      tokens: { access_token: "grtlsk-x", token_type: "bearer" },
     });
 
     const result = await performLogin(false);
-    expect(result).toBe("ctx7sk-x");
+    expect(result).toBe("grtlsk-x");
     expect(mockSaveTokens).toHaveBeenCalledWith({
-      access_token: "ctx7sk-x",
+      access_token: "grtlsk-x",
       token_type: "bearer",
     });
   });

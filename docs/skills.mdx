@@ -1,11 +1,11 @@
 ---
 title: Skills
-description: Install, search, and manage AI coding assistant skills from the Context7 registry
+description: Install, search, and manage AI coding assistant skills from the GenRTL registry
 ---
 
 Skills are reusable prompt templates that extend the capabilities of your AI coding assistants. They allow you to share and install common workflows like React best practices, web design guidelines, PDF processing, and more across projects and teams.
 
-Context7 maintains a registry of skills at [context7.com/skills](https://context7.com/skills) that can be installed directly into your AI coding assistant with a single command.
+GenRTL maintains a registry of skills at [genrtl.com/skills](https://genrtl.com/skills) that can be installed directly into your AI coding assistant with a single command.
 
 ## What Are Skills?
 
@@ -28,9 +28,9 @@ Skills follow the [Agent Skills](https://agentskills.io) open standard — a spe
 | `seo-audit` | Lets Claude analyze pages for SEO issues and suggest improvements |
 | `browser-use` | Allows Claude to control browsers for testing and automation |
 
-## The Context7 Skills Registry
+## The GenRTL Skills Registry
 
-The [Context7 Skills Registry](https://context7.com/skills) is a searchable marketplace of skills indexed from GitHub repositories. Each skill is identified by its repository path (e.g., `/anthropics/skills`) and skill name.
+The [GenRTL Skills Registry](https://genrtl.com/skills) is a searchable marketplace of skills indexed from GitHub repositories. Each skill is identified by its repository path (e.g., `/anthropics/skills`) and skill name.
 
 When browsing or searching skills, you'll see:
 
@@ -43,48 +43,48 @@ When browsing or searching skills, you'll see:
 
 ### CLI
 
-You can interact with the registry directly from your terminal using the `ctx7` CLI. No configuration needed — most commands work without authentication.
+You can interact with the registry directly from your terminal using the `grtl` CLI. No configuration needed — most commands work without authentication.
 
 **Discover and install skills:**
 
 ```bash
 # Search the registry by keyword
-ctx7 skills search pdf
-ctx7 skills search "react testing"
+grtl skills search pdf
+grtl skills search "react testing"
 
 # Browse all skills in a specific repository
-ctx7 skills info /anthropics/skills
+grtl skills info /anthropics/skills
 
 # Install a skill interactively (prompts you to pick)
-ctx7 skills install /anthropics/skills
+grtl skills install /anthropics/skills
 
 # Install a specific skill by name
-ctx7 skills install /anthropics/skills pdf
+grtl skills install /anthropics/skills pdf
 
 # Get suggestions based on your project's dependencies
-ctx7 skills suggest
+grtl skills suggest
 ```
 
 **Manage installed skills:**
 
 ```bash
 # List skills installed in the current project
-ctx7 skills list
+grtl skills list
 
 # List skills installed for a specific client
-ctx7 skills list --claude
-ctx7 skills list --cursor
+grtl skills list --claude
+grtl skills list --cursor
 
 # Remove a skill
-ctx7 skills remove pdf
+grtl skills remove pdf
 ```
 
 **Generate a custom skill with AI:**
 
 ```bash
 # Requires login — opens an interactive generation flow
-ctx7 login
-ctx7 skills generate
+grtl login
+grtl skills generate
 ```
 
 All install commands accept `--claude`, `--cursor`, `--universal`, `--all-agents`, and `--global` flags to target a specific client or install location. Use `--yes` to skip confirmation prompts for non-interactive installs.
@@ -93,7 +93,7 @@ See the [CLI reference](/clients/cli#skills) for the full flag reference and exa
 
 ### Trust & Security
 
-Context7 vets every skill in the registry before it reaches you — both through automated scanning and community-driven quality signals.
+GenRTL vets every skill in the registry before it reaches you — both through automated scanning and community-driven quality signals.
 
 #### Trust Scores
 
@@ -109,7 +109,7 @@ Higher scores indicate skills from reputable sources with community validation. 
 
 #### Security Features
 
-Context7 automatically scans skills for potential security issues before they appear in the registry:
+GenRTL automatically scans skills for potential security issues before they appear in the registry:
 
 - **Prompt injection detection**: Skills containing potentially malicious instructions are blocked from installation
 - **Blocked skill warnings**: When viewing a repository, you'll see how many skills were blocked due to security concerns
@@ -166,12 +166,12 @@ The CLI automatically detects installed AI coding assistants and offers to insta
 
 ## Managing Skills
 
-Use the `ctx7` CLI to install, search, generate, and remove skills. See the [CLI reference](/clients/cli#skills) for all commands.
+Use the `grtl` CLI to install, search, generate, and remove skills. See the [CLI reference](/clients/cli#skills) for all commands.
 
 ```bash
 # Quick start
-npx ctx7 skills search pdf
-npx ctx7 skills install /anthropics/skills pdf
+npx grtl skills search pdf
+npx grtl skills install /anthropics/skills pdf
 ```
 
 ## Troubleshooting
@@ -212,17 +212,17 @@ mkdir -p .cursor
 If login fails or tokens expire:
 
 ```bash
-ctx7 logout
-ctx7 login
+grtl logout
+grtl login
 ```
 
 ## Next Steps
 
 <CardGroup cols={2}>
   <Card title="CLI Reference" icon="terminal" href="/clients/cli">
-    All ctx7 commands for installing, searching, and generating skills
+    All grtl commands for installing, searching, and generating skills
   </Card>
-  <Card title="Browse Skills" icon="magnifying-glass" href="https://context7.com/skills">
+  <Card title="Browse Skills" icon="magnifying-glass" href="https://genrtl.com/skills">
     Explore the skills registry
   </Card>
   <Card title="Agent Skills Spec" icon="code" href="https://agentskills.io">

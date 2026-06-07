@@ -31,7 +31,7 @@ beforeEach(async () => {
   });
   vi.spyOn(console, "error").mockImplementation(() => {});
   originalCwd = process.cwd();
-  const rawTempDir = join(tmpdir(), `ctx7-skills-list-${Date.now()}`);
+  const rawTempDir = join(tmpdir(), `grtl-skills-list-${Date.now()}`);
   await mkdir(rawTempDir, { recursive: true });
   tempDir = await realpath(rawTempDir);
   process.chdir(tempDir);

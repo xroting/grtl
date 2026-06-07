@@ -1,9 +1,9 @@
 /**
- * Configuration for Context7 tools
+ * Configuration for GenRTL tools
  */
-export interface Context7ToolsConfig {
+export interface GenRTLToolsConfig {
   /**
-   * Context7 API key. If not provided, will use CONTEXT7_API_KEY environment variable.
+   * GenRTL API key. If not provided, will use GENRTL_API_KEY environment variable.
    */
   apiKey?: string;
 }

@@ -1,17 +1,17 @@
 ---
 title: Developer Guide
-description: Set up and run Context7 MCP locally for development
+description: Set up and run GenRTL MCP locally for development
 ---
 
-This guide covers how to set up the Context7 MCP server locally for development and testing.
+This guide covers how to set up the GenRTL MCP server locally for development and testing.
 
 ## Getting Started
 
 Clone the project and install dependencies:
 
 ```bash
-git clone https://github.com/upstash/context7.git
-cd context7
+git clone https://github.com/upstash/genrtl.git
+cd genrtl
 pnpm i
 ```
 
@@ -29,16 +29,16 @@ node packages/mcp/dist/index.js
 
 ## CLI Arguments
 
-`context7-mcp` accepts the following CLI flags:
+`genrtl-mcp` accepts the following CLI flags:
 
 | Flag | Description | Default |
 |------|-------------|---------|
 | `--transport <stdio\|http>` | Transport to use. Use `http` for remote HTTP server or `stdio` for local integration. | `stdio` |
 | `--port <number>` | Port to listen on when using `http` transport. | `3000` |
-| `--api-key <key>` | API key for authentication (or set `CONTEXT7_API_KEY` env var). | - |
+| `--api-key <key>` | API key for authentication (or set `GENRTL_API_KEY` env var). | - |
 
 <Note>
-  Get your API key by creating an account at [context7.com/dashboard](https://context7.com/dashboard).
+  Get your API key by creating an account at [genrtl.com/dashboard](https://genrtl.com/dashboard).
 </Note>
 
 ### Examples
@@ -57,7 +57,7 @@ node packages/mcp/dist/index.js --transport stdio --api-key YOUR_API_KEY
 
 ## Environment Variables
 
-You can use the `CONTEXT7_API_KEY` environment variable instead of passing the `--api-key` flag. This is useful for:
+You can use the `GENRTL_API_KEY` environment variable instead of passing the `--api-key` flag. This is useful for:
 
 - Storing API keys securely in `.env` files
 - Integration with MCP server setups that use dotenv
@@ -71,7 +71,7 @@ You can use the `CONTEXT7_API_KEY` environment variable instead of passing the `
 
 ```bash
 # .env
-CONTEXT7_API_KEY=your_api_key_here
+GENRTL_API_KEY=your_api_key_here
 ```
 
 ### MCP Configuration with Environment Variable
@@ -79,11 +79,11 @@ CONTEXT7_API_KEY=your_api_key_here
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp"],
+      "args": ["-y", "@upstash/genrtl-mcp"],
       "env": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+        "GENRTL_API_KEY": "YOUR_API_KEY"
       }
     }
   }
@@ -97,9 +97,9 @@ When developing locally, use this configuration to run from source:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["tsx", "/path/to/folder/context7/src/index.ts", "--api-key", "YOUR_API_KEY"]
+      "args": ["tsx", "/path/to/folder/genrtl/src/index.ts", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -110,7 +110,7 @@ When developing locally, use this configuration to run from source:
 Test your setup using the MCP Inspector:
 
 ```bash
-npx -y @modelcontextprotocol/inspector npx @upstash/context7-mcp
+npx -y @modelcontextprotocol/inspector npx @upstash/genrtl-mcp
 ```
 
-This opens an interactive inspector to verify Context7 tools are working correctly.
+This opens an interactive inspector to verify GenRTL tools are working correctly.

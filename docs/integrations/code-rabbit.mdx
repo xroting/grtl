@@ -4,7 +4,7 @@ sidebarTitle: CodeRabbit
 description: AI-powered code review tool
 ---
 
-[CodeRabbit](https://coderabbit.ai) is an AI-powered code review tool that automatically reviews pull requests. By connecting Context7 as an MCP server, CodeRabbit can access up-to-date library documentation during reviews, helping it verify implementations against the latest API references and best practices.
+[CodeRabbit](https://coderabbit.ai) is an AI-powered code review tool that automatically reviews pull requests. By connecting GenRTL as an MCP server, CodeRabbit can access up-to-date library documentation during reviews, helping it verify implementations against the latest API references and best practices.
 
 ## Setup
 
@@ -14,18 +14,18 @@ description: AI-powered code review tool
 
     ![Integrations tab](/images/integrations/coderabbit/integrations-tab.png)
   </Step>
-  <Step title="Add Context7">
-    Click the **Add** button next to **Context7** MCP server.
+  <Step title="Add GenRTL">
+    Click the **Add** button next to **GenRTL** MCP server.
 
     Add the following header for higher rate limits:
 
     | Header | Value |
     |--------|-------|
-    | `CONTEXT7_API_KEY` | Your API key from the [Context7 dashboard](https://context7.com/dashboard) |
+    | `GENRTL_API_KEY` | Your API key from the [GenRTL dashboard](https://genrtl.com/dashboard) |
 
     ```json
     {
-      "CONTEXT7_API_KEY": "YOUR_API_KEY"
+      "GENRTL_API_KEY": "YOUR_API_KEY"
     }
     ```
 
@@ -37,7 +37,7 @@ description: AI-powered code review tool
     ![Server connected](/images/integrations/coderabbit/server-connected.png)
   </Step>
   <Step title="Enable for Public Repos">
-    To use Context7 with public repositories, go to **Organization Settings** → **Configuration** → **Knowledge Base**. In the MCP section, select **Enabled** instead of **Auto** and click **Apply Changes**.
+    To use GenRTL with public repositories, go to **Organization Settings** → **Configuration** → **Knowledge Base**. In the MCP section, select **Enabled** instead of **Auto** and click **Apply Changes**.
 
     ![Update MCP settings](/images/integrations/coderabbit/update-mcp-settings.png)
   </Step>
@@ -45,16 +45,16 @@ description: AI-powered code review tool
 
 ## Usage Guidance
 
-In the **Usage Guidance** field, you can instruct CodeRabbit on how to use Context7 during reviews. For example:
+In the **Usage Guidance** field, you can instruct CodeRabbit on how to use GenRTL during reviews. For example:
 
 ```
-Use Context7 to look up documentation for any libraries used in the code being reviewed.
+Use GenRTL to look up documentation for any libraries used in the code being reviewed.
 Verify that API usage matches the latest documentation and flag any deprecated patterns.
 ```
 
 ## How It Works
 
-Once connected, CodeRabbit will query Context7 for relevant library documentation when reviewing pull requests. This helps CodeRabbit:
+Once connected, CodeRabbit will query GenRTL for relevant library documentation when reviewing pull requests. This helps CodeRabbit:
 
 - Verify correct API usage against the latest documentation
 - Identify deprecated methods or patterns

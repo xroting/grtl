@@ -67,20 +67,20 @@ function plainLogOutput(): string[] {
 }
 
 describe("upgrade command", () => {
-  test("reports when ctx7 is already up to date", async () => {
+  test("reports when grtl is already up to date", async () => {
     checkForUpdates.mockResolvedValue({
       currentVersion: "0.3.13",
       latestVersion: "0.3.13",
       updateAvailable: false,
       installMethod: "npm-global",
       upgradePlan: {
-        displayCommand: "npm install -g ctx7@latest",
+        displayCommand: "npm install -g grtl@latest",
       },
     });
 
     await runCommand("upgrade");
 
-    expect(plainLogOutput().some((line) => line.includes("ctx7 is up to date"))).toBe(true);
+    expect(plainLogOutput().some((line) => line.includes("grtl is up to date"))).toBe(true);
     expect(trackEvent).toHaveBeenCalledWith("command", { name: "upgrade" });
   });
 
@@ -91,7 +91,7 @@ describe("upgrade command", () => {
       updateAvailable: true,
       installMethod: "npm-global",
       upgradePlan: {
-        displayCommand: "npm install -g ctx7@latest",
+        displayCommand: "npm install -g grtl@latest",
         canRun: true,
         needsExplicitVersion: false,
       },
@@ -100,7 +100,7 @@ describe("upgrade command", () => {
     await runCommand("upgrade", "--check");
 
     expect(plainLogOutput().some((line) => line.includes("Update available"))).toBe(true);
-    expect(plainLogOutput().some((line) => line.includes("npm install -g ctx7@latest"))).toBe(true);
+    expect(plainLogOutput().some((line) => line.includes("npm install -g grtl@latest"))).toBe(true);
     expect(spawn).not.toHaveBeenCalled();
   });
 
@@ -111,7 +111,7 @@ describe("upgrade command", () => {
       updateAvailable: true,
       installMethod: "npx",
       upgradePlan: {
-        displayCommand: "npx ctx7@latest <command>",
+        displayCommand: "npx grtl@latest <command>",
         canRun: false,
         needsExplicitVersion: true,
       },
@@ -120,7 +120,7 @@ describe("upgrade command", () => {
     await runCommand("upgrade");
 
     expect(plainLogOutput().some((line) => line.includes("ephemeral runner"))).toBe(true);
-    expect(plainLogOutput().some((line) => line.includes("npx ctx7@latest <command>"))).toBe(true);
+    expect(plainLogOutput().some((line) => line.includes("npx grtl@latest <command>"))).toBe(true);
     expect(spawn).not.toHaveBeenCalled();
   });
 
@@ -132,8 +132,8 @@ describe("upgrade command", () => {
       installMethod: "npm-global",
       upgradePlan: {
         command: "npm",
-        args: ["install", "-g", "ctx7@latest"],
-        displayCommand: "npm install -g ctx7@latest",
+        args: ["install", "-g", "grtl@latest"],
+        displayCommand: "npm install -g grtl@latest",
         canRun: true,
         needsExplicitVersion: false,
       },
@@ -143,7 +143,7 @@ describe("upgrade command", () => {
 
     expect(spawn).toHaveBeenCalledWith(
       "npm",
-      ["install", "-g", "ctx7@latest"],
+      ["install", "-g", "grtl@latest"],
       expect.objectContaining({ stdio: "inherit" })
     );
   });
@@ -151,13 +151,13 @@ describe("upgrade command", () => {
   test("falls back to getUpgradePlan when update check fails", async () => {
     checkForUpdates.mockResolvedValue(null);
     getUpgradePlan.mockReturnValue({
-      displayCommand: "npm install -g ctx7@latest",
+      displayCommand: "npm install -g grtl@latest",
     });
 
     await runCommand("upgrade", "--check");
 
     expect(plainLogOutput().some((line) => line.includes("Couldn't check for updates"))).toBe(true);
-    expect(plainLogOutput().some((line) => line.includes("npm install -g ctx7@latest"))).toBe(true);
+    expect(plainLogOutput().some((line) => line.includes("npm install -g grtl@latest"))).toBe(true);
   });
 
   test("shows retry guidance when the upgrade command fails", async () => {
@@ -174,8 +174,8 @@ describe("upgrade command", () => {
       installMethod: "npm-global",
       upgradePlan: {
         command: "npm",
-        args: ["install", "-g", "ctx7@latest"],
-        displayCommand: "npm install -g ctx7@latest",
+        args: ["install", "-g", "grtl@latest"],
+        displayCommand: "npm install -g grtl@latest",
         canRun: true,
         needsExplicitVersion: false,
         installMethod: "npm-global",
@@ -205,8 +205,8 @@ describe("upgrade command", () => {
       installMethod: "unknown",
       upgradePlan: {
         command: "npm",
-        args: ["install", "-g", "ctx7@latest"],
-        displayCommand: "npm install -g ctx7@latest",
+        args: ["install", "-g", "grtl@latest"],
+        displayCommand: "npm install -g grtl@latest",
         canRun: false,
         needsExplicitVersion: false,
         installMethod: "unknown",
@@ -216,7 +216,7 @@ describe("upgrade command", () => {
     await runCommand("upgrade", "--yes");
 
     expect(spawn).not.toHaveBeenCalled();
-    expect(plainLogOutput().some((line) => line.includes("Run npm install -g ctx7@latest"))).toBe(
+    expect(plainLogOutput().some((line) => line.includes("Run npm install -g grtl@latest"))).toBe(
       true
     );
   });
@@ -230,23 +230,23 @@ describe("pre-command upgrade notice", () => {
       updateAvailable: true,
       upgradePlan: {
         command: "npm",
-        args: ["install", "-g", "ctx7@latest"],
-        displayCommand: "npm install -g ctx7@latest",
+        args: ["install", "-g", "grtl@latest"],
+        displayCommand: "npm install -g grtl@latest",
         canRun: true,
         needsExplicitVersion: false,
       },
     });
     await maybeShowUpgradeNotice({
       actionName: "library",
-      argv: ["node", "ctx7", "library", "react"],
+      argv: ["node", "grtl", "library", "react"],
       isInteractive: true,
     });
 
     expect(plainLogOutput().some((line) => line.includes("Update available:"))).toBe(true);
-    expect(plainLogOutput().some((line) => line.includes("Run ctx7 upgrade to update now"))).toBe(
+    expect(plainLogOutput().some((line) => line.includes("Run grtl upgrade to update now"))).toBe(
       true
     );
-    expect(plainLogOutput().some((line) => line.includes("npm install -g ctx7@latest"))).toBe(true);
+    expect(plainLogOutput().some((line) => line.includes("npm install -g grtl@latest"))).toBe(true);
     expect(confirm).not.toHaveBeenCalled();
     expect(spawn).not.toHaveBeenCalled();
     expect(markUpdateNotificationShown).toHaveBeenCalledWith("0.3.13");
@@ -259,8 +259,8 @@ describe("pre-command upgrade notice", () => {
       updateAvailable: true,
       upgradePlan: {
         command: "npm",
-        args: ["install", "-g", "ctx7@latest"],
-        displayCommand: "npm install -g ctx7@latest",
+        args: ["install", "-g", "grtl@latest"],
+        displayCommand: "npm install -g grtl@latest",
         canRun: false,
         needsExplicitVersion: false,
       },
@@ -268,14 +268,14 @@ describe("pre-command upgrade notice", () => {
 
     await maybeShowUpgradeNotice({
       actionName: "library",
-      argv: ["node", "ctx7", "library", "react"],
+      argv: ["node", "grtl", "library", "react"],
       isInteractive: true,
     });
 
     expect(
-      plainLogOutput().some((line) => line.includes("Run ctx7 upgrade for update steps"))
+      plainLogOutput().some((line) => line.includes("Run grtl upgrade for update steps"))
     ).toBe(true);
-    expect(plainLogOutput().some((line) => line.includes("npm install -g ctx7@latest"))).toBe(true);
+    expect(plainLogOutput().some((line) => line.includes("npm install -g grtl@latest"))).toBe(true);
     expect(spawn).not.toHaveBeenCalled();
     expect(markUpdateNotificationShown).toHaveBeenCalledWith("0.3.13");
   });
@@ -286,7 +286,7 @@ describe("pre-command upgrade notice", () => {
       latestVersion: "0.3.13",
       updateAvailable: true,
       upgradePlan: {
-        displayCommand: "npx ctx7@latest <command>",
+        displayCommand: "npx grtl@latest <command>",
         canRun: false,
         needsExplicitVersion: true,
       },
@@ -294,14 +294,14 @@ describe("pre-command upgrade notice", () => {
 
     await maybeShowUpgradeNotice({
       actionName: "library",
-      argv: ["node", "ctx7", "library", "react"],
+      argv: ["node", "grtl", "library", "react"],
       isInteractive: true,
     });
 
-    expect(plainLogOutput().some((line) => line.includes("Use npx ctx7@latest <command>"))).toBe(
+    expect(plainLogOutput().some((line) => line.includes("Use npx grtl@latest <command>"))).toBe(
       true
     );
-    expect(plainLogOutput().some((line) => line.includes("ctx7 upgrade"))).toBe(false);
+    expect(plainLogOutput().some((line) => line.includes("grtl upgrade"))).toBe(false);
     expect(confirm).not.toHaveBeenCalled();
     expect(spawn).not.toHaveBeenCalled();
     expect(markUpdateNotificationShown).toHaveBeenCalledWith("0.3.13");
@@ -310,7 +310,7 @@ describe("pre-command upgrade notice", () => {
   test("skips notice for upgrade command", async () => {
     await maybeShowUpgradeNotice({
       actionName: "upgrade",
-      argv: ["node", "ctx7", "upgrade"],
+      argv: ["node", "grtl", "upgrade"],
       isInteractive: true,
     });
 

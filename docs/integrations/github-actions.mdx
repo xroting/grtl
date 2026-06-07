@@ -1,29 +1,29 @@
 ---
 title: GitHub Actions
 sidebarTitle: GitHub Actions
-description: Automatically refresh your Context7 library when your docs change
+description: Automatically refresh your GenRTL library when your docs change
 ---
 
-Keep your Context7 documentation in sync by triggering a refresh whenever you push to your main branch.
+Keep your GenRTL documentation in sync by triggering a refresh whenever you push to your main branch.
 
 ## Setup
 
 <Steps>
   <Step title="Get your API key">
-    Go to your [Context7 dashboard](https://context7.com/dashboard) and copy your API key.
+    Go to your [GenRTL dashboard](https://genrtl.com/dashboard) and copy your API key.
   </Step>
   <Step title="Add the API key as a repository secret">
     In your GitHub repository, go to **Settings** → **Secrets and variables** → **Actions** and add a new secret:
 
     | Name | Value |
     |------|-------|
-    | `CONTEXT7_API_KEY` | Your API key from the Context7 dashboard |
+    | `GENRTL_API_KEY` | Your API key from the GenRTL dashboard |
   </Step>
   <Step title="Create the workflow file">
-    Add the following file to your repository at `.github/workflows/context7-refresh.yml`:
+    Add the following file to your repository at `.github/workflows/genrtl-refresh.yml`:
 
     ```yaml
-    name: Refresh Context7 Docs
+    name: Refresh GenRTL Docs
 
     on:
       push:
@@ -34,45 +34,45 @@ Keep your Context7 documentation in sync by triggering a refresh whenever you pu
       refresh:
         runs-on: ubuntu-latest
         steps:
-          - name: Trigger Context7 Refresh
+          - name: Trigger GenRTL Refresh
             run: |
-              curl -s -X POST https://context7.com/api/v1/refresh \
+              curl -s -X POST https://genrtl.com/api/v1/refresh \
                 -H "Content-Type: application/json" \
-                -H "Authorization: Bearer ${{ secrets.CONTEXT7_API_KEY }}" \
+                -H "Authorization: Bearer ${{ secrets.GENRTL_API_KEY }}" \
                 -d '{"libraryName": "/${{ github.repository }}"}'
     ```
 
-    This uses `${{ github.repository }}` to automatically resolve to your repository's `owner/repo` (e.g., `vercel/next.js`). If your library identifier on Context7 differs from your GitHub repository name, replace it with the correct value (e.g., `/your-org/your-repo`).
+    This uses `${{ github.repository }}` to automatically resolve to your repository's `owner/repo` (e.g., `vercel/next.js`). If your library identifier on GenRTL differs from your GitHub repository name, replace it with the correct value (e.g., `/your-org/your-repo`).
   </Step>
 </Steps>
 
 ## Refreshing a Specific Branch
 
-To refresh a non-default branch, add the `branch` field to the request body. The `branch` value must match a branch name that already exists on your library in Context7.
+To refresh a non-default branch, add the `branch` field to the request body. The `branch` value must match a branch name that already exists on your library in GenRTL.
 
 ```yaml
-- name: Trigger Context7 Refresh
+- name: Trigger GenRTL Refresh
   run: |
-    curl -s -X POST https://context7.com/api/v1/refresh \
+    curl -s -X POST https://genrtl.com/api/v1/refresh \
       -H "Content-Type: application/json" \
-      -H "Authorization: Bearer ${{ secrets.CONTEXT7_API_KEY }}" \
+      -H "Authorization: Bearer ${{ secrets.GENRTL_API_KEY }}" \
       -d '{"libraryName": "/your-org/your-repo", "branch": "v2"}'
 ```
 
 <Note>
-  If the branch has not been added to your library on Context7, the refresh will fail with a `branch_not_found` error.
+  If the branch has not been added to your library on GenRTL, the refresh will fail with a `branch_not_found` error.
 </Note>
 
 ## Private Repositories
 
-For private repositories, include a `gitToken` so Context7 can access your code:
+For private repositories, include a `gitToken` so GenRTL can access your code:
 
 ```yaml
-- name: Trigger Context7 Refresh
+- name: Trigger GenRTL Refresh
   run: |
-    curl -s -X POST https://context7.com/api/v1/refresh \
+    curl -s -X POST https://genrtl.com/api/v1/refresh \
       -H "Content-Type: application/json" \
-      -H "Authorization: Bearer ${{ secrets.CONTEXT7_API_KEY }}" \
+      -H "Authorization: Bearer ${{ secrets.GENRTL_API_KEY }}" \
       -d '{"libraryName": "/your-org/your-repo", "gitToken": "${{ secrets.GIT_ACCESS_TOKEN }}"}'
 ```
 

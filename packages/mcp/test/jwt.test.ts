@@ -173,7 +173,7 @@ describe("validateJWT - Clerk path", () => {
     } as unknown as Awaited<ReturnType<typeof jose.jwtVerify>>);
 
     const { validateJWT } = await loadModule();
-    const result = await validateJWT(makeEntraToken({ iss: "https://clerk.context7.com" }));
+    const result = await validateJWT(makeEntraToken({ iss: "https://clerk.genrtl.com" }));
 
     expect(result.valid).toBe(true);
     expect(fetch).not.toHaveBeenCalled();
@@ -185,7 +185,7 @@ describe("validateJWT - Clerk path", () => {
     );
 
     const { validateJWT } = await loadModule();
-    const result = await validateJWT(makeEntraToken({ iss: "https://clerk.context7.com" }));
+    const result = await validateJWT(makeEntraToken({ iss: "https://clerk.genrtl.com" }));
 
     expect(result.valid).toBe(false);
     expect(result.error).toBe("Token expired");

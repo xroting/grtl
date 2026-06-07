@@ -1,12 +1,12 @@
 import { SearchResponse, ContextRequest, ContextResponse, ClientContext } from "./types.js";
 import { generateHeaders } from "./encryption.js";
 import { Agent, ProxyAgent, setGlobalDispatcher } from "undici";
-import { CONTEXT7_API_BASE_URL } from "./constants.js";
+import { GENRTL_API_BASE_URL } from "./constants.js";
 import { readFileSync } from "fs";
 import tls from "tls";
 
 /**
- * Parses error response from the Context7 API
+ * Parses error response from the GenRTL API
  * Extracts the server's error message, falling back to status-based messages if parsing fails
  * @param response The fetch Response object
  * @param apiKey Optional API key (used for fallback messages)
@@ -25,14 +25,14 @@ async function parseErrorResponse(response: Response, apiKey?: string): Promise<
   const status = response.status;
   if (status === 429) {
     return apiKey
-      ? "Rate limited or quota exceeded. Upgrade your plan at https://context7.com/plans for higher limits."
-      : "Rate limited or quota exceeded. Create a free API key at https://context7.com/dashboard for higher limits.";
+      ? "Rate limited or quota exceeded. Upgrade your plan at https://genrtl.com/plans for higher limits."
+      : "Rate limited or quota exceeded. Create a free API key at https://genrtl.com/dashboard for higher limits.";
   }
   if (status === 404) {
     return "The library you are trying to access does not exist. Please try with a different library ID.";
   }
   if (status === 401) {
-    return "Invalid API key. Please check your API key. API keys should start with 'ctx7sk' prefix.";
+    return "Invalid API key. Please check your API key. API keys should start with 'grtlsk' prefix.";
   }
   return `Request failed with status ${status}. Please try again later.`;
 }
@@ -61,7 +61,7 @@ export function loadCustomCACerts(customCACertsPath = CUSTOM_CA_CERTS): string[]
     return [...getDefaultCACertificates(), customCa];
   } catch (error) {
     console.error(
-      `[Context7] Failed to load custom CA certificates from ${customCACertsPath}:`,
+      `[GenRTL] Failed to load custom CA certificates from ${customCACertsPath}:`,
       error
     );
     return undefined;
@@ -79,7 +79,7 @@ if (PROXY_URL && !PROXY_URL.startsWith("$") && /^(http|https):\/\//i.test(PROXY_
     );
   } catch (error) {
     console.error(
-      `[Context7] Failed to configure proxy agent for provided proxy URL: ${PROXY_URL}:`,
+      `[GenRTL] Failed to configure proxy agent for provided proxy URL: ${PROXY_URL}:`,
       error
     );
   }
@@ -89,13 +89,13 @@ if (PROXY_URL && !PROXY_URL.startsWith("$") && /^(http|https):\/\//i.test(PROXY_
     try {
       setGlobalDispatcher(new Agent({ connect: { ca } }));
     } catch (error) {
-      console.error(`[Context7] Failed to configure custom CA certificates:`, error);
+      console.error(`[GenRTL] Failed to configure custom CA certificates:`, error);
     }
   }
 }
 
 function readPromptSignal(response: Response, context: ClientContext): void {
-  if (response.headers.get("X-Context7-Auth-Prompt") === "1") {
+  if (response.headers.get("X-GenRTL-Auth-Prompt") === "1") {
     context.shouldPrompt = true;
   }
 }
@@ -113,7 +113,7 @@ export async function searchLibraries(
   context: ClientContext = {}
 ): Promise<SearchResponse> {
   try {
-    const url = new URL(`${CONTEXT7_API_BASE_URL}/v2/libs/search`);
+    const url = new URL(`${GENRTL_API_BASE_URL}/v2/libs/search`);
     url.searchParams.set("query", query);
     url.searchParams.set("libraryName", libraryName);
 
@@ -146,7 +146,7 @@ export async function fetchLibraryContext(
   context: ClientContext = {}
 ): Promise<ContextResponse> {
   try {
-    const url = new URL(`${CONTEXT7_API_BASE_URL}/v2/context`);
+    const url = new URL(`${GENRTL_API_BASE_URL}/v2/context`);
     url.searchParams.set("query", request.query);
     url.searchParams.set("libraryId", request.libraryId);
 
@@ -163,7 +163,7 @@ export async function fetchLibraryContext(
     const text = await response.text();
     if (!text) {
       return {
-        data: "Documentation not found or not finalized for this library. This might have happened because you used an invalid Context7-compatible library ID. To get a valid Context7-compatible library ID, use the 'resolve-library-id' with the package name you wish to retrieve documentation for.",
+        data: "Documentation not found or not finalized for this library. This might have happened because you used an invalid GenRTL-compatible library ID. To get a valid GenRTL-compatible library ID, use the 'resolve-library-id' with the package name you wish to retrieve documentation for.",
       };
     }
     return { data: text };

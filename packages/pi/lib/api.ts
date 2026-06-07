@@ -1,14 +1,14 @@
-// Adapted from @upstash/context7-mcp (packages/mcp/src/lib/api.ts) — kept
+// Adapted from @upstash/genrtl-mcp (packages/mcp/src/lib/api.ts) — kept
 // minimal for pi: no proxy/CA-cert handling (pi controls the HTTP runtime),
 // no per-request client context (pi passes through env). Keep wire format
 // and error messages aligned with MCP.
 
 import type { SearchResponse } from "./types";
 
-const BASE_URL = "https://context7.com/api";
+const BASE_URL = "https://genrtl.com/api";
 
 function authHeaders(): Record<string, string> {
-  const apiKey = process.env.CONTEXT7_API_KEY;
+  const apiKey = process.env.GENRTL_API_KEY;
   return apiKey ? { Authorization: `Bearer ${apiKey}` } : {};
 }
 
@@ -20,17 +20,17 @@ async function parseErrorResponse(response: Response): Promise<string> {
     // JSON parsing failed, fall through to status-based message
   }
 
-  const hasKey = Boolean(process.env.CONTEXT7_API_KEY);
+  const hasKey = Boolean(process.env.GENRTL_API_KEY);
   if (response.status === 429) {
     return hasKey
-      ? "Rate limited or quota exceeded. Upgrade your plan at https://context7.com/plans for higher limits."
-      : "Rate limited or quota exceeded. Create a free API key at https://context7.com/dashboard for higher limits.";
+      ? "Rate limited or quota exceeded. Upgrade your plan at https://genrtl.com/plans for higher limits."
+      : "Rate limited or quota exceeded. Create a free API key at https://genrtl.com/dashboard for higher limits.";
   }
   if (response.status === 404) {
     return "The library you are trying to access does not exist. Please try with a different library ID.";
   }
   if (response.status === 401) {
-    return "Invalid API key. Please check your API key. API keys should start with 'ctx7sk' prefix.";
+    return "Invalid API key. Please check your API key. API keys should start with 'grtlsk' prefix.";
   }
   return `Request failed with status ${response.status}. Please try again later.`;
 }
@@ -59,7 +59,7 @@ export async function fetchLibraryContext(query: string, libraryId: string): Pro
 
   const text = await response.text();
   if (!text) {
-    return "Documentation not found or not finalized for this library. This might have happened because you used an invalid Context7-compatible library ID. To get a valid Context7-compatible library ID, use the 'resolve-library-id' with the package name you wish to retrieve documentation for.";
+    return "Documentation not found or not finalized for this library. This might have happened because you used an invalid GenRTL-compatible library ID. To get a valid GenRTL-compatible library ID, use the 'resolve-library-id' with the package name you wish to retrieve documentation for.";
   }
   return text;
 }

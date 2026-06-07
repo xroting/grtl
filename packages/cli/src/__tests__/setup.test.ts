@@ -3,16 +3,16 @@ import { mkdir, readFile, writeFile, rm } from "fs/promises";
 import { join } from "path";
 import { tmpdir } from "os";
 
-const MOCK_MCP_RULE = "Use Context7 MCP to fetch docs.\n";
-const MOCK_CLI_RULE = "Use the `ctx7` CLI to fetch docs.\n";
+const MOCK_MCP_RULE = "Use GenRTL MCP to fetch docs.\n";
+const MOCK_CLI_RULE = "Use the `grtl` CLI to fetch docs.\n";
 
 vi.stubGlobal(
   "fetch",
   vi.fn((url: string) => {
-    if (url.includes("context7-mcp.md")) {
+    if (url.includes("genrtl-mcp.md")) {
       return Promise.resolve({ ok: true, text: () => Promise.resolve(MOCK_MCP_RULE) });
     }
-    if (url.includes("context7-cli.md")) {
+    if (url.includes("genrtl-cli.md")) {
       return Promise.resolve({ ok: true, text: () => Promise.resolve(MOCK_CLI_RULE) });
     }
     return Promise.resolve({ ok: false });
@@ -31,7 +31,7 @@ import {
   appendTomlServer,
   removeTomlServer,
   resolveMcpPath,
-  isStdioContext7Entry,
+  isStdioGenRTLEntry,
   patchStdioApiKey,
 } from "../setup/mcp-writer.js";
 import { getAgent, ALL_AGENT_NAMES, type AuthOptions } from "../setup/agents.js";
@@ -59,15 +59,15 @@ describe("getRuleContent", () => {
       vi.fn(() => Promise.resolve({ ok: false }))
     );
     const content = await getRuleContent("mcp", "claude");
-    expect(content).toContain("Context7 MCP");
+    expect(content).toContain("GenRTL MCP");
     expect(content.length).toBeGreaterThan(100);
 
     vi.stubGlobal(
       "fetch",
       vi.fn((url: string) => {
-        if (url.includes("context7-mcp.md"))
+        if (url.includes("genrtl-mcp.md"))
           return Promise.resolve({ ok: true, text: () => Promise.resolve(MOCK_MCP_RULE) });
-        if (url.includes("context7-cli.md"))
+        if (url.includes("genrtl-cli.md"))
           return Promise.resolve({ ok: true, text: () => Promise.resolve(MOCK_CLI_RULE) });
         return Promise.resolve({ ok: false });
       })
@@ -77,12 +77,12 @@ describe("getRuleContent", () => {
 
 describe("mergeServerEntry", () => {
   test("adds server to empty config", () => {
-    const { config, alreadyExists } = mergeServerEntry({}, "mcpServers", "context7", {
-      url: "https://mcp.context7.com/mcp",
+    const { config, alreadyExists } = mergeServerEntry({}, "mcpServers", "genrtl", {
+      url: "https://www.genrtl.com/api/mcp",
     });
     expect(alreadyExists).toBe(false);
-    expect((config.mcpServers as Record<string, unknown>).context7).toEqual({
-      url: "https://mcp.context7.com/mcp",
+    expect((config.mcpServers as Record<string, unknown>).genrtl).toEqual({
+      url: "https://www.genrtl.com/api/mcp",
     });
   });
 
@@ -90,21 +90,21 @@ describe("mergeServerEntry", () => {
     const { config } = mergeServerEntry(
       { mcpServers: { other: { url: "https://other.com" } } },
       "mcpServers",
-      "context7",
-      { url: "https://mcp.context7.com/mcp" }
+      "genrtl",
+      { url: "https://www.genrtl.com/api/mcp" }
     );
     const servers = config.mcpServers as Record<string, unknown>;
-    expect(servers.context7).toBeTruthy();
+    expect(servers.genrtl).toBeTruthy();
     expect(servers.other).toEqual({ url: "https://other.com" });
   });
 
   test("overwrites existing server and flags alreadyExists", () => {
-    const existing = { mcpServers: { context7: { url: "https://old.com" } } };
-    const { config, alreadyExists } = mergeServerEntry(existing, "mcpServers", "context7", {
+    const existing = { mcpServers: { genrtl: { url: "https://old.com" } } };
+    const { config, alreadyExists } = mergeServerEntry(existing, "mcpServers", "genrtl", {
       url: "https://new.com",
     });
     expect(alreadyExists).toBe(true);
-    expect((config.mcpServers as Record<string, unknown>).context7).toEqual({
+    expect((config.mcpServers as Record<string, unknown>).genrtl).toEqual({
       url: "https://new.com",
     });
   });
@@ -112,18 +112,18 @@ describe("mergeServerEntry", () => {
   test("overwrites existing server entry with new url", () => {
     const existing = {
       mcpServers: {
-        context7: { url: "https://old.com", headers: { key: "old-key" } },
+        genrtl: { url: "https://old.com", headers: { key: "old-key" } },
         other: { url: "https://other.com" },
       },
     };
-    const { config, alreadyExists } = mergeServerEntry(existing, "mcpServers", "context7", {
-      url: "https://mcp.context7.com/mcp",
+    const { config, alreadyExists } = mergeServerEntry(existing, "mcpServers", "genrtl", {
+      url: "https://www.genrtl.com/api/mcp",
       headers: { key: "new-key" },
     });
     expect(alreadyExists).toBe(true);
     const servers = config.mcpServers as Record<string, unknown>;
-    expect(servers.context7).toEqual({
-      url: "https://mcp.context7.com/mcp",
+    expect(servers.genrtl).toEqual({
+      url: "https://www.genrtl.com/api/mcp",
       headers: { key: "new-key" },
     });
     expect(servers.other).toEqual({ url: "https://other.com" });
@@ -132,26 +132,26 @@ describe("mergeServerEntry", () => {
   test("overwrites existing server entry with different auth mode", () => {
     const existing = {
       mcpServers: {
-        context7: { url: "https://mcp.context7.com/mcp", headers: { "x-api-key": "old" } },
+        genrtl: { url: "https://www.genrtl.com/api/mcp", headers: { "x-api-key": "old" } },
       },
     };
-    const { config, alreadyExists } = mergeServerEntry(existing, "mcpServers", "context7", {
-      url: "https://mcp.context7.com/mcp",
+    const { config, alreadyExists } = mergeServerEntry(existing, "mcpServers", "genrtl", {
+      url: "https://www.genrtl.com/api/mcp",
     });
     expect(alreadyExists).toBe(true);
-    expect((config.mcpServers as Record<string, unknown>).context7).toEqual({
-      url: "https://mcp.context7.com/mcp",
+    expect((config.mcpServers as Record<string, unknown>).genrtl).toEqual({
+      url: "https://www.genrtl.com/api/mcp",
     });
   });
 
   test("works with opencode configKey 'mcp'", () => {
-    const { config } = mergeServerEntry({}, "mcp", "context7", {
+    const { config } = mergeServerEntry({}, "mcp", "genrtl", {
       type: "remote",
-      url: "https://mcp.context7.com/mcp",
+      url: "https://www.genrtl.com/api/mcp",
     });
-    expect((config.mcp as Record<string, unknown>).context7).toEqual({
+    expect((config.mcp as Record<string, unknown>).genrtl).toEqual({
       type: "remote",
-      url: "https://mcp.context7.com/mcp",
+      url: "https://www.genrtl.com/api/mcp",
     });
   });
 });
@@ -161,12 +161,12 @@ describe("removeServerEntry", () => {
     const { config, removed } = removeServerEntry(
       {
         mcpServers: {
-          context7: { url: "https://mcp.context7.com/mcp" },
+          genrtl: { url: "https://www.genrtl.com/api/mcp" },
           other: { url: "https://other.com" },
         },
       },
       "mcpServers",
-      "context7"
+      "genrtl"
     );
 
     expect(removed).toBe(true);
@@ -177,16 +177,16 @@ describe("removeServerEntry", () => {
     });
   });
 
-  test("removes empty config section when context7 is the only server", () => {
+  test("removes empty config section when genrtl is the only server", () => {
     const { config, removed } = removeServerEntry(
       {
         mcpServers: {
-          context7: { url: "https://mcp.context7.com/mcp" },
+          genrtl: { url: "https://www.genrtl.com/api/mcp" },
         },
         theme: "dark",
       },
       "mcpServers",
-      "context7"
+      "genrtl"
     );
 
     expect(removed).toBe(true);
@@ -195,7 +195,7 @@ describe("removeServerEntry", () => {
 
   test("returns original config when server is not present", () => {
     const existing = { mcpServers: { other: { url: "https://other.com" } } };
-    const { config, removed } = removeServerEntry(existing, "mcpServers", "context7");
+    const { config, removed } = removeServerEntry(existing, "mcpServers", "genrtl");
 
     expect(removed).toBe(false);
     expect(config).toEqual(existing);
@@ -207,13 +207,13 @@ describe("removeServerEntry", () => {
       theme: "dark",
       mcpServers: {
         alpha: { url: "https://alpha.com" },
-        context7: { url: "https://mcp.context7.com/mcp", headers: { key: "secret" } },
+        genrtl: { url: "https://www.genrtl.com/api/mcp", headers: { key: "secret" } },
         omega: { url: "https://omega.com" },
       },
       telemetry: { enabled: true },
     };
 
-    const { config, removed } = removeServerEntry(existing, "mcpServers", "context7");
+    const { config, removed } = removeServerEntry(existing, "mcpServers", "genrtl");
 
     expect(removed).toBe(true);
     expect(config).toEqual({
@@ -232,7 +232,7 @@ describe("readJsonConfig / writeJsonConfig", () => {
   let tempDir: string;
 
   beforeEach(async () => {
-    tempDir = join(tmpdir(), `ctx7-test-${Date.now()}`);
+    tempDir = join(tmpdir(), `grtl-test-${Date.now()}`);
     await mkdir(tempDir, { recursive: true });
   });
 
@@ -249,7 +249,7 @@ describe("readJsonConfig / writeJsonConfig", () => {
 
   test("roundtrip write then read preserves data", async () => {
     const path = join(tempDir, "sub", "dir", "config.json");
-    const data = { mcpServers: { context7: { url: "https://mcp.context7.com/mcp" } } };
+    const data = { mcpServers: { genrtl: { url: "https://www.genrtl.com/api/mcp" } } };
 
     await writeJsonConfig(path, data);
     const result = await readJsonConfig(path);
@@ -264,7 +264,7 @@ describe("JSONC support", () => {
   let tempDir: string;
 
   beforeEach(async () => {
-    tempDir = join(tmpdir(), `ctx7-test-${Date.now()}`);
+    tempDir = join(tmpdir(), `grtl-test-${Date.now()}`);
     await mkdir(tempDir, { recursive: true });
   });
 
@@ -319,7 +319,7 @@ describe("TOML config", () => {
   let tempDir: string;
 
   beforeEach(async () => {
-    tempDir = join(tmpdir(), `ctx7-test-${Date.now()}`);
+    tempDir = join(tmpdir(), `grtl-test-${Date.now()}`);
     await mkdir(tempDir, { recursive: true });
   });
 
@@ -328,77 +328,77 @@ describe("TOML config", () => {
   });
 
   test("buildTomlServerBlock generates correct TOML", () => {
-    const block = buildTomlServerBlock("context7", {
-      url: "https://mcp.context7.com/mcp",
+    const block = buildTomlServerBlock("genrtl", {
+      url: "https://www.genrtl.com/api/mcp",
     });
-    expect(block).toContain("[mcp_servers.context7]");
-    expect(block).toContain('url = "https://mcp.context7.com/mcp"');
+    expect(block).toContain("[mcp_servers.genrtl]");
+    expect(block).toContain('url = "https://www.genrtl.com/api/mcp"');
   });
 
   test("buildTomlServerBlock includes http_headers", () => {
-    const block = buildTomlServerBlock("context7", {
-      url: "https://mcp.context7.com/mcp",
-      headers: { CONTEXT7_API_KEY: "sk-test" },
+    const block = buildTomlServerBlock("genrtl", {
+      url: "https://www.genrtl.com/api/mcp",
+      headers: { Authorization: "Bearer sk-test" },
     });
-    expect(block).toContain("[mcp_servers.context7]");
-    expect(block).toContain("[mcp_servers.context7.http_headers]");
-    expect(block).toContain('CONTEXT7_API_KEY = "sk-test"');
+    expect(block).toContain("[mcp_servers.genrtl]");
+    expect(block).toContain("[mcp_servers.genrtl.http_headers]");
+    expect(block).toContain('Authorization = "Bearer sk-test"');
     expect(block).not.toContain("headers =");
   });
 
   test("readTomlServerExists detects existing server", async () => {
     const path = join(tempDir, "config.toml");
-    await writeFile(path, '[mcp_servers.context7]\nurl = "https://test.com"\n', "utf-8");
-    expect(await readTomlServerExists(path, "context7")).toBe(true);
+    await writeFile(path, '[mcp_servers.genrtl]\nurl = "https://test.com"\n', "utf-8");
+    expect(await readTomlServerExists(path, "genrtl")).toBe(true);
     expect(await readTomlServerExists(path, "other")).toBe(false);
   });
 
   test("readTomlServerExists returns false for missing file", async () => {
-    expect(await readTomlServerExists(join(tempDir, "nope.toml"), "context7")).toBe(false);
+    expect(await readTomlServerExists(join(tempDir, "nope.toml"), "genrtl")).toBe(false);
   });
 
   test("appendTomlServer appends to empty file", async () => {
     const path = join(tempDir, "config.toml");
-    const { alreadyExists } = await appendTomlServer(path, "context7", {
-      url: "https://mcp.context7.com/mcp",
+    const { alreadyExists } = await appendTomlServer(path, "genrtl", {
+      url: "https://www.genrtl.com/api/mcp",
     });
     expect(alreadyExists).toBe(false);
     const content = await readFile(path, "utf-8");
-    expect(content).toContain("[mcp_servers.context7]");
-    expect(content).toContain('url = "https://mcp.context7.com/mcp"');
+    expect(content).toContain("[mcp_servers.genrtl]");
+    expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
   });
 
   test("appendTomlServer preserves existing config", async () => {
     const path = join(tempDir, "config.toml");
     await writeFile(path, 'model = "gpt-5"\n\n[mcp_servers.other]\nurl = "https://other.com"\n');
-    await appendTomlServer(path, "context7", { url: "https://mcp.context7.com/mcp" });
+    await appendTomlServer(path, "genrtl", { url: "https://www.genrtl.com/api/mcp" });
     const content = await readFile(path, "utf-8");
     expect(content).toContain('model = "gpt-5"');
     expect(content).toContain("[mcp_servers.other]");
-    expect(content).toContain("[mcp_servers.context7]");
+    expect(content).toContain("[mcp_servers.genrtl]");
   });
 
   test("appendTomlServer is idempotent", async () => {
     const path = join(tempDir, "config.toml");
-    await appendTomlServer(path, "context7", { url: "https://mcp.context7.com/mcp" });
-    const { alreadyExists } = await appendTomlServer(path, "context7", {
-      url: "https://mcp.context7.com/mcp",
+    await appendTomlServer(path, "genrtl", { url: "https://www.genrtl.com/api/mcp" });
+    const { alreadyExists } = await appendTomlServer(path, "genrtl", {
+      url: "https://www.genrtl.com/api/mcp",
     });
     expect(alreadyExists).toBe(true);
     const content = await readFile(path, "utf-8");
-    expect(content.match(/\[mcp_servers\.context7\]/g)?.length).toBe(1);
+    expect(content.match(/\[mcp_servers\.genrtl\]/g)?.length).toBe(1);
   });
 
   test("appendTomlServer overwrites existing server with new url", async () => {
     const path = join(tempDir, "config.toml");
-    await appendTomlServer(path, "context7", { url: "https://old.com" });
-    const { alreadyExists } = await appendTomlServer(path, "context7", {
-      url: "https://mcp.context7.com/mcp",
+    await appendTomlServer(path, "genrtl", { url: "https://old.com" });
+    const { alreadyExists } = await appendTomlServer(path, "genrtl", {
+      url: "https://www.genrtl.com/api/mcp",
     });
     expect(alreadyExists).toBe(true);
     const content = await readFile(path, "utf-8");
-    expect(content.match(/\[mcp_servers\.context7\]/g)?.length).toBe(1);
-    expect(content).toContain('url = "https://mcp.context7.com/mcp"');
+    expect(content.match(/\[mcp_servers\.genrtl\]/g)?.length).toBe(1);
+    expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
     expect(content).not.toContain("https://old.com");
   });
 
@@ -406,11 +406,11 @@ describe("TOML config", () => {
     const path = join(tempDir, "config.toml");
     await writeFile(
       path,
-      '[mcp_servers.context7]\nurl = "https://old.com"\n\n[mcp_servers.other]\nurl = "https://other.com"\n'
+      '[mcp_servers.genrtl]\nurl = "https://old.com"\n\n[mcp_servers.other]\nurl = "https://other.com"\n'
     );
-    await appendTomlServer(path, "context7", { url: "https://mcp.context7.com/mcp" });
+    await appendTomlServer(path, "genrtl", { url: "https://www.genrtl.com/api/mcp" });
     const content = await readFile(path, "utf-8");
-    expect(content).toContain('url = "https://mcp.context7.com/mcp"');
+    expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
     expect(content).not.toContain("https://old.com");
     expect(content).toContain("[mcp_servers.other]");
     expect(content).toContain('url = "https://other.com"');
@@ -420,16 +420,16 @@ describe("TOML config", () => {
     const path = join(tempDir, "config.toml");
     await writeFile(
       path,
-      'model = "gpt-5"\n\n[mcp_servers.context7]\nurl = "https://old.com"\n\n[some_other_section]\nkey = "value"\n'
+      'model = "gpt-5"\n\n[mcp_servers.genrtl]\nurl = "https://old.com"\n\n[some_other_section]\nkey = "value"\n'
     );
-    await appendTomlServer(path, "context7", {
-      url: "https://mcp.context7.com/mcp",
+    await appendTomlServer(path, "genrtl", {
+      url: "https://www.genrtl.com/api/mcp",
       headers: { "x-api-key": "sk-new" },
     });
     const content = await readFile(path, "utf-8");
     expect(content).toContain('model = "gpt-5"');
-    expect(content).toContain('url = "https://mcp.context7.com/mcp"');
-    expect(content).toContain("[mcp_servers.context7.http_headers]");
+    expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
+    expect(content).toContain("[mcp_servers.genrtl.http_headers]");
     expect(content).toContain('x-api-key = "sk-new"');
     expect(content).not.toContain("https://old.com");
     expect(content).toContain("[some_other_section]");
@@ -440,29 +440,29 @@ describe("TOML config", () => {
     const path = join(tempDir, "config.toml");
     await writeFile(
       path,
-      '[mcp_servers.other]\nurl = "https://other.com"\n\n[mcp_servers.context7]\nurl = "https://old.com"\n'
+      '[mcp_servers.other]\nurl = "https://other.com"\n\n[mcp_servers.genrtl]\nurl = "https://old.com"\n'
     );
-    await appendTomlServer(path, "context7", { url: "https://new.com" });
+    await appendTomlServer(path, "genrtl", { url: "https://new.com" });
     const content = await readFile(path, "utf-8");
     expect(content).toContain("[mcp_servers.other]");
     expect(content).toContain('url = "https://new.com"');
     expect(content).not.toContain("https://old.com");
-    expect(content.match(/\[mcp_servers\.context7\]/g)?.length).toBe(1);
+    expect(content.match(/\[mcp_servers\.genrtl\]/g)?.length).toBe(1);
   });
 
   test("appendTomlServer does not accumulate blank lines on repeated overwrites", async () => {
     const path = join(tempDir, "config.toml");
     await writeFile(
       path,
-      'model = "o3"\n\n[mcp_servers.context7]\nurl = "https://old.com"\n\n[mcp_servers.other]\nurl = "https://other.com"\n'
+      'model = "o3"\n\n[mcp_servers.genrtl]\nurl = "https://old.com"\n\n[mcp_servers.other]\nurl = "https://other.com"\n'
     );
 
     for (let i = 1; i <= 3; i++) {
-      await appendTomlServer(path, "context7", { url: `https://v${i}.com` });
+      await appendTomlServer(path, "genrtl", { url: `https://v${i}.com` });
     }
 
     const content = await readFile(path, "utf-8");
-    expect(content.match(/\[mcp_servers\.context7\]/g)?.length).toBe(1);
+    expect(content.match(/\[mcp_servers\.genrtl\]/g)?.length).toBe(1);
     expect(content).toContain('url = "https://v3.com"');
     expect(content).toContain("[mcp_servers.other]");
     expect(content).not.toContain("\n\n\n");
@@ -472,47 +472,47 @@ describe("TOML config", () => {
     const path = join(tempDir, "config.toml");
     await writeFile(
       path,
-      'model = "gpt-5"\n\n[mcp_servers.context7]\nurl = "https://mcp.context7.com/mcp"\n\n[mcp_servers.other]\nurl = "https://other.com"\n',
+      'model = "gpt-5"\n\n[mcp_servers.genrtl]\nurl = "https://www.genrtl.com/api/mcp"\n\n[mcp_servers.other]\nurl = "https://other.com"\n',
       "utf-8"
     );
 
-    const { removed } = await removeTomlServer(path, "context7");
+    const { removed } = await removeTomlServer(path, "genrtl");
     expect(removed).toBe(true);
 
     const content = await readFile(path, "utf-8");
     expect(content).toContain('model = "gpt-5"');
     expect(content).toContain("[mcp_servers.other]");
     expect(content).toContain('url = "https://other.com"');
-    expect(content).not.toContain("[mcp_servers.context7]");
+    expect(content).not.toContain("[mcp_servers.genrtl]");
   });
 
   test("removeTomlServer removes nested subsections too", async () => {
     const path = join(tempDir, "config.toml");
     await writeFile(
       path,
-      '[mcp_servers.context7]\nurl = "https://mcp.context7.com/mcp"\n\n[mcp_servers.context7.http_headers]\nCONTEXT7_API_KEY = "sk-test"\n\n[settings]\nmodel = "gpt-5"\n',
+      '[mcp_servers.genrtl]\nurl = "https://www.genrtl.com/api/mcp"\n\n[mcp_servers.genrtl.http_headers]\nAuthorization = "Bearer sk-test"\n\n[settings]\nmodel = "gpt-5"\n',
       "utf-8"
     );
 
-    const { removed } = await removeTomlServer(path, "context7");
+    const { removed } = await removeTomlServer(path, "genrtl");
     expect(removed).toBe(true);
 
     const content = await readFile(path, "utf-8");
     expect(content).toContain("[settings]");
     expect(content).toContain('model = "gpt-5"');
-    expect(content).not.toContain("[mcp_servers.context7]");
-    expect(content).not.toContain("CONTEXT7_API_KEY");
+    expect(content).not.toContain("[mcp_servers.genrtl]");
+    expect(content).not.toContain("Authorization");
   });
 
   test("removeTomlServer preserves other MCP servers and their subsections", async () => {
     const path = join(tempDir, "config.toml");
     await writeFile(
       path,
-      '[mcp_servers.context7]\nurl = "https://mcp.context7.com/mcp"\n\n[mcp_servers.context7.http_headers]\nCONTEXT7_API_KEY = "sk-test"\n\n[mcp_servers.other]\nurl = "https://other.com"\n\n[mcp_servers.other.http_headers]\nX_API_KEY = "keep-me"\n\n[settings]\nmodel = "gpt-5"\n',
+      '[mcp_servers.genrtl]\nurl = "https://www.genrtl.com/api/mcp"\n\n[mcp_servers.genrtl.http_headers]\nAuthorization = "Bearer sk-test"\n\n[mcp_servers.other]\nurl = "https://other.com"\n\n[mcp_servers.other.http_headers]\nX_API_KEY = "keep-me"\n\n[settings]\nmodel = "gpt-5"\n',
       "utf-8"
     );
 
-    const { removed } = await removeTomlServer(path, "context7");
+    const { removed } = await removeTomlServer(path, "genrtl");
     const content = await readFile(path, "utf-8");
 
     expect(removed).toBe(true);
@@ -521,15 +521,15 @@ describe("TOML config", () => {
     expect(content).toContain("[mcp_servers.other.http_headers]");
     expect(content).toContain('X_API_KEY = "keep-me"');
     expect(content).toContain("[settings]");
-    expect(content).not.toContain("[mcp_servers.context7]");
-    expect(content).not.toContain("[mcp_servers.context7.http_headers]");
+    expect(content).not.toContain("[mcp_servers.genrtl]");
+    expect(content).not.toContain("[mcp_servers.genrtl.http_headers]");
   });
 
   test("removeTomlServer returns false when server is missing", async () => {
     const path = join(tempDir, "config.toml");
     await writeFile(path, '[mcp_servers.other]\nurl = "https://other.com"\n', "utf-8");
 
-    const { removed } = await removeTomlServer(path, "context7");
+    const { removed } = await removeTomlServer(path, "genrtl");
     expect(removed).toBe(false);
   });
 });
@@ -538,7 +538,7 @@ describe("AGENTS.md append", () => {
   let tempDir: string;
 
   beforeEach(async () => {
-    tempDir = join(tmpdir(), `ctx7-test-${Date.now()}`);
+    tempDir = join(tmpdir(), `grtl-test-${Date.now()}`);
     await mkdir(tempDir, { recursive: true });
   });
 
@@ -546,8 +546,8 @@ describe("AGENTS.md append", () => {
     await rm(tempDir, { recursive: true, force: true });
   });
 
-  const marker = "<!-- context7 -->";
-  const ruleContent = "Use ctx7 CLI for docs.\n";
+  const marker = "<!-- genrtl -->";
+  const ruleContent = "Use grtl CLI for docs.\n";
 
   async function appendRule(filePath: string, existing?: string): Promise<string> {
     if (existing !== undefined) {
@@ -583,10 +583,10 @@ describe("AGENTS.md append", () => {
 
   test("appends to existing content with proper spacing", async () => {
     const withNewline = await appendRule(join(tempDir, "a.md"), "# Rules\n");
-    expect(withNewline).toContain("# Rules\n\n<!-- context7 -->");
+    expect(withNewline).toContain("# Rules\n\n<!-- genrtl -->");
 
     const withoutNewline = await appendRule(join(tempDir, "b.md"), "No trailing newline");
-    expect(withoutNewline).toContain("No trailing newline\n\n<!-- context7 -->");
+    expect(withoutNewline).toContain("No trailing newline\n\n<!-- genrtl -->");
   });
 
   test("is idempotent on re-run", async () => {
@@ -594,7 +594,7 @@ describe("AGENTS.md append", () => {
     const first = await appendRule(filePath);
     const second = await appendRule(filePath);
     expect(second).toBe(first);
-    expect(second.match(/<!-- context7 -->/g)?.length).toBe(2);
+    expect(second.match(/<!-- genrtl -->/g)?.length).toBe(2);
   });
 
   test("replaces section without affecting surrounding content", async () => {
@@ -613,7 +613,7 @@ describe("agent config integration", () => {
   let tempDir: string;
 
   beforeEach(async () => {
-    tempDir = join(tmpdir(), `ctx7-agent-cfg-${Date.now()}`);
+    tempDir = join(tmpdir(), `grtl-agent-cfg-${Date.now()}`);
     await mkdir(tempDir, { recursive: true });
   });
 
@@ -631,8 +631,8 @@ describe("agent config integration", () => {
       const entry = agent.mcp.buildEntry(apiKeyAuth, "http");
       expect(entry).toEqual({
         type: "http",
-        url: "https://mcp.context7.com/mcp",
-        headers: { CONTEXT7_API_KEY: "sk-test-123" },
+        url: "https://www.genrtl.com/api/mcp",
+        headers: { Authorization: "Bearer sk-test-123" },
       });
     });
 
@@ -640,7 +640,7 @@ describe("agent config integration", () => {
       const entry = agent.mcp.buildEntry(oauthAuth, "http");
       expect(entry).toEqual({
         type: "http",
-        url: "https://mcp.context7.com/mcp/oauth",
+        url: "https://www.genrtl.com/api/mcp",
       });
     });
 
@@ -671,41 +671,41 @@ describe("agent config integration", () => {
       const { config } = mergeServerEntry(
         existing,
         agent.mcp.configKey,
-        "context7",
+        "genrtl",
         agent.mcp.buildEntry(apiKeyAuth, "http")
       );
       await writeJsonConfig(path, config);
 
       const result = await readJsonConfig(path);
       const servers = result.mcpServers as Record<string, unknown>;
-      expect(servers.context7).toEqual({
+      expect(servers.genrtl).toEqual({
         type: "http",
-        url: "https://mcp.context7.com/mcp",
-        headers: { CONTEXT7_API_KEY: "sk-test-123" },
+        url: "https://www.genrtl.com/api/mcp",
+        headers: { Authorization: "Bearer sk-test-123" },
       });
     });
 
     test("overwrites existing config in JSON", async () => {
       const path = join(tempDir, ".claude.json");
       await writeJsonConfig(path, {
-        mcpServers: { context7: { type: "http", url: "https://old.com" } },
+        mcpServers: { genrtl: { type: "http", url: "https://old.com" } },
       });
 
       const existing = await readJsonConfig(path);
       const { config, alreadyExists } = mergeServerEntry(
         existing,
         agent.mcp.configKey,
-        "context7",
+        "genrtl",
         agent.mcp.buildEntry(apiKeyAuth, "http")
       );
       expect(alreadyExists).toBe(true);
       await writeJsonConfig(path, config);
 
       const result = await readJsonConfig(path);
-      expect((result.mcpServers as Record<string, unknown>).context7).toEqual({
+      expect((result.mcpServers as Record<string, unknown>).genrtl).toEqual({
         type: "http",
-        url: "https://mcp.context7.com/mcp",
-        headers: { CONTEXT7_API_KEY: "sk-test-123" },
+        url: "https://www.genrtl.com/api/mcp",
+        headers: { Authorization: "Bearer sk-test-123" },
       });
     });
   });
@@ -716,8 +716,8 @@ describe("agent config integration", () => {
     test("buildEntry with api-key produces correct shape (no type field)", () => {
       const entry = agent.mcp.buildEntry(apiKeyAuth, "http");
       expect(entry).toEqual({
-        url: "https://mcp.context7.com/mcp",
-        headers: { CONTEXT7_API_KEY: "sk-test-123" },
+        url: "https://www.genrtl.com/api/mcp",
+        headers: { Authorization: "Bearer sk-test-123" },
       });
       expect(entry).not.toHaveProperty("type");
     });
@@ -725,7 +725,7 @@ describe("agent config integration", () => {
     test("buildEntry with oauth produces correct shape", () => {
       const entry = agent.mcp.buildEntry(oauthAuth, "http");
       expect(entry).toEqual({
-        url: "https://mcp.context7.com/mcp/oauth",
+        url: "https://www.genrtl.com/api/mcp",
       });
     });
 
@@ -735,28 +735,28 @@ describe("agent config integration", () => {
       const { config } = mergeServerEntry(
         existing,
         agent.mcp.configKey,
-        "context7",
+        "genrtl",
         agent.mcp.buildEntry(oauthAuth, "http")
       );
       await writeJsonConfig(path, config);
 
       const result = await readJsonConfig(path);
-      expect((result.mcpServers as Record<string, unknown>).context7).toEqual({
-        url: "https://mcp.context7.com/mcp/oauth",
+      expect((result.mcpServers as Record<string, unknown>).genrtl).toEqual({
+        url: "https://www.genrtl.com/api/mcp",
       });
     });
 
     test("overwrites existing config in JSON", async () => {
       const path = join(tempDir, "mcp.json");
       await writeJsonConfig(path, {
-        mcpServers: { context7: { url: "https://old.com" }, other: { url: "https://other.com" } },
+        mcpServers: { genrtl: { url: "https://old.com" }, other: { url: "https://other.com" } },
       });
 
       const existing = await readJsonConfig(path);
       const { config, alreadyExists } = mergeServerEntry(
         existing,
         agent.mcp.configKey,
-        "context7",
+        "genrtl",
         agent.mcp.buildEntry(apiKeyAuth, "http")
       );
       expect(alreadyExists).toBe(true);
@@ -764,9 +764,9 @@ describe("agent config integration", () => {
 
       const result = await readJsonConfig(path);
       const servers = result.mcpServers as Record<string, unknown>;
-      expect(servers.context7).toEqual({
-        url: "https://mcp.context7.com/mcp",
-        headers: { CONTEXT7_API_KEY: "sk-test-123" },
+      expect(servers.genrtl).toEqual({
+        url: "https://www.genrtl.com/api/mcp",
+        headers: { Authorization: "Bearer sk-test-123" },
       });
       expect(servers.other).toEqual({ url: "https://other.com" });
     });
@@ -779,9 +779,9 @@ describe("agent config integration", () => {
       const entry = agent.mcp.buildEntry(apiKeyAuth, "http");
       expect(entry).toEqual({
         type: "remote",
-        url: "https://mcp.context7.com/mcp",
+        url: "https://www.genrtl.com/api/mcp",
         enabled: true,
-        headers: { CONTEXT7_API_KEY: "sk-test-123" },
+        headers: { Authorization: "Bearer sk-test-123" },
       });
     });
 
@@ -789,7 +789,7 @@ describe("agent config integration", () => {
       const entry = agent.mcp.buildEntry(oauthAuth, "http");
       expect(entry).toEqual({
         type: "remote",
-        url: "https://mcp.context7.com/mcp/oauth",
+        url: "https://www.genrtl.com/api/mcp",
         enabled: true,
       });
     });
@@ -806,41 +806,41 @@ describe("agent config integration", () => {
       const { config } = mergeServerEntry(
         existing,
         agent.mcp.configKey,
-        "context7",
+        "genrtl",
         agent.mcp.buildEntry(apiKeyAuth, "http")
       );
       await writeJsonConfig(path, config);
 
       const result = await readJsonConfig(path);
       expect(result.$schema).toBe("https://opencode.ai/config.json");
-      expect((result.mcp as Record<string, unknown>).context7).toEqual({
+      expect((result.mcp as Record<string, unknown>).genrtl).toEqual({
         type: "remote",
-        url: "https://mcp.context7.com/mcp",
+        url: "https://www.genrtl.com/api/mcp",
         enabled: true,
-        headers: { CONTEXT7_API_KEY: "sk-test-123" },
+        headers: { Authorization: "Bearer sk-test-123" },
       });
     });
 
     test("overwrites existing config in JSON", async () => {
       const path = join(tempDir, "opencode.json");
       await writeJsonConfig(path, {
-        mcp: { context7: { type: "remote", url: "https://old.com", enabled: true } },
+        mcp: { genrtl: { type: "remote", url: "https://old.com", enabled: true } },
       });
 
       const existing = await readJsonConfig(path);
       const { config, alreadyExists } = mergeServerEntry(
         existing,
         agent.mcp.configKey,
-        "context7",
+        "genrtl",
         agent.mcp.buildEntry(oauthAuth, "http")
       );
       expect(alreadyExists).toBe(true);
       await writeJsonConfig(path, config);
 
       const result = await readJsonConfig(path);
-      expect((result.mcp as Record<string, unknown>).context7).toEqual({
+      expect((result.mcp as Record<string, unknown>).genrtl).toEqual({
         type: "remote",
-        url: "https://mcp.context7.com/mcp/oauth",
+        url: "https://www.genrtl.com/api/mcp",
         enabled: true,
       });
     });
@@ -861,14 +861,14 @@ describe("agent config integration", () => {
       const { config } = mergeServerEntry(
         existing,
         agent.mcp.configKey,
-        "context7",
+        "genrtl",
         agent.mcp.buildEntry(apiKeyAuth, "http")
       );
       await writeJsonConfig(path, config);
 
       const result = await readJsonConfig(path);
       expect(result.$schema).toBe("https://opencode.ai/config.json");
-      expect((result.mcp as Record<string, unknown>).context7).toBeTruthy();
+      expect((result.mcp as Record<string, unknown>).genrtl).toBeTruthy();
     });
   });
 
@@ -879,8 +879,8 @@ describe("agent config integration", () => {
       const entry = agent.mcp.buildEntry(apiKeyAuth, "http");
       expect(entry).toEqual({
         type: "http",
-        url: "https://mcp.context7.com/mcp",
-        headers: { CONTEXT7_API_KEY: "sk-test-123" },
+        url: "https://www.genrtl.com/api/mcp",
+        headers: { Authorization: "Bearer sk-test-123" },
       });
     });
 
@@ -888,7 +888,7 @@ describe("agent config integration", () => {
       const entry = agent.mcp.buildEntry(oauthAuth, "http");
       expect(entry).toEqual({
         type: "http",
-        url: "https://mcp.context7.com/mcp/oauth",
+        url: "https://www.genrtl.com/api/mcp",
       });
     });
 
@@ -896,58 +896,58 @@ describe("agent config integration", () => {
       const path = join(tempDir, "config.toml");
       const { alreadyExists } = await appendTomlServer(
         path,
-        "context7",
+        "genrtl",
         agent.mcp.buildEntry(apiKeyAuth, "http")
       );
       expect(alreadyExists).toBe(false);
 
       const content = await readFile(path, "utf-8");
-      expect(content).toContain("[mcp_servers.context7]");
+      expect(content).toContain("[mcp_servers.genrtl]");
       expect(content).toContain('type = "http"');
-      expect(content).toContain('url = "https://mcp.context7.com/mcp"');
-      expect(content).toContain("[mcp_servers.context7.http_headers]");
-      expect(content).toContain('CONTEXT7_API_KEY = "sk-test-123"');
+      expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
+      expect(content).toContain("[mcp_servers.genrtl.http_headers]");
+      expect(content).toContain('Authorization = "Bearer sk-test-123"');
     });
 
     test("appends oauth entry to TOML without headers", async () => {
       const path = join(tempDir, "config.toml");
-      await appendTomlServer(path, "context7", agent.mcp.buildEntry(oauthAuth, "http"));
+      await appendTomlServer(path, "genrtl", agent.mcp.buildEntry(oauthAuth, "http"));
 
       const content = await readFile(path, "utf-8");
-      expect(content).toContain("[mcp_servers.context7]");
-      expect(content).toContain('url = "https://mcp.context7.com/mcp/oauth"');
+      expect(content).toContain("[mcp_servers.genrtl]");
+      expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
       expect(content).not.toContain("http_headers");
     });
 
     test("overwrites existing TOML config", async () => {
       const path = join(tempDir, "config.toml");
-      await appendTomlServer(path, "context7", agent.mcp.buildEntry(oauthAuth, "http"));
+      await appendTomlServer(path, "genrtl", agent.mcp.buildEntry(oauthAuth, "http"));
       const { alreadyExists } = await appendTomlServer(
         path,
-        "context7",
+        "genrtl",
         agent.mcp.buildEntry(apiKeyAuth, "http")
       );
 
       expect(alreadyExists).toBe(true);
       const content = await readFile(path, "utf-8");
-      expect(content.match(/\[mcp_servers\.context7\]/g)?.length).toBe(1);
-      expect(content).toContain('url = "https://mcp.context7.com/mcp"');
+      expect(content.match(/\[mcp_servers\.genrtl\]/g)?.length).toBe(1);
+      expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
       expect(content).not.toContain("mcp/oauth");
-      expect(content).toContain('CONTEXT7_API_KEY = "sk-test-123"');
+      expect(content).toContain('Authorization = "Bearer sk-test-123"');
     });
 
     test("overwrites TOML config preserving other servers", async () => {
       const path = join(tempDir, "config.toml");
       await writeFile(
         path,
-        '[mcp_servers.other]\nurl = "https://other.com"\n\n[mcp_servers.context7]\ntype = "http"\nurl = "https://old.com"\n'
+        '[mcp_servers.other]\nurl = "https://other.com"\n\n[mcp_servers.genrtl]\ntype = "http"\nurl = "https://old.com"\n'
       );
-      await appendTomlServer(path, "context7", agent.mcp.buildEntry(apiKeyAuth, "http"));
+      await appendTomlServer(path, "genrtl", agent.mcp.buildEntry(apiKeyAuth, "http"));
 
       const content = await readFile(path, "utf-8");
       expect(content).toContain("[mcp_servers.other]");
       expect(content).toContain('url = "https://other.com"');
-      expect(content).toContain('url = "https://mcp.context7.com/mcp"');
+      expect(content).toContain('url = "https://www.genrtl.com/api/mcp"');
       expect(content).not.toContain("https://old.com");
     });
   });
@@ -958,8 +958,8 @@ describe("agent config integration", () => {
     test("buildEntry with api-key uses httpUrl", () => {
       const entry = agent.mcp.buildEntry(apiKeyAuth, "http");
       expect(entry).toEqual({
-        httpUrl: "https://mcp.context7.com/mcp",
-        headers: { CONTEXT7_API_KEY: "sk-test-123" },
+        httpUrl: "https://www.genrtl.com/api/mcp",
+        headers: { Authorization: "Bearer sk-test-123" },
       });
       expect(entry).not.toHaveProperty("url");
     });
@@ -967,7 +967,7 @@ describe("agent config integration", () => {
     test("buildEntry with oauth uses httpUrl without headers", () => {
       const entry = agent.mcp.buildEntry(oauthAuth, "http");
       expect(entry).toEqual({
-        httpUrl: "https://mcp.context7.com/mcp/oauth",
+        httpUrl: "https://www.genrtl.com/api/mcp",
       });
     });
 
@@ -983,39 +983,39 @@ describe("agent config integration", () => {
       const { config } = mergeServerEntry(
         existing,
         agent.mcp.configKey,
-        "context7",
+        "genrtl",
         agent.mcp.buildEntry(apiKeyAuth, "http")
       );
       await writeJsonConfig(path, config);
 
       const result = await readJsonConfig(path);
       expect(result.theme).toBe("dark");
-      expect((result.mcpServers as Record<string, unknown>).context7).toEqual({
-        httpUrl: "https://mcp.context7.com/mcp",
-        headers: { CONTEXT7_API_KEY: "sk-test-123" },
+      expect((result.mcpServers as Record<string, unknown>).genrtl).toEqual({
+        httpUrl: "https://www.genrtl.com/api/mcp",
+        headers: { Authorization: "Bearer sk-test-123" },
       });
     });
 
     test("overwrites existing config in JSON", async () => {
       const path = join(tempDir, "settings.json");
       await writeJsonConfig(path, {
-        mcpServers: { context7: { httpUrl: "https://old.com" } },
+        mcpServers: { genrtl: { httpUrl: "https://old.com" } },
       });
 
       const existing = await readJsonConfig(path);
       const { config, alreadyExists } = mergeServerEntry(
         existing,
         agent.mcp.configKey,
-        "context7",
+        "genrtl",
         agent.mcp.buildEntry(apiKeyAuth, "http")
       );
       expect(alreadyExists).toBe(true);
       await writeJsonConfig(path, config);
 
       const result = await readJsonConfig(path);
-      expect((result.mcpServers as Record<string, unknown>).context7).toEqual({
-        httpUrl: "https://mcp.context7.com/mcp",
-        headers: { CONTEXT7_API_KEY: "sk-test-123" },
+      expect((result.mcpServers as Record<string, unknown>).genrtl).toEqual({
+        httpUrl: "https://www.genrtl.com/api/mcp",
+        headers: { Authorization: "Bearer sk-test-123" },
       });
     });
   });
@@ -1038,8 +1038,8 @@ describe("agent config integration", () => {
       const oauthEntry = agent.mcp.buildEntry(oauthAuth, "http");
 
       const urlKey = name === "gemini" ? "httpUrl" : name === "antigravity" ? "serverUrl" : "url";
-      expect(apiEntry[urlKey]).toBe("https://mcp.context7.com/mcp");
-      expect(oauthEntry[urlKey]).toBe("https://mcp.context7.com/mcp/oauth");
+      expect(apiEntry[urlKey]).toBe("https://www.genrtl.com/api/mcp");
+      expect(oauthEntry[urlKey]).toBe("https://www.genrtl.com/api/mcp");
     });
 
     test.each(ALL_AGENT_NAMES)("%s buildEntry includes headers only for api-key auth", (name) => {
@@ -1047,7 +1047,7 @@ describe("agent config integration", () => {
       const apiEntry = agent.mcp.buildEntry(apiKeyAuth, "http");
       const oauthEntry = agent.mcp.buildEntry(oauthAuth, "http");
 
-      expect(apiEntry.headers).toEqual({ CONTEXT7_API_KEY: "sk-test-123" });
+      expect(apiEntry.headers).toEqual({ Authorization: "Bearer sk-test-123" });
       expect(oauthEntry).not.toHaveProperty("headers");
     });
 
@@ -1066,7 +1066,7 @@ describe("agent config integration", () => {
       const entry = getAgent("claude").mcp.buildEntry(apiKeyAuth, "stdio");
       expect(entry).toEqual({
         command: "npx",
-        args: ["-y", "@upstash/context7-mcp", "--api-key", "sk-test-stdio"],
+        args: ["-y", "@upstash/genrtl-mcp", "--api-key", "sk-test-stdio"],
       });
     });
 
@@ -1074,7 +1074,7 @@ describe("agent config integration", () => {
       const entry = getAgent("cursor").mcp.buildEntry(apiKeyAuth, "stdio");
       expect(entry).toEqual({
         command: "npx",
-        args: ["-y", "@upstash/context7-mcp", "--api-key", "sk-test-stdio"],
+        args: ["-y", "@upstash/genrtl-mcp", "--api-key", "sk-test-stdio"],
       });
     });
 
@@ -1082,7 +1082,7 @@ describe("agent config integration", () => {
       const entry = getAgent("opencode").mcp.buildEntry(apiKeyAuth, "stdio");
       expect(entry).toEqual({
         type: "local",
-        command: ["npx", "-y", "@upstash/context7-mcp", "--api-key", "sk-test-stdio"],
+        command: ["npx", "-y", "@upstash/genrtl-mcp", "--api-key", "sk-test-stdio"],
         enabled: true,
       });
     });
@@ -1091,7 +1091,7 @@ describe("agent config integration", () => {
       const entry = getAgent("codex").mcp.buildEntry(apiKeyAuth, "stdio");
       expect(entry).toEqual({
         command: "npx",
-        args: ["-y", "@upstash/context7-mcp", "--api-key", "sk-test-stdio"],
+        args: ["-y", "@upstash/genrtl-mcp", "--api-key", "sk-test-stdio"],
       });
     });
 
@@ -1099,7 +1099,7 @@ describe("agent config integration", () => {
       const entry = getAgent("gemini").mcp.buildEntry(apiKeyAuth, "stdio");
       expect(entry).toEqual({
         command: "npx",
-        args: ["-y", "@upstash/context7-mcp", "--api-key", "sk-test-stdio"],
+        args: ["-y", "@upstash/genrtl-mcp", "--api-key", "sk-test-stdio"],
       });
     });
 
@@ -1107,138 +1107,138 @@ describe("agent config integration", () => {
       const entry = getAgent(name).mcp.buildEntry(oauthAuth, "stdio");
       const args = (entry.args ?? entry.command) as string[];
       expect(args).not.toContain("--api-key");
-      expect(args).toContain("@upstash/context7-mcp");
+      expect(args).toContain("@upstash/genrtl-mcp");
     });
 
     test("codex stdio entry serializes to TOML correctly", () => {
       const block = buildTomlServerBlock(
-        "context7",
+        "genrtl",
         getAgent("codex").mcp.buildEntry(apiKeyAuth, "stdio")
       );
-      expect(block).toContain("[mcp_servers.context7]");
+      expect(block).toContain("[mcp_servers.genrtl]");
       expect(block).toContain('command = "npx"');
-      expect(block).toContain('args = ["-y","@upstash/context7-mcp","--api-key","sk-test-stdio"]');
+      expect(block).toContain('args = ["-y","@upstash/genrtl-mcp","--api-key","sk-test-stdio"]');
       expect(block).not.toContain("http_headers");
     });
   });
 
-  describe("isStdioContext7Entry", () => {
+  describe("isStdioGenRTLEntry", () => {
     test("detects standard command/args stdio entry", () => {
       expect(
-        isStdioContext7Entry({
+        isStdioGenRTLEntry({
           command: "npx",
-          args: ["-y", "@upstash/context7-mcp", "--api-key", "k"],
+          args: ["-y", "@upstash/genrtl-mcp", "--api-key", "k"],
         })
       ).toBe(true);
     });
 
     test("detects entry with @latest specifier", () => {
       expect(
-        isStdioContext7Entry({ command: "npx", args: ["-y", "@upstash/context7-mcp@latest"] })
+        isStdioGenRTLEntry({ command: "npx", args: ["-y", "@upstash/genrtl-mcp@latest"] })
       ).toBe(true);
     });
 
     test("detects entry with pinned version", () => {
       expect(
-        isStdioContext7Entry({ command: "npx", args: ["-y", "@upstash/context7-mcp@2.0.0"] })
+        isStdioGenRTLEntry({ command: "npx", args: ["-y", "@upstash/genrtl-mcp@2.0.0"] })
       ).toBe(true);
     });
 
     test("detects OpenCode array-command form", () => {
       expect(
-        isStdioContext7Entry({
+        isStdioGenRTLEntry({
           type: "local",
-          command: ["npx", "-y", "@upstash/context7-mcp@latest"],
+          command: ["npx", "-y", "@upstash/genrtl-mcp@latest"],
           enabled: true,
         })
       ).toBe(true);
     });
 
     test("returns false for HTTP entry", () => {
-      expect(isStdioContext7Entry({ url: "https://mcp.context7.com/mcp" })).toBe(false);
+      expect(isStdioGenRTLEntry({ url: "https://www.genrtl.com/api/mcp" })).toBe(false);
     });
 
     test("returns false for unrelated stdio package", () => {
-      expect(isStdioContext7Entry({ command: "npx", args: ["-y", "@some-other/package"] })).toBe(
+      expect(isStdioGenRTLEntry({ command: "npx", args: ["-y", "@some-other/package"] })).toBe(
         false
       );
     });
 
     test("returns false for null/undefined", () => {
-      expect(isStdioContext7Entry(null)).toBe(false);
-      expect(isStdioContext7Entry(undefined)).toBe(false);
+      expect(isStdioGenRTLEntry(null)).toBe(false);
+      expect(isStdioGenRTLEntry(undefined)).toBe(false);
     });
   });
 
   describe("patchStdioApiKey", () => {
     test("preserves @latest package specifier", () => {
       const patched = patchStdioApiKey(
-        { command: "npx", args: ["-y", "@upstash/context7-mcp@latest"] },
+        { command: "npx", args: ["-y", "@upstash/genrtl-mcp@latest"] },
         "new-key"
       );
       expect(patched).toEqual({
         command: "npx",
-        args: ["-y", "@upstash/context7-mcp@latest", "--api-key", "new-key"],
+        args: ["-y", "@upstash/genrtl-mcp@latest", "--api-key", "new-key"],
       });
     });
 
     test("preserves pinned version specifier", () => {
       const patched = patchStdioApiKey(
-        { command: "npx", args: ["-y", "@upstash/context7-mcp@2.0.0"] },
+        { command: "npx", args: ["-y", "@upstash/genrtl-mcp@2.0.0"] },
         "new-key"
       );
-      expect(patched.args).toEqual(["-y", "@upstash/context7-mcp@2.0.0", "--api-key", "new-key"]);
+      expect(patched.args).toEqual(["-y", "@upstash/genrtl-mcp@2.0.0", "--api-key", "new-key"]);
     });
 
     test("replaces an existing --api-key value", () => {
       const patched = patchStdioApiKey(
         {
           command: "npx",
-          args: ["-y", "@upstash/context7-mcp@latest", "--api-key", "OLD"],
+          args: ["-y", "@upstash/genrtl-mcp@latest", "--api-key", "OLD"],
         },
         "NEW"
       );
-      expect(patched.args).toEqual(["-y", "@upstash/context7-mcp@latest", "--api-key", "NEW"]);
+      expect(patched.args).toEqual(["-y", "@upstash/genrtl-mcp@latest", "--api-key", "NEW"]);
     });
 
     test("removes --api-key when new key is undefined (oauth)", () => {
       const patched = patchStdioApiKey(
-        { command: "npx", args: ["-y", "@upstash/context7-mcp", "--api-key", "OLD"] },
+        { command: "npx", args: ["-y", "@upstash/genrtl-mcp", "--api-key", "OLD"] },
         undefined
       );
-      expect(patched.args).toEqual(["-y", "@upstash/context7-mcp"]);
+      expect(patched.args).toEqual(["-y", "@upstash/genrtl-mcp"]);
     });
 
     test("preserves other args (e.g. --debug) untouched", () => {
       const patched = patchStdioApiKey(
         {
           command: "npx",
-          args: ["-y", "@upstash/context7-mcp", "--debug", "--api-key", "OLD"],
+          args: ["-y", "@upstash/genrtl-mcp", "--debug", "--api-key", "OLD"],
         },
         "NEW"
       );
-      expect(patched.args).toEqual(["-y", "@upstash/context7-mcp", "--debug", "--api-key", "NEW"]);
+      expect(patched.args).toEqual(["-y", "@upstash/genrtl-mcp", "--debug", "--api-key", "NEW"]);
     });
 
     test("patches OpenCode array-command form", () => {
       const patched = patchStdioApiKey(
         {
           type: "local",
-          command: ["npx", "-y", "@upstash/context7-mcp@latest", "--api-key", "OLD"],
+          command: ["npx", "-y", "@upstash/genrtl-mcp@latest", "--api-key", "OLD"],
           enabled: true,
         },
         "NEW"
       );
       expect(patched).toEqual({
         type: "local",
-        command: ["npx", "-y", "@upstash/context7-mcp@latest", "--api-key", "NEW"],
+        command: ["npx", "-y", "@upstash/genrtl-mcp@latest", "--api-key", "NEW"],
         enabled: true,
       });
     });
 
     test("preserves unrelated top-level fields", () => {
       const patched = patchStdioApiKey(
-        { command: "npx", args: ["-y", "@upstash/context7-mcp"], cwd: "/custom" },
+        { command: "npx", args: ["-y", "@upstash/genrtl-mcp"], cwd: "/custom" },
         "NEW"
       );
       expect(patched.cwd).toBe("/custom");
@@ -1249,7 +1249,7 @@ describe("agent config integration", () => {
     let tempDir: string;
 
     beforeEach(async () => {
-      tempDir = join(tmpdir(), `ctx7-test-${Date.now()}`);
+      tempDir = join(tmpdir(), `grtl-test-${Date.now()}`);
       await mkdir(tempDir, { recursive: true });
     });
 
@@ -1258,26 +1258,26 @@ describe("agent config integration", () => {
     });
 
     test("returns undefined for missing file", async () => {
-      expect(await readTomlServerEntry(join(tempDir, "nope.toml"), "context7")).toBeUndefined();
+      expect(await readTomlServerEntry(join(tempDir, "nope.toml"), "genrtl")).toBeUndefined();
     });
 
     test("returns undefined for missing section", async () => {
       const path = join(tempDir, "config.toml");
       await writeFile(path, '[mcp_servers.other]\nurl = "https://other.com"\n', "utf-8");
-      expect(await readTomlServerEntry(path, "context7")).toBeUndefined();
+      expect(await readTomlServerEntry(path, "genrtl")).toBeUndefined();
     });
 
     test("parses string and array values from a stdio block", async () => {
       const path = join(tempDir, "config.toml");
       await writeFile(
         path,
-        '[mcp_servers.context7]\ncommand = "npx"\nargs = ["-y", "@upstash/context7-mcp@latest", "--api-key", "OLD"]\n',
+        '[mcp_servers.genrtl]\ncommand = "npx"\nargs = ["-y", "@upstash/genrtl-mcp@latest", "--api-key", "OLD"]\n',
         "utf-8"
       );
-      const entry = await readTomlServerEntry(path, "context7");
+      const entry = await readTomlServerEntry(path, "genrtl");
       expect(entry).toEqual({
         command: "npx",
-        args: ["-y", "@upstash/context7-mcp@latest", "--api-key", "OLD"],
+        args: ["-y", "@upstash/genrtl-mcp@latest", "--api-key", "OLD"],
       });
     });
 
@@ -1285,27 +1285,27 @@ describe("agent config integration", () => {
       const path = join(tempDir, "config.toml");
       await writeFile(
         path,
-        '[mcp_servers.context7]\ntype = "http"\nurl = "https://mcp.context7.com/mcp"\n\n[mcp_servers.context7.http_headers]\nCONTEXT7_API_KEY = "k"\n',
+        '[mcp_servers.genrtl]\ntype = "http"\nurl = "https://www.genrtl.com/api/mcp"\n\n[mcp_servers.genrtl.http_headers]\nAuthorization = "Bearer k"\n',
         "utf-8"
       );
-      const entry = await readTomlServerEntry(path, "context7");
-      expect(entry).toEqual({ type: "http", url: "https://mcp.context7.com/mcp" });
+      const entry = await readTomlServerEntry(path, "genrtl");
+      expect(entry).toEqual({ type: "http", url: "https://www.genrtl.com/api/mcp" });
     });
 
     test("round-trips through patchStdioApiKey + appendTomlServer", async () => {
       const path = join(tempDir, "config.toml");
       await writeFile(
         path,
-        '[mcp_servers.context7]\ncommand = "npx"\nargs = ["-y", "@upstash/context7-mcp@latest", "--api-key", "OLD"]\n',
+        '[mcp_servers.genrtl]\ncommand = "npx"\nargs = ["-y", "@upstash/genrtl-mcp@latest", "--api-key", "OLD"]\n',
         "utf-8"
       );
-      const existing = await readTomlServerEntry(path, "context7");
+      const existing = await readTomlServerEntry(path, "genrtl");
       expect(existing).toBeDefined();
-      expect(isStdioContext7Entry(existing)).toBe(true);
+      expect(isStdioGenRTLEntry(existing)).toBe(true);
       const patched = patchStdioApiKey(existing!, "NEW");
-      await appendTomlServer(path, "context7", patched);
+      await appendTomlServer(path, "genrtl", patched);
       const content = await readFile(path, "utf-8");
-      expect(content).toContain("@upstash/context7-mcp@latest");
+      expect(content).toContain("@upstash/genrtl-mcp@latest");
       expect(content).toContain('"--api-key","NEW"');
       expect(content).not.toContain('"OLD"');
     });

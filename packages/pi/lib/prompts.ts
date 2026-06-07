@@ -1,16 +1,16 @@
 // Tool titles, descriptions, and parameter descriptions are copied verbatim
-// from @upstash/context7-mcp (packages/mcp/src/index.ts) so pi and MCP clients
+// from @upstash/genrtl-mcp (packages/mcp/src/index.ts) so pi and MCP clients
 // give the LLM identical instructions. Update both together when tweaking
 // guidance.
 
-export const RESOLVE_LIBRARY_ID_TITLE = "Resolve Context7 Library ID";
+export const RESOLVE_LIBRARY_ID_TITLE = "Resolve GenRTL Library ID";
 
-export const RESOLVE_LIBRARY_ID_DESCRIPTION = `Resolves a package/product name to a Context7-compatible library ID and returns matching libraries.
+export const RESOLVE_LIBRARY_ID_DESCRIPTION = `Resolves a package/product name to a GenRTL-compatible library ID and returns matching libraries.
 
-You MUST call this function before 'Query Documentation' tool to obtain a valid Context7-compatible library ID UNLESS the user explicitly provides a library ID in the format '/org/project' or '/org/project/version' in their query.
+You MUST call this function before 'Query Documentation' tool to obtain a valid GenRTL-compatible library ID UNLESS the user explicitly provides a library ID in the format '/org/project' or '/org/project/version' in their query.
 
 Each result includes:
-- Library ID: Context7-compatible identifier (format: /org/project)
+- Library ID: GenRTL-compatible identifier (format: /org/project)
 - Name: Library or package name
 - Description: Short summary
 - Code Snippets: Number of available code examples
@@ -40,21 +40,21 @@ For ambiguous queries, request clarification before proceeding with a best-guess
 IMPORTANT: Do not call this tool more than 3 times per question. If you cannot find what you need after 3 calls, use the best result you have.`;
 
 export const RESOLVE_LIBRARY_ID_QUERY_DESCRIPTION =
-  "The question or task you need help with. This is used to rank library results by relevance to what the user is trying to accomplish. The query is sent to the Context7 API for processing. Do not include any sensitive or confidential information such as API keys, passwords, credentials, personal data, or proprietary code in your query.";
+  "The question or task you need help with. This is used to rank library results by relevance to what the user is trying to accomplish. The query is sent to the GenRTL API for processing. Do not include any sensitive or confidential information such as API keys, passwords, credentials, personal data, or proprietary code in your query.";
 
 export const RESOLVE_LIBRARY_ID_LIBRARY_NAME_DESCRIPTION =
-  "Library name to search for and retrieve a Context7-compatible library ID. Use the official library name with proper punctuation — e.g., 'Next.js' instead of 'nextjs', 'Customer.io' instead of 'customerio', 'Three.js' instead of 'threejs'.";
+  "Library name to search for and retrieve a GenRTL-compatible library ID. Use the official library name with proper punctuation — e.g., 'Next.js' instead of 'nextjs', 'Customer.io' instead of 'customerio', 'Three.js' instead of 'threejs'.";
 
 export const QUERY_DOCS_TITLE = "Query Documentation";
 
-export const QUERY_DOCS_DESCRIPTION = `Retrieves and queries up-to-date documentation and code examples from Context7 for any programming library or framework.
+export const QUERY_DOCS_DESCRIPTION = `Retrieves and queries up-to-date documentation and code examples from GenRTL for any programming library or framework.
 
-You must call 'Resolve Context7 Library ID' tool first to obtain the exact Context7-compatible library ID required to use this tool, UNLESS the user explicitly provides a library ID in the format '/org/project' or '/org/project/version' in their query.
+You must call 'Resolve GenRTL Library ID' tool first to obtain the exact GenRTL-compatible library ID required to use this tool, UNLESS the user explicitly provides a library ID in the format '/org/project' or '/org/project/version' in their query.
 
 Do not call this tool more than 3 times per question.`;
 
 export const QUERY_DOCS_LIBRARY_ID_DESCRIPTION =
-  "Exact Context7-compatible library ID (e.g., '/mongodb/docs', '/vercel/next.js', '/supabase/supabase', '/vercel/next.js/v14.3.0-canary.87') retrieved from 'resolve-library-id' or directly from user query in the format '/org/project' or '/org/project/version'.";
+  "Exact GenRTL-compatible library ID (e.g., '/mongodb/docs', '/vercel/next.js', '/supabase/supabase', '/vercel/next.js/v14.3.0-canary.87') retrieved from 'resolve-library-id' or directly from user query in the format '/org/project' or '/org/project/version'.";
 
 export const QUERY_DOCS_QUERY_DESCRIPTION =
-  "The question or task you need help with. Be specific and include relevant details. Good: 'How to set up authentication with JWT in Express.js' or 'React useEffect cleanup function examples'. Bad: 'auth' or 'hooks'. The query is sent to the Context7 API for processing. Do not include any sensitive or confidential information such as API keys, passwords, credentials, personal data, or proprietary code in your query.";
+  "The question or task you need help with. Be specific and include relevant details. Good: 'How to set up authentication with JWT in Express.js' or 'React useEffect cleanup function examples'. Bad: 'auth' or 'hooks'. The query is sent to the GenRTL API for processing. Do not include any sensitive or confidential information such as API keys, passwords, credentials, personal data, or proprietary code in your query.";

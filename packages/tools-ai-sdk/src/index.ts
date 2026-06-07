@@ -1,8 +1,8 @@
 // Agents
-export { Context7Agent, type Context7AgentConfig } from "@agents";
+export { GenRTLAgent, type GenRTLAgentConfig } from "@agents";
 
 // Tools
-export { resolveLibraryId, queryDocs, type Context7ToolsConfig } from "@tools";
+export { resolveLibraryId, queryDocs, type GenRTLToolsConfig } from "@tools";
 
 // Prompts
 export {
@@ -14,8 +14,8 @@ export {
 
 // Re-export useful types from SDK
 export type {
-  Context7Config,
+  GenRTLConfig,
   Library,
   Documentation,
   GetContextOptions,
-} from "@upstash/context7-sdk";
+} from "@upstash/genrtl-sdk";

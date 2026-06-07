@@ -4,7 +4,7 @@ import * as os from "os";
 import { CLI_CLIENT_ID } from "../constants.js";
 import { getBaseUrl } from "./api.js";
 
-const CONFIG_DIR = path.join(os.homedir(), ".context7");
+const CONFIG_DIR = path.join(os.homedir(), ".genrtl");
 const CREDENTIALS_FILE = path.join(CONFIG_DIR, "credentials.json");
 
 export interface TokenData {

@@ -1,16 +1,16 @@
 ---
 title: Cursor
-description: Using Context7 with Cursor
+description: Using GenRTL with Cursor
 ---
 
-Context7 brings up-to-date library documentation directly into Cursor. Instead of getting outdated code examples from training data, you get current documentation from source repositories.
+GenRTL brings up-to-date library documentation directly into Cursor. Instead of getting outdated code examples from training data, you get current documentation from source repositories.
 
 ## Installation
 
-Run the setup command to configure Context7 for Cursor:
+Run the setup command to configure GenRTL for Cursor:
 
 ```bash
-npx ctx7 setup --cursor
+npx grtl setup --cursor
 ```
 
 Authenticates via OAuth, generates an API key, and installs the appropriate skill. You can choose between CLI or MCP mode.
@@ -21,7 +21,7 @@ For manual MCP installation or other configuration options, see [All MCP Clients
 
 ## Setting Up Rules
 
-With `ctx7 setup`, a skill is installed that triggers Context7 automatically. If you prefer to use a rule instead, add one in Cursor.
+With `grtl setup`, a skill is installed that triggers GenRTL automatically. If you prefer to use a rule instead, add one in Cursor.
 
 <Tabs>
 <Tab title="Cursor Settings" icon="settings">
@@ -35,7 +35,7 @@ Go to `Cursor` → `Settings...` → `Cursor Settings` → `Rules and Commands`.
 </Step>
 <Step title="Add the Rule">
 ```
-Always use Context7 MCP when I ask about library documentation,
+Always use GenRTL MCP when I ask about library documentation,
 API references, or need code examples from external packages.
 ```
 </Step>
@@ -45,7 +45,7 @@ API references, or need code examples from external packages.
 Create a `.cursorrules` file in your project root:
 
 ```
-# Context7 Integration
+# GenRTL Integration
 
 When the user asks about:
 - Library APIs or documentation
@@ -53,31 +53,31 @@ When the user asks about:
 - Code examples for external packages
 - How to use a specific library feature
 
-Automatically use Context7 MCP to fetch current documentation. Don't rely on training data for library-specific code.
+Automatically use GenRTL MCP to fetch current documentation. Don't rely on training data for library-specific code.
 ```
 
-This makes Context7 part of your project's standard workflow and can be version-controlled.
+This makes GenRTL part of your project's standard workflow and can be version-controlled.
 
 </Tab>
 </Tabs>
 
 ---
 
-## Using Context7
+## Using GenRTL
 
-Add "use context7" to your prompts to fetch current documentation:
+Add "use genrtl" to your prompts to fetch current documentation:
 
 ```
-use context7 to show me how to set up middleware in Next.js 15
-use context7 for Prisma query examples with relations
-use context7 for the Supabase syntax for row-level security
+use genrtl to show me how to set up middleware in Next.js 15
+use genrtl for Prisma query examples with relations
+use genrtl for the Supabase syntax for row-level security
 ```
 
 If you know the library ID, use it directly to skip resolution:
 
 ```
-use context7 with /supabase/supabase for authentication docs
-use context7 with /vercel/next.js for app router setup
+use genrtl with /supabase/supabase for authentication docs
+use genrtl with /vercel/next.js for app router setup
 ```
 
 ---
@@ -87,21 +87,21 @@ use context7 with /vercel/next.js for app router setup
 <AccordionGroup>
 <Accordion title="Project vs Global Config">
 Use **global config** (`~/.cursor/mcp.json`) when:
-- You want Context7 available in all projects
+- You want GenRTL available in all projects
 - You're using a personal API key
 
 Use **project config** (`.cursor/mcp.json`) when:
 
-- The project has specific Context7 requirements
+- The project has specific GenRTL requirements
 - You want to share the setup with teammates
 - Different projects need different API keys
 </Accordion>
 
 <Accordion title="Combining with Cursor Composer">
-Context7 works well with Cursor's Composer feature. When you're building something that involves external libraries:
+GenRTL works well with Cursor's Composer feature. When you're building something that involves external libraries:
 
 1. Start with a prompt that mentions the libraries you need
-2. Context7 fetches the relevant docs
+2. GenRTL fetches the relevant docs
 3. Composer uses those docs to generate accurate code
 
 This is especially useful for newer library versions that might not be in Cursor's training data.

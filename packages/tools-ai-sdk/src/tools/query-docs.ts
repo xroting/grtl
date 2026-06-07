@@ -1,13 +1,13 @@
 import { tool } from "ai";
 import { z } from "zod";
-import { Context7 } from "@upstash/context7-sdk";
-import type { Context7ToolsConfig } from "./types";
+import { GenRTL } from "@upstash/genrtl-sdk";
+import type { GenRTLToolsConfig } from "./types";
 import { QUERY_DOCS_DESCRIPTION } from "@prompts";
 
 /**
- * Tool to fetch documentation for a library using its Context7 library ID.
+ * Tool to fetch documentation for a library using its GenRTL library ID.
  *
- * Can be called with or without configuration. Uses CONTEXT7_API_KEY environment
+ * Can be called with or without configuration. Uses GENRTL_API_KEY environment
  * variable for authentication when no API key is provided.
  *
  * @param config Optional configuration options
@@ -15,7 +15,7 @@ import { QUERY_DOCS_DESCRIPTION } from "@prompts";
  *
  * @example
  * ```typescript
- * import { resolveLibraryId, queryDocs } from '@upstash/context7-tools-ai-sdk';
+ * import { resolveLibraryId, queryDocs } from '@upstash/genrtl-tools-ai-sdk';
  * import { generateText, stepCountIs } from 'ai';
  * import { openai } from '@ai-sdk/openai';
  *
@@ -30,9 +30,9 @@ import { QUERY_DOCS_DESCRIPTION } from "@prompts";
  * });
  * ```
  */
-export function queryDocs(config: Context7ToolsConfig = {}) {
+export function queryDocs(config: GenRTLToolsConfig = {}) {
   const { apiKey } = config;
-  const getClient = () => new Context7({ apiKey });
+  const getClient = () => new GenRTL({ apiKey });
 
   return tool({
     description: QUERY_DOCS_DESCRIPTION,
@@ -40,7 +40,7 @@ export function queryDocs(config: Context7ToolsConfig = {}) {
       libraryId: z
         .string()
         .describe(
-          "Exact Context7-compatible library ID (e.g., '/mongodb/docs', '/vercel/next.js', '/supabase/supabase', '/vercel/next.js/v14.3.0-canary.87') retrieved from 'resolveLibraryId' or directly from user query in the format '/org/project' or '/org/project/version'."
+          "Exact GenRTL-compatible library ID (e.g., '/mongodb/docs', '/vercel/next.js', '/supabase/supabase', '/vercel/next.js/v14.3.0-canary.87') retrieved from 'resolveLibraryId' or directly from user query in the format '/org/project' or '/org/project/version'."
         ),
       query: z
         .string()
@@ -54,7 +54,7 @@ export function queryDocs(config: Context7ToolsConfig = {}) {
         const documentation = await client.getContext(query, libraryId, { type: "txt" });
 
         if (!documentation || documentation.length === 0) {
-          return `No documentation found for library "${libraryId}". This might have happened because you used an invalid Context7-compatible library ID. Use 'resolveLibraryId' to get a valid ID.`;
+          return `No documentation found for library "${libraryId}". This might have happened because you used an invalid GenRTL-compatible library ID. Use 'resolveLibraryId' to get a valid ID.`;
         }
 
         return documentation;

@@ -1,7 +1,7 @@
 {
-  "name": "@upstash/context7-pi",
+  "name": "@upstash/genrtl-pi",
   "version": "0.1.0",
-  "description": "Official Context7 extension for pi.dev — adds resolve-library-id and query-docs tools to the pi coding agent",
+  "description": "Official GenRTL extension for pi.dev — adds resolve-library-id and query-docs tools to the pi coding agent",
   "type": "module",
   "pi": {
     "extensions": [
@@ -13,7 +13,7 @@
     "prompts": [
       "./prompts"
     ],
-    "image": "https://github.com/upstash/context7/blob/master/public/cover.png?raw=true"
+    "image": "https://github.com/upstash/genrtl/blob/master/public/cover.png?raw=true"
   },
   "files": [
     "extensions",
@@ -38,12 +38,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/upstash/context7.git",
+    "url": "git+https://github.com/upstash/genrtl.git",
     "directory": "packages/pi"
   },
   "keywords": [
     "pi-package",
-    "context7",
+    "genrtl",
     "documentation",
     "upstash",
     "ai",
@@ -52,9 +52,9 @@
   "author": "Upstash",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/upstash/context7/issues"
+    "url": "https://github.com/upstash/genrtl/issues"
   },
-  "homepage": "https://github.com/upstash/context7#readme",
+  "homepage": "https://github.com/upstash/genrtl#readme",
   "publishConfig": {
     "access": "public"
   },

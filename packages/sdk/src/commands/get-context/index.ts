@@ -2,7 +2,7 @@ import { Command } from "@commands/command";
 import type { GetContextOptions, Documentation } from "@commands/types";
 import type { ApiContextJsonResponse } from "./types";
 import type { Requester } from "@http";
-import { Context7Error } from "@error";
+import { GenRTLError } from "@error";
 import { formatCodeSnippet, formatInfoSnippet } from "@utils/format";
 
 const DEFAULT_TYPE = "json";
@@ -33,7 +33,7 @@ export class GetContextCommand extends Command<Documentation[] | string> {
     });
 
     if (result === undefined) {
-      throw new Context7Error("Request did not return a result");
+      throw new GenRTLError("Request did not return a result");
     }
 
     if (this.responseType === "txt" && typeof result === "string") {

@@ -1,10 +1,10 @@
-# Upstash Context7 SDK
+# Upstash GenRTL SDK
 
 > ⚠️ **Work in Progress**: This SDK is currently under active development. The API is subject to change and may introduce breaking changes in future releases.
 
-`@upstash/context7-sdk` is an HTTP/REST based client for TypeScript, built on top of the [Context7 API](https://context7.com).
+`@upstash/genrtl-sdk` is an HTTP/REST based client for TypeScript, built on top of the [GenRTL API](https://genrtl.com).
 
-## Why Context7?
+## Why GenRTL?
 
 LLMs rely on outdated or generic training data about the libraries you use. This leads to:
 
@@ -12,7 +12,7 @@ LLMs rely on outdated or generic training data about the libraries you use. This
 - Hallucinated APIs that don't exist
 - Generic answers for old package versions
 
-Context7 solves this by providing up-to-date, version-specific documentation and code examples directly from the source. Use this SDK to:
+GenRTL solves this by providing up-to-date, version-specific documentation and code examples directly from the source. Use this SDK to:
 
 - Build AI agents with accurate, current documentation context
 - Create RAG pipelines with reliable library documentation
@@ -23,20 +23,20 @@ Context7 solves this by providing up-to-date, version-specific documentation and
 ### Install
 
 ```bash
-npm install @upstash/context7-sdk
+npm install @upstash/genrtl-sdk
 ```
 
 ### Get API Key
 
-Get your API key from [Context7](https://context7.com)
+Get your API key from [GenRTL](https://genrtl.com)
 
 ## Basic Usage
 
 ```ts
-import { Context7 } from "@upstash/context7-sdk";
+import { GenRTL } from "@upstash/genrtl-sdk";
 
-const client = new Context7({
-  apiKey: "<CONTEXT7_API_KEY>",
+const client = new GenRTL({
+  apiKey: "<GENRTL_API_KEY>",
 });
 
 // Search for libraries
@@ -66,18 +66,18 @@ console.log(context);
 You can set your API key via environment variable:
 
 ```sh
-CONTEXT7_API_KEY=ctx7sk-...
+GENRTL_API_KEY=grtlsk-...
 ```
 
 Then initialize without options:
 
 ```ts
-const client = new Context7();
+const client = new GenRTL();
 ```
 
 ## Docs
 
-See the [documentation](https://context7.com/docs/sdks/ts/getting-started) for details.
+See the [documentation](https://genrtl.com/docs/sdks/ts/getting-started) for details.
 
 ## Contributing
 

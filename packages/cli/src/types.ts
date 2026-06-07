@@ -4,7 +4,7 @@ export interface SkillFile {
 }
 
 // TODO(deprecate-skills-phase-2): Remove Skill Hub response types when
-// deprecated `ctx7 skills ...` commands are deleted. Keep setup skill directory
+// deprecated `grtl skills ...` commands are deleted. Keep setup skill directory
 // types below.
 export interface Skill {
   name: string;
@@ -249,4 +249,52 @@ export interface ContextResponse {
   error?: string;
   message?: string;
   redirectUrl?: string;
+}
+
+export type GenrtlKnowledgeToolName =
+  | "genrtl_knowledge_search"
+  | "genrtl_spec2rtl_search"
+  | "genrtl_verification_search"
+  | "genrtl_debug_search";
+
+export type KnowledgeCardType = "spec2rtl" | "verification" | "debug";
+
+export interface KnowledgeSearchInput {
+  query: string;
+  filters?: {
+    types?: KnowledgeCardType[];
+    domain?: string;
+    tool?: string;
+    tool_version?: string;
+    error_type?: string;
+    severity?: string;
+    interface?: string;
+    target?: "fpga" | "asic" | "both";
+    tags?: string[];
+  };
+  top_k?: number;
+  min_score?: number;
+  workspace_id?: string;
+}
+
+export interface KnowledgeMatch {
+  id: string;
+  title: string;
+  type: KnowledgeCardType;
+  summary: string;
+  confidence: number;
+  root_cause?: string;
+  fix_strategy?: string[];
+  code_example?: string;
+  related_cbb?: string[];
+  recommended_next_action?: string;
+  source_id: string;
+  metadata: Record<string, unknown>;
+}
+
+export interface KnowledgeSearchResponse {
+  summary: string;
+  matched_cards: KnowledgeMatch[];
+  recommended_next_action?: string;
+  usage?: Record<string, unknown>;
 }

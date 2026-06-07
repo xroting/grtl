@@ -17,7 +17,7 @@ let tempDir: string;
 let stateFile: string;
 
 beforeEach(async () => {
-  tempDir = join(tmpdir(), `ctx7-update-${Date.now()}`);
+  tempDir = join(tmpdir(), `grtl-update-${Date.now()}`);
   stateFile = join(tempDir, "cli-state.json");
   await mkdir(tempDir, { recursive: true });
   vi.stubGlobal(
@@ -100,8 +100,8 @@ describe("detectInstallMethod", () => {
 
 describe("getUpgradePlan", () => {
   test("returns explicit runner commands for ephemeral installs", () => {
-    expect(getUpgradePlan("npx").displayCommand).toBe("npx ctx7@latest <command>");
-    expect(getUpgradePlan("pnpm-dlx").displayCommand).toBe("pnpm dlx ctx7@latest <command>");
+    expect(getUpgradePlan("npx").displayCommand).toBe("npx grtl@latest <command>");
+    expect(getUpgradePlan("pnpm-dlx").displayCommand).toBe("pnpm dlx grtl@latest <command>");
   });
 
   test("does not auto-run upgrade plans for unknown installs", () => {
@@ -155,7 +155,7 @@ describe("checkForUpdates", () => {
 });
 
 describe("default cli-state persistence", () => {
-  test("writes updater state under ~/.context7/cli-state.json when using the default path", async () => {
+  test("writes updater state under ~/.genrtl/cli-state.json when using the default path", async () => {
     const fakeHome = join(tempDir, "fake-home");
     await mkdir(fakeHome, { recursive: true });
 
@@ -179,7 +179,7 @@ describe("default cli-state persistence", () => {
     await updateCheck.markUpdateNotificationShown("9.9.9", { now: 2000 });
 
     const persisted = JSON.parse(
-      await readFile(join(fakeHome, ".context7", "cli-state.json"), "utf-8")
+      await readFile(join(fakeHome, ".genrtl", "cli-state.json"), "utf-8")
     ) as {
       latestVersion?: string;
       lastCheckedAt?: number;
@@ -217,8 +217,8 @@ describe("update notifications", () => {
   });
 
   test("skips notifier for json and version argv", () => {
-    expect(shouldSkipUpdateNotifier(["node", "ctx7", "library", "react", "--json"])).toBe(true);
-    expect(shouldSkipUpdateNotifier(["node", "ctx7", "--version"])).toBe(true);
-    expect(shouldSkipUpdateNotifier(["node", "ctx7", "skills", "list"])).toBe(false);
+    expect(shouldSkipUpdateNotifier(["node", "grtl", "library", "react", "--json"])).toBe(true);
+    expect(shouldSkipUpdateNotifier(["node", "grtl", "--version"])).toBe(true);
+    expect(shouldSkipUpdateNotifier(["node", "grtl", "skills", "list"])).toBe(false);
   });
 });

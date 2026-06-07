@@ -5,7 +5,7 @@ import { z } from "zod";
 import {
   resolveLibraryId,
   queryDocs,
-  Context7Agent,
+  GenRTLAgent,
   SYSTEM_PROMPT,
   AGENT_PROMPT,
   RESOLVE_LIBRARY_ID_DESCRIPTION,
@@ -16,7 +16,7 @@ const bedrock = createAmazonBedrock({
   apiKey: process.env.AWS_BEARER_TOKEN_BEDROCK,
 });
 
-describe("@upstash/context7-tools-ai-sdk", () => {
+describe("@upstash/genrtl-tools-ai-sdk", () => {
   describe("Tool structure", () => {
     test("resolveLibraryId() should return a tool object with correct structure", () => {
       const tool = resolveLibraryId();
@@ -40,11 +40,11 @@ describe("@upstash/context7-tools-ai-sdk", () => {
 
     test("tools should accept custom config", () => {
       const resolveTool = resolveLibraryId({
-        apiKey: "ctx7sk-test-key",
+        apiKey: "grtlsk-test-key",
       });
 
       const docsTool = queryDocs({
-        apiKey: "ctx7sk-test-key",
+        apiKey: "grtlsk-test-key",
       });
 
       expect(resolveTool).toHaveProperty("execute");
@@ -69,7 +69,7 @@ describe("@upstash/context7-tools-ai-sdk", () => {
       expect(result.toolResults.length).toBeGreaterThan(0);
       const toolResult = result.toolResults[0] as unknown as { output: string };
       expect(typeof toolResult.output).toBe("string");
-      expect(toolResult.output).toContain("Context7-compatible library ID");
+      expect(toolResult.output).toContain("GenRTL-compatible library ID");
     }, 30000);
 
     test("queryDocs tool should fetch documentation", async () => {
@@ -110,9 +110,9 @@ describe("@upstash/context7-tools-ai-sdk", () => {
     }, 60000);
   });
 
-  describe("Context7Agent class", () => {
+  describe("GenRTLAgent class", () => {
     test("should create an agent instance with model", () => {
-      const agent = new Context7Agent({
+      const agent = new GenRTLAgent({
         model: bedrock("anthropic.claude-3-haiku-20240307-v1:0"),
       });
 
@@ -122,7 +122,7 @@ describe("@upstash/context7-tools-ai-sdk", () => {
     });
 
     test("should accept custom stopWhen condition", () => {
-      const agent = new Context7Agent({
+      const agent = new GenRTLAgent({
         model: bedrock("anthropic.claude-3-haiku-20240307-v1:0"),
         stopWhen: stepCountIs(3),
       });
@@ -131,7 +131,7 @@ describe("@upstash/context7-tools-ai-sdk", () => {
     });
 
     test("should accept custom instructions", () => {
-      const agent = new Context7Agent({
+      const agent = new GenRTLAgent({
         model: bedrock("anthropic.claude-3-haiku-20240307-v1:0"),
         instructions: "Custom instructions for testing",
       });
@@ -139,16 +139,16 @@ describe("@upstash/context7-tools-ai-sdk", () => {
       expect(agent).toBeDefined();
     });
 
-    test("should accept Context7 config options", () => {
-      const agent = new Context7Agent({
+    test("should accept GenRTL config options", () => {
+      const agent = new GenRTLAgent({
         model: bedrock("anthropic.claude-3-haiku-20240307-v1:0"),
-        apiKey: "ctx7sk-test-key",
+        apiKey: "grtlsk-test-key",
       });
 
       expect(agent).toBeDefined();
     });
 
-    test("should accept additional tools alongside Context7 tools", () => {
+    test("should accept additional tools alongside GenRTL tools", () => {
       const customTool = tool({
         description: "A custom test tool",
         inputSchema: z.object({
@@ -157,7 +157,7 @@ describe("@upstash/context7-tools-ai-sdk", () => {
         execute: async ({ input }) => ({ result: `processed: ${input}` }),
       });
 
-      const agent = new Context7Agent({
+      const agent = new GenRTLAgent({
         model: bedrock("anthropic.claude-3-haiku-20240307-v1:0"),
         tools: {
           customTool,
@@ -168,7 +168,7 @@ describe("@upstash/context7-tools-ai-sdk", () => {
     });
 
     test("should generate response using agent workflow", async () => {
-      const agent = new Context7Agent({
+      const agent = new GenRTLAgent({
         model: bedrock("anthropic.claude-3-haiku-20240307-v1:0"),
         stopWhen: stepCountIs(5),
       });
@@ -185,8 +185,8 @@ describe("@upstash/context7-tools-ai-sdk", () => {
       expect(toolNames).toContain("resolveLibraryId");
     }, 60000);
 
-    test("should include Context7 tools in generate result", async () => {
-      const agent = new Context7Agent({
+    test("should include GenRTL tools in generate result", async () => {
+      const agent = new GenRTLAgent({
         model: bedrock("anthropic.claude-3-haiku-20240307-v1:0"),
         stopWhen: stepCountIs(5),
       });
@@ -216,7 +216,7 @@ describe("@upstash/context7-tools-ai-sdk", () => {
     test("should export AGENT_PROMPT", () => {
       expect(AGENT_PROMPT).toBeDefined();
       expect(typeof AGENT_PROMPT).toBe("string");
-      expect(AGENT_PROMPT).toContain("Context7");
+      expect(AGENT_PROMPT).toContain("GenRTL");
     });
 
     test("should export RESOLVE_LIBRARY_ID_DESCRIPTION", () => {

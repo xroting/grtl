@@ -3,11 +3,11 @@ title: MCP Clients
 description: Installation examples for MCP clients
 ---
 
-Context7 supports all MCP clients. Below are configuration examples for popular clients. If your client isn't listed, check its documentation for MCP server installation. To configure manually, use the Context7 server URL `https://mcp.context7.com/mcp` with your MCP client and pass your API key via the `CONTEXT7_API_KEY` header.
+GenRTL supports all MCP clients. Below are configuration examples for popular clients. If your client isn't listed, check its documentation for MCP server installation. To configure manually, use the GenRTL server URL `https://mcp.genrtl.com/mcp` with your MCP client and pass your API key via the `GENRTL_API_KEY` header.
 
 <Tip>
-  Looking for the easiest way to get started? Use `npx ctx7 setup` to configure Context7
-  automatically, and `npx ctx7 remove` to remove the generated setup later. See the [CLI
+  Looking for the easiest way to get started? Use `npx grtl setup` to configure GenRTL
+  automatically, and `npx grtl remove` to remove the generated setup later. See the [CLI
   docs](/clients/cli) for more details.
 </Tip>
 
@@ -19,13 +19,13 @@ Context7 supports all MCP clients. Below are configuration examples for popular 
 
 ## OAuth Authentication
 
-Context7 MCP server supports OAuth 2.0 authentication for MCP clients that implement the [MCP OAuth specification](https://modelcontextprotocol.io/specification/2025-03-26/basic/authorization).
+GenRTL MCP server supports OAuth 2.0 authentication for MCP clients that implement the [MCP OAuth specification](https://modelcontextprotocol.io/specification/2025-03-26/basic/authorization).
 
 To use OAuth, change the endpoint from `/mcp` to `/mcp/oauth` in your client configuration:
 
 ```diff
-- "url": "https://mcp.context7.com/mcp"
-+ "url": "https://mcp.context7.com/mcp/oauth"
+- "url": "https://mcp.genrtl.com/mcp"
++ "url": "https://mcp.genrtl.com/mcp/oauth"
 ```
 
 OAuth is only available for remote HTTP connections. For local MCP connections using stdio transport, use API key authentication instead.
@@ -39,13 +39,13 @@ Run this command. See [Claude Code MCP docs](https://docs.anthropic.com/en/docs/
 #### Local Server Connection
 
 ```sh
-claude mcp add --scope user context7 -- npx -y @upstash/context7-mcp --api-key YOUR_API_KEY
+claude mcp add --scope user genrtl -- npx -y @upstash/genrtl-mcp --api-key YOUR_API_KEY
 ```
 
 #### Remote Server Connection
 
 ```sh
-claude mcp add --scope user --header "CONTEXT7_API_KEY: YOUR_API_KEY" --transport http context7 https://mcp.context7.com/mcp
+claude mcp add --scope user --header "GENRTL_API_KEY: YOUR_API_KEY" --transport http genrtl https://mcp.genrtl.com/mcp
 ```
 
 </Accordion>
@@ -60,15 +60,15 @@ Since Cursor 1.0, you can click the install button below for instant one-click i
 
 #### Remote Server Connection
 
-[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=context7&config=eyJ1cmwiOiJodHRwczovL21jcC5jb250ZXh0Ny5jb20vbWNwIn0%3D)
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=genrtl&config=eyJ1cmwiOiJodHRwczovL21jcC5jb250ZXh0Ny5jb20vbWNwIn0%3D)
 
 ```json
 {
   "mcpServers": {
-    "context7": {
-      "url": "https://mcp.context7.com/mcp",
+    "genrtl": {
+      "url": "https://mcp.genrtl.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+        "GENRTL_API_KEY": "YOUR_API_KEY"
       }
     }
   }
@@ -77,14 +77,14 @@ Since Cursor 1.0, you can click the install button below for instant one-click i
 
 #### Local Server Connection
 
-[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=context7&config=eyJjb21tYW5kIjoibnB4IC15IEB1cHN0YXNoL2NvbnRleHQ3LW1jcCJ9)
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=genrtl&config=eyJjb21tYW5kIjoibnB4IC15IEB1cHN0YXNoL2NvbnRleHQ3LW1jcCJ9)
 
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -100,11 +100,11 @@ Add this to your Opencode configuration file. See [Opencode MCP docs](https://op
 
 ```json
 "mcp": {
-  "context7": {
+  "genrtl": {
     "type": "remote",
-    "url": "https://mcp.context7.com/mcp",
+    "url": "https://mcp.genrtl.com/mcp",
     "headers": {
-      "CONTEXT7_API_KEY": "YOUR_API_KEY"
+      "GENRTL_API_KEY": "YOUR_API_KEY"
     },
     "enabled": true
   }
@@ -116,9 +116,9 @@ Add this to your Opencode configuration file. See [Opencode MCP docs](https://op
 ```json
 {
   "mcp": {
-    "context7": {
+    "genrtl": {
       "type": "local",
-      "command": ["npx", "-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"],
+      "command": ["npx", "-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"],
       "enabled": true
     }
   }
@@ -134,7 +134,7 @@ See [OpenAI Codex MCP docs](https://developers.openai.com/codex/mcp) for more in
 #### Using CLI
 
 ```sh
-codex mcp add context7 -- npx -y @upstash/context7-mcp --api-key YOUR_API_KEY
+codex mcp add genrtl -- npx -y @upstash/genrtl-mcp --api-key YOUR_API_KEY
 ```
 
 #### Local Server Connection
@@ -142,18 +142,18 @@ codex mcp add context7 -- npx -y @upstash/context7-mcp --api-key YOUR_API_KEY
 Add this to your Codex configuration file (`~/.codex/config.toml` or `.codex/config.toml`).
 
 ```toml
-[mcp_servers.context7]
+[mcp_servers.genrtl]
 command = "npx"
-args = ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+args = ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
 startup_timeout_sec = 20
 ```
 
 #### Remote Server Connection
 
 ```toml
-[mcp_servers.context7]
-url = "https://mcp.context7.com/mcp"
-http_headers = { "CONTEXT7_API_KEY" = "YOUR_API_KEY" }
+[mcp_servers.genrtl]
+url = "https://mcp.genrtl.com/mcp"
+http_headers = { "GENRTL_API_KEY" = "YOUR_API_KEY" }
 ```
 
 <Note>If you see startup timeout errors, try increasing `startup_timeout_sec` to `40`.</Note>
@@ -169,10 +169,10 @@ Add this to your Antigravity MCP config file. See [Antigravity MCP docs](https:/
 ```json
 {
   "mcpServers": {
-    "context7": {
-      "serverUrl": "https://mcp.context7.com/mcp",
+    "genrtl": {
+      "serverUrl": "https://mcp.genrtl.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+        "GENRTL_API_KEY": "YOUR_API_KEY"
       }
     }
   }
@@ -184,9 +184,9 @@ Add this to your Antigravity MCP config file. See [Antigravity MCP docs](https:/
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -196,8 +196,8 @@ Add this to your Antigravity MCP config file. See [Antigravity MCP docs](https:/
 
 <Accordion title="VS Code">
 
-[<img alt="Install in VS Code (npx)" src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20Context7%20MCP&color=0098FF" />](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%7B%22name%22%3A%22context7%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40upstash%2Fcontext7-mcp%40latest%22%5D%7D)
-[<img alt="Install in VS Code Insiders (npx)" src="https://img.shields.io/badge/VS_Code_Insiders-VS_Code_Insiders?style=flat-square&label=Install%20Context7%20MCP&color=24bfa5" />](https://insiders.vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%7B%22name%22%3A%22context7%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40upstash%2Fcontext7-mcp%40latest%22%5D%7D)
+[<img alt="Install in VS Code (npx)" src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20GenRTL%20MCP&color=0098FF" />](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%7B%22name%22%3A%22genrtl%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40upstash%2Fgenrtl-mcp%40latest%22%5D%7D)
+[<img alt="Install in VS Code Insiders (npx)" src="https://img.shields.io/badge/VS_Code_Insiders-VS_Code_Insiders?style=flat-square&label=Install%20GenRTL%20MCP&color=24bfa5" />](https://insiders.vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%7B%22name%22%3A%22genrtl%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40upstash%2Fgenrtl-mcp%40latest%22%5D%7D)
 
 Add this to your VS Code MCP config file (`.vscode/mcp.json`). See [VS Code MCP docs](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) for more info.
 
@@ -206,11 +206,11 @@ Add this to your VS Code MCP config file (`.vscode/mcp.json`). See [VS Code MCP 
 ```json
 {
   "servers": {
-    "context7": {
+    "genrtl": {
       "type": "http",
-      "url": "https://mcp.context7.com/mcp",
+      "url": "https://mcp.genrtl.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+        "GENRTL_API_KEY": "YOUR_API_KEY"
       }
     }
   }
@@ -222,10 +222,10 @@ Add this to your VS Code MCP config file (`.vscode/mcp.json`). See [VS Code MCP 
 ```json
 {
   "servers": {
-    "context7": {
+    "genrtl": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -237,7 +237,7 @@ Add this to your VS Code MCP config file (`.vscode/mcp.json`). See [VS Code MCP 
 
 See [Kiro Model Context Protocol Documentation](https://kiro.dev/docs/mcp/configuration/) for details.
 
-[![Add to Kiro](https://kiro.dev/images/add-to-kiro.svg)](https://kiro.dev/launch/mcp/add?name=context7&config=%7B%22url%22%3A%22https%3A%2F%2Fmcp.context7.com%2Fmcp%22%2C%22disabled%22%3Afalse%2C%22autoApprove%22%3A%5B%5D%7D)
+[![Add to Kiro](https://kiro.dev/images/add-to-kiro.svg)](https://kiro.dev/launch/mcp/add?name=genrtl&config=%7B%22url%22%3A%22https%3A%2F%2Fmcp.genrtl.com%2Fmcp%22%2C%22disabled%22%3Afalse%2C%22autoApprove%22%3A%5B%5D%7D)
 
 1. Navigate `Kiro` > `MCP Servers`
 2. Add a new MCP server by clicking the `+ Add` button.
@@ -248,8 +248,8 @@ See [Kiro Model Context Protocol Documentation](https://kiro.dev/docs/mcp/config
 ```json
 {
   "mcpServers": {
-    "context7": {
-      "url": "https://mcp.context7.com/mcp"
+    "genrtl": {
+      "url": "https://mcp.genrtl.com/mcp"
     }
   }
 }
@@ -259,7 +259,7 @@ To use an API key in Kiro, add:
 
 ```json
 "headers": {
-  "CONTEXT7_API_KEY": "YOUR_API_KEY"
+  "GENRTL_API_KEY": "YOUR_API_KEY"
 }
 ```
 
@@ -270,9 +270,9 @@ See the [API keys guide](/howto/api-keys) for how to create one.
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -284,7 +284,7 @@ See the [API keys guide](/howto/api-keys) for how to create one.
 
 <Accordion title="Kilo Code">
 
-You can configure the Context7 MCP server in **Kilo Code** using either the UI or by editing your project's MCP configuration file.
+You can configure the GenRTL MCP server in **Kilo Code** using either the UI or by editing your project's MCP configuration file.
 
 Kilo Code supports two configuration levels:
 
@@ -299,7 +299,7 @@ Kilo Code supports two configuration levels:
 4. Click **Add Server**.
 5. Choose **HTTP Server** (Streamable HTTP Transport).
 6. Enter the details:
-   - **URL**: `https://mcp.context7.com/mcp`
+   - **URL**: `https://mcp.genrtl.com/mcp`
    - **Headers → Add Header**
      - **Key:** `Authorization`
      - **Value:** `Bearer YOUR_API_KEY`
@@ -312,9 +312,9 @@ Create `.kilocode/mcp.json`:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "type": "streamable-http",
-      "url": "https://mcp.context7.com/mcp",
+      "url": "https://mcp.genrtl.com/mcp",
       "headers": {
         "Authorization": "Bearer YOUR_API_KEY"
       },
@@ -336,11 +336,11 @@ Add this to your Roo Code MCP configuration file. See [Roo Code MCP docs](https:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "type": "streamable-http",
-      "url": "https://mcp.context7.com/mcp",
+      "url": "https://mcp.genrtl.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+        "GENRTL_API_KEY": "YOUR_API_KEY"
       }
     }
   }
@@ -352,9 +352,9 @@ Add this to your Roo Code MCP configuration file. See [Roo Code MCP docs](https:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -371,10 +371,10 @@ Add this to your Windsurf MCP config file. See [Windsurf MCP docs](https://docs.
 ```json
 {
   "mcpServers": {
-    "context7": {
-      "serverUrl": "https://mcp.context7.com/mcp",
+    "genrtl": {
+      "serverUrl": "https://mcp.genrtl.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+        "GENRTL_API_KEY": "YOUR_API_KEY"
       }
     }
   }
@@ -386,9 +386,9 @@ Add this to your Windsurf MCP config file. See [Windsurf MCP docs](https://docs.
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -400,7 +400,7 @@ Add this to your Windsurf MCP config file. See [Windsurf MCP docs](https://docs.
 
 #### Remote Server Connection
 
-Open Claude Desktop and navigate to Settings > Connectors > Add Custom Connector. Enter the name as `Context7` and the remote MCP server URL as `https://mcp.context7.com/mcp`.
+Open Claude Desktop and navigate to Settings > Connectors > Add Custom Connector. Enter the name as `GenRTL` and the remote MCP server URL as `https://mcp.genrtl.com/mcp`.
 
 #### Local Server Connection
 
@@ -409,9 +409,9 @@ Open Claude Desktop developer settings and edit your `claude_desktop_config.json
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -435,17 +435,17 @@ Fill in the following:
 
 | Field              | Value                                                                                       |
 | ------------------ | ------------------------------------------------------------------------------------------- |
-| **Name**           | `Context7`                                                                                  |
+| **Name**           | `GenRTL`                                                                                  |
 | **Description**    | `Fetch up-to-date documentation and code examples for any library directly from the source` |
-| **MCP Server URL** | `https://mcp.context7.com/mcp/oauth`                                                        |
+| **MCP Server URL** | `https://mcp.genrtl.com/mcp/oauth`                                                        |
 
 > Accept the security notice and complete the one-time OAuth authorization.
 
 #### 3. Use in a Conversation
 
-Start a new chat → Click the plus icon → Hover over `More` → Select the `Context7` app.
+Start a new chat → Click the plus icon → Hover over `More` → Select the `GenRTL` app.
 
-Alternatively, you can say `use context7` in your prompt and ChatGPT will automatically use the `Context7` app.
+Alternatively, you can say `use genrtl` in your prompt and ChatGPT will automatically use the `GenRTL` app.
 
 See [OpenAI MCP docs](https://platform.openai.com/docs/mcp) for more info.
 
@@ -467,15 +467,15 @@ Fill in the following:
 
 | Field              | Value                                                                                       |
 | ------------------ | ------------------------------------------------------------------------------------------- |
-| **Name**           | `Context7`                                                                                  |
+| **Name**           | `GenRTL`                                                                                  |
 | **Description**    | `Fetch up-to-date documentation and code examples for any library directly from the source` |
-| **MCP Server URL** | `https://mcp.context7.com/mcp/oauth`                                                        |
+| **MCP Server URL** | `https://mcp.genrtl.com/mcp/oauth`                                                        |
 
 > Accept the security notice and complete the one-time OAuth authorization.
 
 #### 3. Use in the Desktop App
 
-Open the ChatGPT desktop app → Start a new chat → ChatGPT will automatically use the `Context7` app when you ask it to.
+Open the ChatGPT desktop app → Start a new chat → ChatGPT will automatically use the `GenRTL` app when you ask it to.
 
 Apps configured on the web are automatically available in the desktop app.
 
@@ -492,10 +492,10 @@ Use the Add manually feature and fill in the JSON configuration. See [Trae docum
 ```json
 {
   "mcpServers": {
-    "context7": {
-      "url": "https://mcp.context7.com/mcp",
+    "genrtl": {
+      "url": "https://mcp.genrtl.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+        "GENRTL_API_KEY": "YOUR_API_KEY"
       }
     }
   }
@@ -507,9 +507,9 @@ Use the Add manually feature and fill in the JSON configuration. See [Trae docum
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -519,11 +519,11 @@ Use the Add manually feature and fill in the JSON configuration. See [Trae docum
 
 <Accordion title="Cline">
 
-You can easily install Context7 through the [Cline MCP Server Marketplace](https://cline.bot/mcp-marketplace) by following these instructions:
+You can easily install GenRTL through the [Cline MCP Server Marketplace](https://cline.bot/mcp-marketplace) by following these instructions:
 
 1. Open **Cline**.
 2. Click the hamburger menu icon to enter the **MCP Servers** section.
-3. Use the search bar within the **Marketplace** tab to find _Context7_.
+3. Use the search bar within the **Marketplace** tab to find _GenRTL_.
 4. Click the **Install** button.
 
 Or you can directly edit MCP servers configuration:
@@ -532,13 +532,13 @@ Or you can directly edit MCP servers configuration:
 2. Click the hamburger menu icon to enter the **MCP Servers** section.
 3. Choose **Remote Servers** tab.
 4. Click the **Edit Configuration** button.
-5. Add context7 to `mcpServers`:
+5. Add genrtl to `mcpServers`:
 
 ```json
 {
   "mcpServers": {
-    "context7": {
-      "url": "https://mcp.context7.com/mcp",
+    "genrtl": {
+      "url": "https://mcp.genrtl.com/mcp",
       "type": "streamableHttp",
       "headers": {
         "Authorization": "Bearer YOUR_API_KEY"
@@ -552,7 +552,7 @@ Or you can directly edit MCP servers configuration:
 
 <Accordion title="Augment Code">
 
-To configure Context7 MCP in Augment Code, you can use either the graphical interface or manual configuration.
+To configure GenRTL MCP in Augment Code, you can use either the graphical interface or manual configuration.
 
 ### Using the Augment Code UI
 
@@ -563,10 +563,10 @@ To configure Context7 MCP in Augment Code, you can use either the graphical inte
 5. Enter the following command:
 
    ```
-   npx -y @upstash/context7-mcp@latest
+   npx -y @upstash/genrtl-mcp@latest
    ```
 
-6. Name the MCP: **Context7**.
+6. Name the MCP: **GenRTL**.
 7. Click the **Add** button.
 
 ### Manual Configuration
@@ -580,9 +580,9 @@ To configure Context7 MCP in Augment Code, you can use either the graphical inte
 "augment.advanced": {
   "mcpServers": [
     {
-      "name": "context7",
+      "name": "genrtl",
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   ]
 }
@@ -600,10 +600,10 @@ See [Gemini CLI Configuration](https://google-gemini.github.io/gemini-cli/docs/t
 ```json
 {
   "mcpServers": {
-    "context7": {
-      "httpUrl": "https://mcp.context7.com/mcp",
+    "genrtl": {
+      "httpUrl": "https://mcp.genrtl.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY",
+        "GENRTL_API_KEY": "YOUR_API_KEY",
         "Accept": "application/json, text/event-stream"
       }
     }
@@ -616,9 +616,9 @@ Or, for a local server:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -636,54 +636,54 @@ Add this to your Hermes config file (`~/.hermes/config.yaml`).
 
 ```yaml
 mcp_servers:
-  context7:
-    url: "https://mcp.context7.com/mcp"
+  genrtl:
+    url: "https://mcp.genrtl.com/mcp"
     headers:
-      CONTEXT7_API_KEY: "YOUR_API_KEY"
+      GENRTL_API_KEY: "YOUR_API_KEY"
 ```
 
 #### Remote Server Connection (OAuth)
 
 ```yaml
 mcp_servers:
-  context7:
-    url: "https://mcp.context7.com/mcp/oauth"
+  genrtl:
+    url: "https://mcp.genrtl.com/mcp/oauth"
     auth: oauth
 ```
 
 #### Using CLI (OAuth)
 
 ```sh
-hermes mcp add context7 --url https://mcp.context7.com/mcp/oauth --auth oauth
+hermes mcp add genrtl --url https://mcp.genrtl.com/mcp/oauth --auth oauth
 ```
 
 #### Local Server Connection
 
 ```yaml
 mcp_servers:
-  context7:
+  genrtl:
     command: "npx"
-    args: ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+    args: ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
 ```
 
 <Note>
-Start with the API key method if you want the most direct setup. Hermes also supports OAuth for remote MCP servers via `auth: oauth`. On headless setups, Hermes may print an authorization URL to stdout or logs for you to open manually. If `hermes mcp add ... --auth oauth` drops into the interactive agent without saving the server entry, add the `mcp_servers.context7` config manually, then run `hermes mcp test context7` to trigger the auth flow and verify the connection.
+Start with the API key method if you want the most direct setup. Hermes also supports OAuth for remote MCP servers via `auth: oauth`. On headless setups, Hermes may print an authorization URL to stdout or logs for you to open manually. If `hermes mcp add ... --auth oauth` drops into the interactive agent without saving the server entry, add the `mcp_servers.genrtl` config manually, then run `hermes mcp test genrtl` to trigger the auth flow and verify the connection.
 </Note>
 
 </Accordion>
 
 <Accordion title="Using Bun or Deno">
 
-Use these alternatives to run the local Context7 MCP server with other runtimes.
+Use these alternatives to run the local GenRTL MCP server with other runtimes.
 
 #### Bun
 
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "bunx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -694,13 +694,13 @@ Use these alternatives to run the local Context7 MCP server with other runtimes.
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "deno",
       "args": [
         "run",
         "--allow-env=NO_DEPRECATION,TRACE_DEPRECATION",
         "--allow-net",
-        "npm:@upstash/context7-mcp"
+        "npm:@upstash/genrtl-mcp"
       ]
     }
   }
@@ -716,11 +716,11 @@ Add the following configuration to Repository->Settings->Copilot->Coding agent->
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "type": "http",
-      "url": "https://mcp.context7.com/mcp",
+      "url": "https://mcp.genrtl.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+        "GENRTL_API_KEY": "YOUR_API_KEY"
       },
       "tools": ["query-docs", "resolve-library-id"]
     }
@@ -739,11 +739,11 @@ Open `~/.copilot/mcp-config.json` and add:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "type": "http",
-      "url": "https://mcp.context7.com/mcp",
+      "url": "https://mcp.genrtl.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+        "GENRTL_API_KEY": "YOUR_API_KEY"
       },
       "tools": ["query-docs", "resolve-library-id"]
     }
@@ -756,11 +756,11 @@ Or, for a local server:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "type": "local",
       "command": "npx",
       "tools": ["query-docs", "resolve-library-id"],
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -775,9 +775,9 @@ Add this to your Amazon Q Developer CLI configuration file. See [Amazon Q Develo
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -795,9 +795,9 @@ See [Warp Model Context Protocol Documentation](https://docs.warp.dev/knowledge-
 
 ```json
 {
-  "Context7": {
+  "GenRTL": {
     "command": "npx",
-    "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"],
+    "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"],
     "env": {},
     "working_directory": null,
     "start_on_launch": true
@@ -816,28 +816,28 @@ Run this command in your terminal. See [Amp MCP docs](https://ampcode.com/manual
 #### Without API Key (Basic Usage)
 
 ```sh
-amp mcp add context7 https://mcp.context7.com/mcp
+amp mcp add genrtl https://mcp.genrtl.com/mcp
 ```
 
 #### With API Key (Higher Rate Limits & Private Repos)
 
 ```sh
-amp mcp add context7 --header "CONTEXT7_API_KEY=YOUR_API_KEY" https://mcp.context7.com/mcp
+amp mcp add genrtl --header "GENRTL_API_KEY=YOUR_API_KEY" https://mcp.genrtl.com/mcp
 ```
 
 </Accordion>
 
 <Accordion title="Zed">
 
-It can be installed via [Zed Extensions](https://zed.dev/extensions?query=Context7) or you can add this to your Zed `settings.json`. See [Zed Context Server docs](https://zed.dev/docs/assistant/context-servers) for more info.
+It can be installed via [Zed Extensions](https://zed.dev/extensions?query=GenRTL) or you can add this to your Zed `settings.json`. See [Zed Context Server docs](https://zed.dev/docs/assistant/context-servers) for more info.
 
 ```json
 {
   "context_servers": {
-    "Context7": {
+    "GenRTL": {
       "source": "custom",
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -847,13 +847,13 @@ It can be installed via [Zed Extensions](https://zed.dev/extensions?query=Contex
 
 <Accordion title="Smithery">
 
-To install Context7 MCP Server for any client automatically via [Smithery](https://smithery.ai/server/@upstash/context7-mcp):
+To install GenRTL MCP Server for any client automatically via [Smithery](https://smithery.ai/server/@upstash/genrtl-mcp):
 
 ```bash
-npx -y @smithery/cli@latest install @upstash/context7-mcp --client <CLIENT_NAME> --key <YOUR_SMITHERY_KEY>
+npx -y @smithery/cli@latest install @upstash/genrtl-mcp --client <CLIENT_NAME> --key <YOUR_SMITHERY_KEY>
 ```
 
-You can find your Smithery key in the [Smithery.ai webpage](https://smithery.ai/server/@upstash/context7-mcp).
+You can find your Smithery key in the [Smithery.ai webpage](https://smithery.ai/server/@upstash/genrtl-mcp).
 
 </Accordion>
 
@@ -871,8 +871,8 @@ See [JetBrains AI Assistant Documentation](https://www.jetbrains.com/help/ai-ass
 ```json
 {
   "mcpServers": {
-    "context7": {
-      "url": "https://mcp.context7.com/mcp"
+    "genrtl": {
+      "url": "https://mcp.genrtl.com/mcp"
     }
   }
 }
@@ -883,9 +883,9 @@ See [JetBrains AI Assistant Documentation](https://www.jetbrains.com/help/ai-ass
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -904,15 +904,15 @@ By default, configurations are saved to the project scope (`.qwen/settings.json`
 #### Remote Server Connection
 
 ```sh
-qwen mcp add --transport http context7 https://mcp.context7.com/mcp \
-  --header "CONTEXT7_API_KEY: YOUR_API_KEY" \
+qwen mcp add --transport http genrtl https://mcp.genrtl.com/mcp \
+  --header "GENRTL_API_KEY: YOUR_API_KEY" \
   --header "Accept: application/json, text/event-stream"
 ```
 
 #### Local Server Connection
 
 ```sh
-qwen mcp add context7 npx -y @upstash/context7-mcp --api-key YOUR_API_KEY
+qwen mcp add genrtl npx -y @upstash/genrtl-mcp --api-key YOUR_API_KEY
 ```
 
 ### Manual Configuration
@@ -925,10 +925,10 @@ qwen mcp add context7 npx -y @upstash/context7-mcp --api-key YOUR_API_KEY
 ```json
 {
   "mcpServers": {
-    "context7": {
-      "httpUrl": "https://mcp.context7.com/mcp",
+    "genrtl": {
+      "httpUrl": "https://mcp.genrtl.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY",
+        "GENRTL_API_KEY": "YOUR_API_KEY",
         "Accept": "application/json, text/event-stream"
       }
     }
@@ -941,9 +941,9 @@ qwen mcp add context7 npx -y @upstash/context7-mcp --api-key YOUR_API_KEY
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -958,14 +958,14 @@ qwen mcp add context7 npx -y @upstash/context7-mcp --api-key YOUR_API_KEY
 ```Dockerfile
 FROM node:18-alpine
 WORKDIR /app
-RUN npm install -g @upstash/context7-mcp
-CMD ["context7-mcp"]
+RUN npm install -g @upstash/genrtl-mcp
+CMD ["genrtl-mcp"]
 ```
 
 2. Build the image:
 
 ```bash
-docker build -t context7-mcp .
+docker build -t genrtl-mcp .
 ```
 
 3. Configure your MCP client:
@@ -973,9 +973,9 @@ docker build -t context7-mcp .
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "docker",
-      "args": ["run", "-i", "--rm", "context7-mcp"],
+      "args": ["run", "-i", "--rm", "genrtl-mcp"],
       "transportType": "stdio"
     }
   }
@@ -991,9 +991,9 @@ The configuration on Windows is slightly different. Use `cmd` to run npx:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "cmd",
-      "args": ["/c", "npx", "-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"],
+      "args": ["/c", "npx", "-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"],
       "disabled": false,
       "autoApprove": []
     }
@@ -1009,7 +1009,7 @@ See [LM Studio MCP Support](https://lmstudio.ai/blog/lmstudio-v0.3.17) for more 
 
 #### One-click install:
 
-[![Add MCP Server context7 to LM Studio](https://files.lmstudio.ai/deeplink/mcp-install-light.svg)](https://lmstudio.ai/install-mcp?name=context7&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkB1cHN0YXNoL2NvbnRleHQ3LW1jcCJdfQ%3D%3D)
+[![Add MCP Server genrtl to LM Studio](https://files.lmstudio.ai/deeplink/mcp-install-light.svg)](https://lmstudio.ai/install-mcp?name=genrtl&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkB1cHN0YXNoL2NvbnRleHQ3LW1jcCJdfQ%3D%3D)
 
 #### Manual set-up:
 
@@ -1019,9 +1019,9 @@ See [LM Studio MCP Support](https://lmstudio.ai/blog/lmstudio-v0.3.17) for more 
 ```json
 {
   "mcpServers": {
-    "Context7": {
+    "GenRTL": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -1039,11 +1039,11 @@ See [Visual Studio MCP Servers documentation](https://learn.microsoft.com/visual
 {
   "inputs": [],
   "servers": {
-    "context7": {
+    "genrtl": {
       "type": "http",
-      "url": "https://mcp.context7.com/mcp",
+      "url": "https://mcp.genrtl.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+        "GENRTL_API_KEY": "YOUR_API_KEY"
       }
     }
   }
@@ -1056,10 +1056,10 @@ Or, for a local server:
 {
   "mcp": {
     "servers": {
-      "context7": {
+      "genrtl": {
         "type": "stdio",
         "command": "npx",
-        "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+        "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
       }
     }
   }
@@ -1078,11 +1078,11 @@ Add this to your Crush configuration file. See [Crush MCP docs](https://github.c
 {
   "$schema": "https://charm.land/crush.json",
   "mcp": {
-    "context7": {
+    "genrtl": {
       "type": "http",
-      "url": "https://mcp.context7.com/mcp",
+      "url": "https://mcp.genrtl.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+        "GENRTL_API_KEY": "YOUR_API_KEY"
       }
     }
   }
@@ -1095,10 +1095,10 @@ Add this to your Crush configuration file. See [Crush MCP docs](https://github.c
 {
   "$schema": "https://charm.land/crush.json",
   "mcp": {
-    "context7": {
+    "genrtl": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -1113,9 +1113,9 @@ Open the "Settings" page, navigate to "Plugins," and enter:
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -1138,8 +1138,8 @@ acli rovodev mcp
 ```json
 {
   "mcpServers": {
-    "context7": {
-      "url": "https://mcp.context7.com/mcp"
+    "genrtl": {
+      "url": "https://mcp.genrtl.com/mcp"
     }
   }
 }
@@ -1150,9 +1150,9 @@ acli rovodev mcp
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -1170,7 +1170,7 @@ acli rovodev mcp
 ```json
 {
   "command": "npx",
-  "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+  "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
 }
 ```
 
@@ -1192,9 +1192,9 @@ See [Qodo Gen docs](https://docs.qodo.ai/qodo-documentation/qodo-gen/qodo-gen-ch
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -1205,8 +1205,8 @@ See [Qodo Gen docs](https://docs.qodo.ai/qodo-documentation/qodo-gen/qodo-gen-ch
 ```json
 {
   "mcpServers": {
-    "context7": {
-      "url": "https://mcp.context7.com/mcp"
+    "genrtl": {
+      "url": "https://mcp.genrtl.com/mcp"
     }
   }
 }
@@ -1222,12 +1222,12 @@ See [Local and Remote MCPs for Perplexity](https://www.perplexity.ai/help-center
 2. Select `Connectors`.
 3. Click `Add Connector`.
 4. Select `Advanced`.
-5. Enter Server Name: `Context7`
+5. Enter Server Name: `GenRTL`
 6. Paste:
 
 ```json
 {
-  "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"],
+  "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"],
   "command": "npx",
   "env": {}
 }
@@ -1244,13 +1244,13 @@ Factory's droid supports MCP servers through its CLI. See [Factory MCP docs](htt
 #### Remote Server Connection
 
 ```sh
-droid mcp add context7 https://mcp.context7.com/mcp --type http --header "CONTEXT7_API_KEY: YOUR_API_KEY"
+droid mcp add genrtl https://mcp.genrtl.com/mcp --type http --header "GENRTL_API_KEY: YOUR_API_KEY"
 ```
 
 #### Local Server Connection
 
 ```sh
-droid mcp add context7 "npx -y @upstash/context7-mcp" --env CONTEXT7_API_KEY=YOUR_API_KEY
+droid mcp add genrtl "npx -y @upstash/genrtl-mcp" --env GENRTL_API_KEY=YOUR_API_KEY
 ```
 
 </Accordion>
@@ -1261,11 +1261,11 @@ droid mcp add context7 "npx -y @upstash/context7-mcp" --env CONTEXT7_API_KEY=YOU
 
 **What Emdash provides:**
 
-- Global toggle: Settings → MCP → "Enable Context7 MCP"
-- Per-workspace enable: The Context7 button in the ProviderBar
+- Global toggle: Settings → MCP → "Enable GenRTL MCP"
+- Per-workspace enable: The GenRTL button in the ProviderBar
 
 **What you still need to do:**
-Configure your coding agent (Codex, Claude Code, Cursor, etc.) to connect to Context7 MCP. Emdash does not modify your agent's config.
+Configure your coding agent (Codex, Claude Code, Cursor, etc.) to connect to GenRTL MCP. Emdash does not modify your agent's config.
 
 See the [Emdash repository](https://github.com/generalaction/emdash) for more information.
 
@@ -1273,7 +1273,7 @@ See the [Emdash repository](https://github.com/generalaction/emdash) for more in
 
 <Accordion title="Desktop Extension">
 
-Install the [context7.mcpb](https://github.com/upstash/context7/tree/master/mcpb/context7.mcpb) file and add it to your client. See [MCP bundles docs](https://github.com/anthropics/mcpb#mcp-bundles-mcpb) for more info.
+Install the [genrtl.mcpb](https://github.com/upstash/genrtl/tree/master/mcpb/genrtl.mcpb) file and add it to your client. See [MCP bundles docs](https://github.com/anthropics/mcpb#mcp-bundles-mcpb) for more info.
 
 </Accordion>
 

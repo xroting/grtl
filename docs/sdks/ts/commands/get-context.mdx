@@ -59,9 +59,9 @@ Returns a `string` containing the documentation context ready to use in LLM prom
 
 <RequestExample>
 ```typescript JSON Format (Default)
-import { Context7 } from "@upstash/context7-sdk";
+import { GenRTL } from "@upstash/genrtl-sdk";
 
-const client = new Context7();
+const client = new GenRTL();
 
 const docs = await client.getContext(
   "How do I use hooks?",
@@ -76,9 +76,9 @@ docs.forEach((doc) => {
 ```
 
 ```typescript Text Format
-import { Context7 } from "@upstash/context7-sdk";
+import { GenRTL } from "@upstash/genrtl-sdk";
 
-const client = new Context7();
+const client = new GenRTL();
 
 const context = await client.getContext(
   "How do I use hooks?",
@@ -90,9 +90,9 @@ console.log(context);
 ```
 
 ```typescript Error Handling
-import { Context7, Context7Error } from "@upstash/context7-sdk";
+import { GenRTL, GenRTLError } from "@upstash/genrtl-sdk";
 
-const client = new Context7();
+const client = new GenRTL();
 
 try {
   const context = await client.getContext(
@@ -100,7 +100,7 @@ try {
     "/invalid/library"
   );
 } catch (error) {
-  if (error instanceof Context7Error) {
+  if (error instanceof GenRTLError) {
     console.error("API Error:", error.message);
   } else {
     throw error;
@@ -114,9 +114,9 @@ try {
 ### Providing Context to LLMs
 
 ```typescript
-import { Context7 } from "@upstash/context7-sdk";
+import { GenRTL } from "@upstash/genrtl-sdk";
 
-const client = new Context7();
+const client = new GenRTL();
 
 async function getDocsForPrompt(library: string, question: string) {
   const context = await client.getContext(question, library);
@@ -136,9 +136,9 @@ const prompt = await getDocsForPrompt("/facebook/react", "How do I use useEffect
 ### Processing Individual Snippets
 
 ```typescript
-import { Context7 } from "@upstash/context7-sdk";
+import { GenRTL } from "@upstash/genrtl-sdk";
 
-const client = new Context7();
+const client = new GenRTL();
 
 const docs = await client.getContext(
   "How to create components?",

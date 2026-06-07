@@ -1,13 +1,11 @@
 import { Command } from "commander";
 import pc from "picocolors";
 import figlet from "figlet";
-import { registerSkillCommands, registerSkillAliases } from "./commands/skill.js";
-import { registerAuthCommands, setAuthBaseUrl } from "./commands/auth.js";
 import { registerSetupCommand } from "./commands/setup.js";
-import { registerRemoveCommand } from "./commands/remove.js";
-import { registerDocsCommands } from "./commands/docs.js";
+import { registerKnowledgeCommands } from "./commands/knowledge.js";
 import { maybeShowUpgradeNotice, registerUpgradeCommand } from "./commands/upgrade.js";
-import { setBaseUrl } from "./utils/api.js";
+import { setMcpBaseUrl } from "./setup/http-agents.js";
+import { setBaseUrl } from "./utils/knowledge-api.js";
 import { VERSION } from "./constants.js";
 
 const brand = {
@@ -18,15 +16,15 @@ const brand = {
 const program = new Command();
 
 program
-  .name("ctx7")
-  .description("Context7 CLI - Fetch documentation context and configure Context7")
+  .name("grtl")
+  .description("GenRTL CLI - Search RTL engineering knowledge and configure GenRTL")
   .version(VERSION)
   .option("--base-url <url>")
   .hook("preAction", (thisCommand) => {
     const opts = thisCommand.opts();
     if (opts.baseUrl) {
       setBaseUrl(opts.baseUrl);
-      setAuthBaseUrl(opts.baseUrl);
+      setMcpBaseUrl(opts.baseUrl);
     }
   })
   .hook("preAction", async (_thisCommand, actionCommand) => {
@@ -39,44 +37,35 @@ program
     "after",
     `
 Examples:
-  ${brand.dim("# Configure Context7 for your coding agent")}
-  ${brand.primary("npx ctx7 setup")}
-  ${brand.primary("npx ctx7 setup --mcp")}
-  ${brand.primary("npx ctx7 setup --cli")}
+  ${brand.dim("# Configure GenRTL for your coding agent")}
+  ${brand.primary("GRTL_API_KEY=your_key npx grtl setup --cursor")}
+  ${brand.primary("GRTL_API_KEY=your_key npx grtl setup --codex --project")}
 
-  ${brand.dim("# Remove Context7 setup")}
-  ${brand.primary("npx ctx7 remove --cursor")}
-  ${brand.primary("npx ctx7 remove --cursor --all")}
-  ${brand.primary("npx ctx7 remove --cursor --cli")}
-  ${brand.primary("npx ctx7 remove --claude --mcp")}
-
-  ${brand.dim("# Query library documentation")}
-  ${brand.primary('npx ctx7 library react "how to use hooks"')}
-  ${brand.primary('npx ctx7 docs /facebook/react "useEffect examples"')}
+  ${brand.dim("# Search the same four tools exposed by the GenRTL MCP server")}
+  ${brand.primary('npx grtl knowledge-search "AXI stream backpressure design"')}
+  ${brand.primary('npx grtl spec2rtl-search "Generate an APB register block"')}
+  ${brand.primary('npx grtl verification-search "Verify an async FIFO"')}
+  ${brand.primary('npx grtl debug-search "Explain this Vivado CDC warning"')}
 `
   );
 
-registerSkillCommands(program);
-registerSkillAliases(program);
-registerAuthCommands(program);
 registerSetupCommand(program);
-registerRemoveCommand(program);
-registerDocsCommands(program);
+registerKnowledgeCommands(program);
 registerUpgradeCommand(program);
 
 program.action(() => {
   console.log("");
-  const banner = figlet.textSync("Context7", { font: "ANSI Shadow" });
+  const banner = figlet.textSync("GenRTL", { font: "ANSI Shadow" });
   console.log(brand.primary(banner));
-  console.log(brand.dim("  Documentation context for AI coding agents"));
+  console.log(brand.dim("  RTL engineering knowledge for AI coding agents"));
   console.log("");
 
   console.log("  Quick start:");
-  console.log(`    ${brand.primary("npx ctx7 setup")}`);
-  console.log(`    ${brand.primary('npx ctx7 docs /facebook/react "useEffect examples"')}`);
+  console.log(`    ${brand.primary("npx grtl setup")}`);
+  console.log(`    ${brand.primary('npx grtl knowledge-search "your RTL question"')}`);
   console.log("");
 
-  console.log(`  Run ${brand.primary("npx ctx7 --help")} for all commands and options`);
+  console.log(`  Run ${brand.primary("npx grtl --help")} for all commands and options`);
   console.log("");
 });
 

@@ -1,18 +1,18 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Context7 Public API",
-    "description": "The Context7 Public API provides programmatic access to library documentation and search functionality. Get up-to-date documentation and code examples for any library.",
+    "title": "GenRTL Public API",
+    "description": "The GenRTL Public API provides programmatic access to library documentation and search functionality. Get up-to-date documentation and code examples for any library.",
     "version": "2.0.0",
     "contact": {
-      "name": "Context7 Support",
-      "url": "https://context7.com",
-      "email": "support@context7.com"
+      "name": "GenRTL Support",
+      "url": "https://genrtl.com",
+      "email": "support@genrtl.com"
     }
   },
   "servers": [
     {
-      "url": "https://context7.com/api",
+      "url": "https://genrtl.com/api",
       "description": "Production server"
     }
   ],
@@ -102,7 +102,7 @@
     "/v2/libs/metrics": {
       "get": {
         "summary": "Get library usage metrics",
-        "description": "Retrieve full usage metrics for a library: cumulative and daily request counters broken down by surface (web page, text docs, MCP, CLI), MCP client daily unique-user breakdown, and lifetime topic and country distributions. The API key must belong to a member of the teamspace that owns the library — claim ownership from the library's admin page on context7.com.",
+        "description": "Retrieve full usage metrics for a library: cumulative and daily request counters broken down by surface (web page, text docs, MCP, CLI), MCP client daily unique-user breakdown, and lifetime topic and country distributions. The API key must belong to a member of the teamspace that owns the library — claim ownership from the library's admin page on genrtl.com.",
         "operationId": "getLibraryMetrics",
         "tags": [
           "Metrics"
@@ -330,7 +330,7 @@
                 "properties": {
                   "libraryName": {
                     "type": "string",
-                    "description": "Library identifier — the URL path of the library on context7.com. Use `/owner/repo` for GitHub repositories (e.g., `/vercel/next.js`), or `/<source>/<id>` for other sources (e.g., `/websites/uploadcare_com`, `/llmstxt/<source>`). See [Library ID format](/api-guide#library-id-format)."
+                    "description": "Library identifier — the URL path of the library on genrtl.com. Use `/owner/repo` for GitHub repositories (e.g., `/vercel/next.js`), or `/<source>/<id>` for other sources (e.g., `/websites/uploadcare_com`, `/llmstxt/<source>`). See [Library ID format](/api-guide#library-id-format)."
                   },
                   "branch": {
                     "type": "string",
@@ -689,7 +689,7 @@
     "/v2/add/repo/github": {
       "post": {
         "summary": "Add a GitHub repository",
-        "description": "Submit a GitHub repository for documentation processing. Supports private repos via a gitToken or by connecting your GitHub account at https://context7.com/add-library.",
+        "description": "Submit a GitHub repository for documentation processing. Supports private repos via a gitToken or by connecting your GitHub account at https://genrtl.com/add-library.",
         "operationId": "addGitHubRepo",
         "tags": [
           "Add Library"
@@ -746,7 +746,7 @@
     "/v2/add/repo/gitlab": {
       "post": {
         "summary": "Add a GitLab repository",
-        "description": "Submit a GitLab repository for documentation processing. Supports private repos via a gitToken or by connecting your GitLab account at https://context7.com/add-library.",
+        "description": "Submit a GitLab repository for documentation processing. Supports private repos via a gitToken or by connecting your GitLab account at https://genrtl.com/add-library.",
         "operationId": "addGitLabRepo",
         "tags": [
           "Add Library"
@@ -803,7 +803,7 @@
     "/v2/add/repo/bitbucket": {
       "post": {
         "summary": "Add a Bitbucket repository",
-        "description": "Submit a Bitbucket repository for documentation processing. Supports private repos via a gitToken or by connecting your Bitbucket account at https://context7.com/add-library.",
+        "description": "Submit a Bitbucket repository for documentation processing. Supports private repos via a gitToken or by connecting your Bitbucket account at https://genrtl.com/add-library.",
         "operationId": "addBitbucketRepo",
         "tags": [
           "Add Library"
@@ -1406,7 +1406,7 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "Get your API key at [context7.com/dashboard](https://context7.com/dashboard). Treat your API key like a password and store it securely."
+        "description": "Get your API key at [genrtl.com/dashboard](https://genrtl.com/dashboard). Treat your API key like a password and store it securely."
       }
     },
     "parameters": {
@@ -1437,7 +1437,7 @@
       "LibraryIdParam": {
         "name": "libraryId",
         "in": "query",
-        "description": "Context7-compatible library ID — the URL path of the library on context7.com. Use `/owner/repo` for GitHub repositories, or `/<source>/<id>` for other sources (websites, llms.txt, GitLab/Bitbucket, etc.). Optionally suffix with `/<version>` or `@<version>` to pin a specific version. See [Library ID format](/api-guide#library-id-format).",
+        "description": "GenRTL-compatible library ID — the URL path of the library on genrtl.com. Use `/owner/repo` for GitHub repositories, or `/<source>/<id>` for other sources (websites, llms.txt, GitLab/Bitbucket, etc.). Optionally suffix with `/<version>` or `@<version>` to pin a specific version. See [Library ID format](/api-guide#library-id-format).",
         "required": true,
         "schema": {
           "type": "string",
@@ -1519,7 +1519,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Library ID — the URL path of the library on context7.com. `/owner/repo` for GitHub repositories, or `/<source>/<id>` for other sources (e.g., `/vercel/next.js`, `/websites/uploadcare_com`). See [Library ID format](/api-guide#library-id-format).",
+            "description": "Library ID — the URL path of the library on genrtl.com. `/owner/repo` for GitHub repositories, or `/<source>/<id>` for other sources (e.g., `/vercel/next.js`, `/websites/uploadcare_com`). See [Library ID format](/api-guide#library-id-format).",
             "example": "/vercel/next.js"
           },
           "title": {
@@ -1791,7 +1791,7 @@
         "properties": {
           "page": {
             "type": "integer",
-            "description": "Requests served to the context7.com web UI"
+            "description": "Requests served to the genrtl.com web UI"
           },
           "txt": {
             "type": "integer",
@@ -1799,11 +1799,11 @@
           },
           "mcp": {
             "type": "integer",
-            "description": "Requests served via the Context7 MCP server"
+            "description": "Requests served via the GenRTL MCP server"
           },
           "cli": {
             "type": "integer",
-            "description": "Requests served to the Context7 CLI"
+            "description": "Requests served to the GenRTL CLI"
           }
         },
         "required": [
@@ -1825,7 +1825,7 @@
           },
           "page": {
             "type": "integer",
-            "description": "Requests served to the context7.com web UI on this date"
+            "description": "Requests served to the genrtl.com web UI on this date"
           },
           "txt": {
             "type": "integer",
@@ -1833,11 +1833,11 @@
           },
           "mcp": {
             "type": "integer",
-            "description": "Requests served via the Context7 MCP server on this date"
+            "description": "Requests served via the GenRTL MCP server on this date"
           },
           "cli": {
             "type": "integer",
-            "description": "Requests served to the Context7 CLI on this date"
+            "description": "Requests served to the GenRTL CLI on this date"
           },
           "total": {
             "type": "integer",
@@ -1989,7 +1989,7 @@
           },
           "gitToken": {
             "type": "string",
-            "description": "Personal access token for private repositories. If not provided, the token from your OAuth connection at https://context7.com/add-library is used."
+            "description": "Personal access token for private repositories. If not provided, the token from your OAuth connection at https://genrtl.com/add-library is used."
           },
           "private": {
             "type": "boolean",
@@ -2007,7 +2007,7 @@
         "properties": {
           "libraryName": {
             "type": "string",
-            "description": "The library identifier assigned — the URL path of the library on context7.com. `/owner/repo` for GitHub repositories, or `/<source>/<id>` for other sources (e.g., `/vercel/next.js`, `/websites/uploadcare_com`). See [Library ID format](/api-guide#library-id-format)."
+            "description": "The library identifier assigned — the URL path of the library on genrtl.com. `/owner/repo` for GitHub repositories, or `/<source>/<id>` for other sources (e.g., `/vercel/next.js`, `/websites/uploadcare_com`). See [Library ID format](/api-guide#library-id-format)."
           },
           "message": {
             "type": "string",
@@ -2393,7 +2393,7 @@
                 "summary": "Invalid library ID format",
                 "value": {
                   "error": "invalid_library_id",
-                  "message": "Invalid library ID format. Expected: `/owner/repo` for GitHub repositories, or `/<source>/<id>` for other sources (the URL path of the library on context7.com)"
+                  "message": "Invalid library ID format. Expected: `/owner/repo` for GitHub repositories, or `/<source>/<id>` for other sources (the URL path of the library on genrtl.com)"
                 }
               }
             }
@@ -2426,7 +2426,7 @@
                 "summary": "Plan upgrade required",
                 "value": {
                   "error": "forbidden",
-                  "message": "Private repositories require a pro plan or team. Upgrade at https://context7.com/plans"
+                  "message": "Private repositories require a pro plan or team. Upgrade at https://genrtl.com/plans"
                 }
               }
             }
@@ -2579,7 +2579,7 @@
             },
             "example": {
               "error": "invalid_api_key",
-              "message": "Invalid API key. Please check your API key. API keys should start with 'ctx7sk' prefix."
+              "message": "Invalid API key. Please check your API key. API keys should start with 'grtlsk' prefix."
             }
           }
         }
@@ -2621,7 +2621,7 @@
             },
             "example": {
               "error": "spending_limit_exceeded",
-              "message": "Monthly spending limit of $5.00 reached for this teamspace. An owner or admin can raise the limit at https://context7.com/dashboard/billing, or the cap will reset at the start of next month."
+              "message": "Monthly spending limit of $5.00 reached for this teamspace. An owner or admin can raise the limit at https://genrtl.com/dashboard/billing, or the cap will reset at the start of next month."
             }
           }
         }
@@ -2685,7 +2685,7 @@
   "tags": [
     {
       "name": "Search",
-      "description": "Search for libraries in the Context7 database"
+      "description": "Search for libraries in the GenRTL database"
     },
     {
       "name": "Context",

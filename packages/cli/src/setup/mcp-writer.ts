@@ -1,6 +1,7 @@
 import { access, readFile, writeFile, mkdir } from "fs/promises";
 import { dirname } from "path";
-import { STDIO_PACKAGE } from "./agents.js";
+
+const LEGACY_STDIO_PACKAGE = "@upstash/genrtl-mcp";
 
 function stripJsonComments(text: string): string {
   let result = "";
@@ -161,14 +162,14 @@ export async function readTomlServerEntry(
 }
 
 /**
- * True when `entry` looks like a stdio invocation of `@upstash/context7-mcp`
- * (either `command: "npx", args: [..., "@upstash/context7-mcp", ...]` or
- * OpenCode-style `command: ["npx", ..., "@upstash/context7-mcp", ...]`).
+ * True when `entry` looks like a stdio invocation of `@upstash/genrtl-mcp`
+ * (either `command: "npx", args: [..., "@upstash/genrtl-mcp", ...]` or
+ * OpenCode-style `command: ["npx", ..., "@upstash/genrtl-mcp", ...]`).
  */
-export function isStdioContext7Entry(entry: unknown): entry is Record<string, unknown> {
+export function isStdioGenRTLEntry(entry: unknown): entry is Record<string, unknown> {
   if (!entry || typeof entry !== "object") return false;
   const e = entry as Record<string, unknown>;
-  const refs = (s: unknown) => typeof s === "string" && s.includes(STDIO_PACKAGE);
+  const refs = (s: unknown) => typeof s === "string" && s.includes(LEGACY_STDIO_PACKAGE);
 
   if (Array.isArray(e.command)) {
     return (e.command as unknown[]).some(refs);
@@ -211,7 +212,7 @@ function stripApiKeyPair(args: string[]): string[] {
  * Returns a copy of `entry` with any existing `--api-key <value>` pair
  * removed from args (or array-form command), then a new `--api-key <apiKey>`
  * appended when `apiKey` is provided. All other fields — including the
- * package specifier (e.g., `@upstash/context7-mcp@latest`) — are preserved.
+ * package specifier (e.g., `@upstash/genrtl-mcp@latest`) — are preserved.
  */
 export function patchStdioApiKey(
   entry: Record<string, unknown>,

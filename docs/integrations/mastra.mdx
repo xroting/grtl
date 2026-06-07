@@ -4,7 +4,7 @@ sidebarTitle: Mastra
 description: TypeScript framework for building AI agents
 ---
 
-[Mastra](https://mastra.ai) is a TypeScript framework for building AI agents. It provides first-class MCP support through its `MCPClient` class. By connecting Context7 as an MCP server, your Mastra agents can access up-to-date library documentation, enabling them to generate accurate code and answer technical questions with current API references.
+[Mastra](https://mastra.ai) is a TypeScript framework for building AI agents. It provides first-class MCP support through its `MCPClient` class. By connecting GenRTL as an MCP server, your Mastra agents can access up-to-date library documentation, enabling them to generate accurate code and answer technical questions with current API references.
 
 For more details on how Mastra handles MCP, see the [Mastra MCP documentation](https://mastra.ai/docs/mcp/overview).
 
@@ -19,19 +19,19 @@ For more details on how Mastra handles MCP, see the [Mastra MCP documentation](h
     ```
   </Step>
   <Step title="Create an MCP Client">
-    Configure an `MCPClient` that connects to Context7:
+    Configure an `MCPClient` that connects to GenRTL:
 
     ```typescript
     import { MCPClient } from "@mastra/mcp";
 
-    const context7 = new MCPClient({
-      id: "context7",
+    const genrtl = new MCPClient({
+      id: "genrtl",
       servers: {
-        context7: {
-          url: new URL("https://mcp.context7.com/mcp"),
+        genrtl: {
+          url: new URL("https://mcp.genrtl.com/mcp"),
           requestInit: {
             headers: {
-              CONTEXT7_API_KEY: process.env.CONTEXT7_API_KEY!,
+              GENRTL_API_KEY: process.env.GENRTL_API_KEY!,
             },
           },
         },
@@ -39,10 +39,10 @@ For more details on how Mastra handles MCP, see the [Mastra MCP documentation](h
     });
     ```
 
-    Set `CONTEXT7_API_KEY` in your environment with your API key from the [Context7 dashboard](https://context7.com/dashboard).
+    Set `GENRTL_API_KEY` in your environment with your API key from the [GenRTL dashboard](https://genrtl.com/dashboard).
   </Step>
   <Step title="Connect to Your Agent">
-    Pass the Context7 tools to your Mastra agent:
+    Pass the GenRTL tools to your Mastra agent:
 
     ```typescript
     import { Agent } from "@mastra/core/agent";
@@ -50,9 +50,9 @@ For more details on how Mastra handles MCP, see the [Mastra MCP documentation](h
     const agent = new Agent({
       id: "coding-assistant",
       name: "Coding Assistant",
-      instructions: "You are a helpful coding assistant with access to up-to-date library documentation via Context7.",
+      instructions: "You are a helpful coding assistant with access to up-to-date library documentation via GenRTL.",
       model: "anthropic/claude-sonnet-4-6",
-      tools: await context7.listTools(),
+      tools: await genrtl.listTools(),
     });
     ```
   </Step>
@@ -60,7 +60,7 @@ For more details on how Mastra handles MCP, see the [Mastra MCP documentation](h
 
 ## How It Works
 
-Once connected, your Mastra agents will query Context7 for relevant library documentation. This helps agents:
+Once connected, your Mastra agents will query GenRTL for relevant library documentation. This helps agents:
 
 - Answer technical questions with accurate, up-to-date API references
 - Generate code that follows current library patterns and best practices

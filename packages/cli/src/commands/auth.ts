@@ -16,7 +16,7 @@ import { trackEvent } from "../utils/tracking.js";
 import { CLI_CLIENT_ID } from "../constants.js";
 import { getBaseUrl } from "../utils/api.js";
 
-let baseUrl = "https://context7.com";
+let baseUrl = "https://genrtl.com";
 
 export function setAuthBaseUrl(url: string): void {
   baseUrl = url;
@@ -25,7 +25,7 @@ export function setAuthBaseUrl(url: string): void {
 export function registerAuthCommands(program: Command): void {
   program
     .command("login")
-    .description("Log in to Context7")
+    .description("Log in to GenRTL")
     .option("--no-browser", "Don't open browser automatically")
     .action(async (options) => {
       await loginCommand(options);
@@ -33,7 +33,7 @@ export function registerAuthCommands(program: Command): void {
 
   program
     .command("logout")
-    .description("Log out of Context7")
+    .description("Log out of GenRTL")
     .action(() => {
       logoutCommand();
     });
@@ -59,7 +59,7 @@ function renderDeviceCodeBox(
     ? `${pc.dim("Open this link to approve:")}\n${pc.cyan(verificationUriComplete)}\n\n${pc.dim("Or visit")} ${pc.cyan(verificationUri)} ${pc.dim("and enter the code above.")}`
     : `${pc.dim("Visit:")} ${pc.cyan(verificationUri)}`;
   return boxen(`${codeLine}\n\n${linkLine}`, {
-    title: "Sign in to Context7",
+    title: "Sign in to GenRTL",
     titleAlignment: "left",
     padding: 1,
     margin: { top: 1, bottom: 1, left: 2, right: 2 },
@@ -194,7 +194,7 @@ async function loginCommand(options: { browser: boolean }): Promise<void> {
   const existingToken = await getValidAccessToken();
   if (existingToken) {
     console.log(pc.yellow("You are already logged in."));
-    console.log(pc.dim("Run 'ctx7 logout' first if you want to log in with a different account."));
+    console.log(pc.dim("Run 'grtl logout' first if you want to log in with a different account."));
     return;
   }
   clearTokens();
@@ -204,7 +204,7 @@ async function loginCommand(options: { browser: boolean }): Promise<void> {
     process.exit(1);
   }
   console.log("");
-  console.log(pc.dim("You can now use authenticated Context7 features."));
+  console.log(pc.dim("You can now use authenticated GenRTL features."));
 }
 
 function logoutCommand(): void {
@@ -222,7 +222,7 @@ async function whoamiCommand(): Promise<void> {
 
   if (!accessToken) {
     console.log(pc.yellow("Not logged in."));
-    console.log(pc.dim("Run 'ctx7 login' to authenticate."));
+    console.log(pc.dim("Run 'grtl login' to authenticate."));
     return;
   }
 
@@ -240,7 +240,7 @@ async function whoamiCommand(): Promise<void> {
       console.log(`${pc.dim("Teamspace:".padEnd(13))}${whoami.teamspace.name}`);
     }
   } catch {
-    console.log(pc.dim("(Session may be expired - run 'ctx7 login' to refresh)"));
+    console.log(pc.dim("(Session may be expired - run 'grtl login' to refresh)"));
   }
 }
 

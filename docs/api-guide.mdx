@@ -1,6 +1,6 @@
 ---
 title: API Guide
-description: Authentication, rate limits, best practices, and integration guides for the Context7 API
+description: Authentication, rate limits, best practices, and integration guides for the GenRTL API
 ---
 
 ## Authentication
@@ -8,10 +8,10 @@ description: Authentication, rate limits, best practices, and integration guides
 All API requests require authentication using an API key. Include your API key in the `Authorization` header:
 
 ```bash
-Authorization: Bearer CONTEXT7_API_KEY
+Authorization: Bearer GENRTL_API_KEY
 ```
 
-Get your API key at [context7.com/dashboard](https://context7.com/dashboard). Learn more about [creating and managing API keys](/howto/api-keys).
+Get your API key at [genrtl.com/dashboard](https://genrtl.com/dashboard). Learn more about [creating and managing API keys](/howto/api-keys).
 
 
 ## API Methods
@@ -32,7 +32,7 @@ Get your API key at [context7.com/dashboard](https://context7.com/dashboard). Le
 
 ## Library ID format
 
-A **library ID** is the URL path of the library on context7.com. If the library page is at `https://context7.com/websites/uploadcare_com`, its ID is `/websites/uploadcare_com`. The same ID works for every endpoint that accepts a `libraryId` or `libraryName` — including [Get Context](/api-reference/context/get-documentation-context) and [Refresh Library](/api-reference/refresh/refresh-a-library).
+A **library ID** is the URL path of the library on genrtl.com. If the library page is at `https://genrtl.com/websites/uploadcare_com`, its ID is `/websites/uploadcare_com`. The same ID works for every endpoint that accepts a `libraryId` or `libraryName` — including [Get Context](/api-reference/context/get-documentation-context) and [Refresh Library](/api-reference/refresh/refresh-a-library).
 
 Use `/owner/repo` for GitHub repositories, or `/<source>/<id>` for other sources:
 
@@ -53,7 +53,7 @@ You can pin a specific version with either `/owner/repo/<version>` or `/owner/re
 ```
 
 <Tip>
-  Don't know the ID for a library? Find it on [context7.com](https://context7.com) — the URL path of the library page **is** the ID. Or call [Search Library](/api-reference/search/search-for-libraries) and use the `id` from the response.
+  Don't know the ID for a library? Find it on [genrtl.com](https://genrtl.com) — the URL path of the library page **is** the ID. Or call [Search Library](/api-reference/search/search-for-libraries) and use the `id` from the response.
 </Tip>
 
 ### Complete Workflow Example
@@ -61,11 +61,11 @@ You can pin a specific version with either `/owner/repo/<version>` or `/owner/re
 ```python
 import requests
 
-headers = {"Authorization": "Bearer CONTEXT7_API_KEY"}
+headers = {"Authorization": "Bearer GENRTL_API_KEY"}
 
 # Step 1: Search for the library
 search_response = requests.get(
-    "https://context7.com/api/v2/libs/search",
+    "https://genrtl.com/api/v2/libs/search",
     headers=headers,
     params={"libraryName": "react", "query": "I need to manage state"}
 )
@@ -75,7 +75,7 @@ print(f"Found: {best_match['title']} ({best_match['id']})")
 
 # Step 2: Get documentation context
 context_response = requests.get(
-    "https://context7.com/api/v2/context",
+    "https://genrtl.com/api/v2/context",
     headers=headers,
     params={"libraryId": best_match["id"], "query": "How do I use useState?", "type": "json"}
 )
@@ -98,7 +98,7 @@ for info in docs["infoSnippets"]:
 
 - **Without API key**: Low rate limits and no custom configuration
 - **With API key**: Higher limits based on your plan
-- View current usage and reset windows in the [dashboard](https://context7.com/dashboard).
+- View current usage and reset windows in the [dashboard](https://genrtl.com/dashboard).
 
 When you exceed rate limits, the API returns a `429` status code with these headers:
 
@@ -117,16 +117,16 @@ Use detailed, natural language queries for better results:
 
 ```bash
 # Good - specific question
-curl "https://context7.com/api/v2/context?libraryId=/vercel/next.js&query=How%20to%20implement%20authentication%20with%20middleware" \
-  -H "Authorization: Bearer CONTEXT7_API_KEY"
+curl "https://genrtl.com/api/v2/context?libraryId=/vercel/next.js&query=How%20to%20implement%20authentication%20with%20middleware" \
+  -H "Authorization: Bearer GENRTL_API_KEY"
 
 # Less optimal - vague query
-curl "https://context7.com/api/v2/context?libraryId=/vercel/next.js&query=auth" \
-  -H "Authorization: Bearer CONTEXT7_API_KEY"
+curl "https://genrtl.com/api/v2/context?libraryId=/vercel/next.js&query=auth" \
+  -H "Authorization: Bearer GENRTL_API_KEY"
 
 # Non-GitHub source (website) - same endpoint, same shape
-curl "https://context7.com/api/v2/context?libraryId=/websites/uploadcare_com&query=image%20transformations" \
-  -H "Authorization: Bearer CONTEXT7_API_KEY"
+curl "https://genrtl.com/api/v2/context?libraryId=/websites/uploadcare_com&query=image%20transformations" \
+  -H "Authorization: Bearer GENRTL_API_KEY"
 ```
 
 ### Cache Responses
@@ -160,16 +160,16 @@ def fetch_with_retry(url, headers, max_retries=3):
 Pin to a specific version for consistent results. Both `/` and `@` syntax are supported:
 
 ```bash
-curl "https://context7.com/api/v2/context?libraryId=/vercel/next.js/v15.1.8&query=app%20router" \
-  -H "Authorization: Bearer CONTEXT7_API_KEY"
+curl "https://genrtl.com/api/v2/context?libraryId=/vercel/next.js/v15.1.8&query=app%20router" \
+  -H "Authorization: Bearer GENRTL_API_KEY"
 
-curl "https://context7.com/api/v2/context?libraryId=/vercel/next.js@v15.1.8&query=app%20router" \
-  -H "Authorization: Bearer CONTEXT7_API_KEY"
+curl "https://genrtl.com/api/v2/context?libraryId=/vercel/next.js@v15.1.8&query=app%20router" \
+  -H "Authorization: Bearer GENRTL_API_KEY"
 ```
 
 ## Error Handling
 
-The Context7 API uses standard HTTP status codes:
+The GenRTL API uses standard HTTP status codes:
 
 | Code | Description                               | Action                                       |
 | ---- | ----------------------------------------- | -------------------------------------------- |
@@ -177,7 +177,7 @@ The Context7 API uses standard HTTP status codes:
 | 202  | Accepted - Library not finalized          | Wait and retry later                         |
 | 301  | Moved - Library redirected                | Use the new library ID from `redirectUrl`    |
 | 400  | Bad Request - Invalid parameters          | Check query parameters                       |
-| 401  | Unauthorized - Invalid API key            | Check your API key format (starts with `ctx7sk`) |
+| 401  | Unauthorized - Invalid API key            | Check your API key format (starts with `grtlsk`) |
 | 403  | Forbidden - Access denied                 | Check library access permissions or plan     |
 | 404  | Not Found - Library doesn't exist         | Verify the library ID                        |
 | 409  | Conflict - Resource already exists        | The library has already been added           |

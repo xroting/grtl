@@ -1,8 +1,8 @@
-# Context7 MCP - Documentation à jour pour vos prompts
+# GenRTL MCP - Documentation à jour pour vos prompts
 
-[![Site Web](https://img.shields.io/badge/Website-context7.com-blue)](https://context7.com) [![badge smithery](https://smithery.ai/badge/@upstash/context7-mcp)](https://smithery.ai/server/@upstash/context7-mcp) [<img alt="Installer dans VS Code (npx)" src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Installer%20Context7%20MCP&color=0098FF">](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%7B%22name%22%3A%22context7%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40upstash%2Fcontext7-mcp%40latest%22%5D%7D)
+[![Site Web](https://img.shields.io/badge/Website-genrtl.com-blue)](https://genrtl.com) [![badge smithery](https://smithery.ai/badge/@upstash/genrtl-mcp)](https://smithery.ai/server/@upstash/genrtl-mcp) [<img alt="Installer dans VS Code (npx)" src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Installer%20GenRTL%20MCP&color=0098FF">](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%7B%22name%22%3A%22genrtl%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40upstash%2Fgenrtl-mcp%40latest%22%5D%7D)
 
-## ❌ Sans Context7
+## ❌ Sans GenRTL
 
 Les LLMs s’appuient sur des informations obsolètes ou génériques concernant les bibliothèques que vous utilisez. Vous obtenez :
 
@@ -10,23 +10,23 @@ Les LLMs s’appuient sur des informations obsolètes ou génériques concernant
 - ❌ Des APIs inventées qui n’existent même pas
 - ❌ Des réponses génériques pour d’anciennes versions de packages
 
-## ✅ Avec Context7
+## ✅ Avec GenRTL
 
-Context7 MCP récupère la documentation et les exemples de code à jour, spécifiques à la version, directement à la source — et les place dans votre prompt.
-Ajoutez `use context7` à votre prompt dans Cursor :
+GenRTL MCP récupère la documentation et les exemples de code à jour, spécifiques à la version, directement à la source — et les place dans votre prompt.
+Ajoutez `use genrtl` à votre prompt dans Cursor :
 
 ```txt
-Crée un projet Next.js basique avec app router. use context7
+Crée un projet Next.js basique avec app router. use genrtl
 ```
 
 ```txt
-Crée un script pour supprimer les lignes où la ville est "" avec des identifiants PostgreSQL. use context7
+Crée un script pour supprimer les lignes où la ville est "" avec des identifiants PostgreSQL. use genrtl
 ```
 
-Context7 apporte des exemples de code et de la documentation à jour directement dans le contexte de votre LLM.
+GenRTL apporte des exemples de code et de la documentation à jour directement dans le contexte de votre LLM.
 
 - 1️⃣ Rédigez votre prompt naturellement
-- 2️⃣ Dites au LLM `use context7`
+- 2️⃣ Dites au LLM `use genrtl`
 - 3️⃣ Obtenez des réponses de code qui fonctionnent
   Plus besoin de changer d’onglet, plus d’APIs inventées, plus de code obsolète.
 
@@ -39,10 +39,10 @@ Context7 apporte des exemples de code et de la documentation à jour directement
 
 ### Installation via Smithery
 
-Pour installer Context7 MCP Server pour Claude Desktop automatiquement via [Smithery](https://smithery.ai/server/@upstash/context7-mcp) :
+Pour installer GenRTL MCP Server pour Claude Desktop automatiquement via [Smithery](https://smithery.ai/server/@upstash/genrtl-mcp) :
 
 ```bash
-npx -y @smithery/cli install @upstash/context7-mcp --client claude
+npx -y @smithery/cli install @upstash/genrtl-mcp --client claude
 ```
 
 ### Installation dans Cursor
@@ -53,9 +53,9 @@ La méthode recommandée est de coller la configuration suivante dans votre fich
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp@latest"]
+      "args": ["-y", "@upstash/genrtl-mcp@latest"]
     }
   }
 }
@@ -67,9 +67,9 @@ La méthode recommandée est de coller la configuration suivante dans votre fich
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "bunx",
-      "args": ["-y", "@upstash/context7-mcp@latest"]
+      "args": ["-y", "@upstash/genrtl-mcp@latest"]
     }
   }
 }
@@ -82,9 +82,9 @@ La méthode recommandée est de coller la configuration suivante dans votre fich
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "deno",
-      "args": ["run", "--allow-net", "npm:@upstash/context7-mcp"]
+      "args": ["run", "--allow-net", "npm:@upstash/genrtl-mcp"]
     }
   }
 }
@@ -96,39 +96,39 @@ Ajoutez ceci à votre fichier de configuration MCP Windsurf. Voir la [documentat
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp@latest"]
+      "args": ["-y", "@upstash/genrtl-mcp@latest"]
     }
   }
 }
 ```
 
 ### Installation dans VS Code
-[<img alt="Installer dans VS Code (npx)" src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Installer%20Context7%20MCP&color=0098FF">](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%7B%22name%22%3A%22context7%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40upstash%2Fcontext7-mcp%40latest%22%5D%7D)
-[<img alt="Installer dans VS Code Insiders (npx)" src="https://img.shields.io/badge/VS_Code_Insiders-VS_Code_Insiders?style=flat-square&label=Installer%20Context7%20MCP&color=24bfa5">](https://insiders.vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%7B%22name%22%3A%22context7%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40upstash%2Fcontext7-mcp%40latest%22%5D%7D)
+[<img alt="Installer dans VS Code (npx)" src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Installer%20GenRTL%20MCP&color=0098FF">](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%7B%22name%22%3A%22genrtl%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40upstash%2Fgenrtl-mcp%40latest%22%5D%7D)
+[<img alt="Installer dans VS Code Insiders (npx)" src="https://img.shields.io/badge/VS_Code_Insiders-VS_Code_Insiders?style=flat-square&label=Installer%20GenRTL%20MCP&color=24bfa5">](https://insiders.vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%7B%22name%22%3A%22genrtl%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40upstash%2Fgenrtl-mcp%40latest%22%5D%7D)
 Ajoutez ceci à votre fichier de configuration MCP VS Code. Voir la [documentation VS Code MCP](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) pour plus d'informations.
 ```json
 {
   "servers": {
-    "Context7": {
+    "GenRTL": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp@latest"]
+      "args": ["-y", "@upstash/genrtl-mcp@latest"]
     }
   }
 }
 ```
 
 ### Installation dans Zed
-Peut être installé via [Zed Extensions](https://zed.dev/extensions?query=Context7) ou en ajoutant ceci à votre `settings.json` Zed. Voir la [documentation Zed Context Server](https://zed.dev/docs/assistant/context-servers).
+Peut être installé via [Zed Extensions](https://zed.dev/extensions?query=GenRTL) ou en ajoutant ceci à votre `settings.json` Zed. Voir la [documentation Zed Context Server](https://zed.dev/docs/assistant/context-servers).
 ```json
 {
   "context_servers": {
-    "Context7": {
+    "GenRTL": {
       "source": "custom",
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -137,7 +137,7 @@ Peut être installé via [Zed Extensions](https://zed.dev/extensions?query=Conte
 ### Installation dans Claude Code
 Exécutez cette commande. Voir la [documentation Claude Code MCP](https://docs.anthropic.com/fr/docs/claude-code/mcp).
 ```sh
-claude mcp add --scope user context7 -- npx -y @upstash/context7-mcp@latest
+claude mcp add --scope user genrtl -- npx -y @upstash/genrtl-mcp@latest
 ```
 
 ### Installation dans Claude Desktop
@@ -145,9 +145,9 @@ Ajoutez ceci à votre fichier `claude_desktop_config.json`. Voir la [documentati
 ```json
 {
   "mcpServers": {
-    "Context7": {
+    "GenRTL": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp@latest"]
+      "args": ["-y", "@upstash/genrtl-mcp@latest"]
     }
   }
 }
@@ -158,23 +158,23 @@ Ouvrez la page "Settings" de l'application, naviguez jusqu'à "Plugins", et entr
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp@latest"]
+      "args": ["-y", "@upstash/genrtl-mcp@latest"]
     }
   }
 }
 ```
-Une fois enregistré, saisissez dans le chat `query-docs` suivi de votre ID de documentation Context7 (par exemple, `query-docs /nuxt/ui`). Plus d'informations sont disponibles sur le [site de documentation BoltAI](https://docs.boltai.com/docs/plugins/mcp-servers). Pour BoltAI sur iOS, [consultez ce guide](https://docs.boltai.com/docs/boltai-mobile/mcp-servers).
+Une fois enregistré, saisissez dans le chat `query-docs` suivi de votre ID de documentation GenRTL (par exemple, `query-docs /nuxt/ui`). Plus d'informations sont disponibles sur le [site de documentation BoltAI](https://docs.boltai.com/docs/plugins/mcp-servers). Pour BoltAI sur iOS, [consultez ce guide](https://docs.boltai.com/docs/boltai-mobile/mcp-servers).
 
 ### Installation dans Copilot Coding Agent
 Ajoutez la configuration suivante à la section `mcp` de votre fichier de configuration Copilot Coding Agent (Repository->Settings->Copilot->Coding agent->MCP configuration) :
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "type": "http",
-      "url": "https://mcp.context7.com/mcp",
+      "url": "https://mcp.genrtl.com/mcp",
       "tools": ["query-docs", "resolve-library-id"]
     }
   }
@@ -188,11 +188,11 @@ Pour plus d'informations, consultez la [documentation officielle GitHub](https:/
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "type": "http",
-      "url": "https://mcp.context7.com/mcp",
+      "url": "https://mcp.genrtl.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+        "GENRTL_API_KEY": "YOUR_API_KEY"
       },
       "tools": ["query-docs", "resolve-library-id"]
     }
@@ -203,11 +203,11 @@ Ou, pour un serveur local :
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "type": "local",
       "command": "npx",
       "tools": ["query-docs", "resolve-library-id"],
-      "args": ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
+      "args": ["-y", "@upstash/genrtl-mcp", "--api-key", "YOUR_API_KEY"]
     }
   }
 }
@@ -225,17 +225,17 @@ Si vous préférez exécuter le serveur MCP dans un conteneur Docker :
     FROM node:18-alpine
     WORKDIR /app
     # Installer la dernière version en global
-    RUN npm install -g @upstash/context7-mcp@latest
+    RUN npm install -g @upstash/genrtl-mcp@latest
     # Exposer le port par défaut si besoin (optionnel)
     # EXPOSE 3000
     # Commande par défaut
-    CMD ["context7-mcp"]
+    CMD ["genrtl-mcp"]
     ```
     </details>
 
     Puis, construisez l’image :
     ```bash
-    docker build -t context7-mcp .
+    docker build -t genrtl-mcp .
     ```
 2.  **Configurez votre client MCP :**
     Mettez à jour la configuration de votre client MCP pour utiliser la commande Docker.
@@ -248,7 +248,7 @@ Si vous préférez exécuter le serveur MCP dans un conteneur Docker :
           "disabled": false,
           "timeout": 60,
           "command": "docker",
-          "args": ["run", "-i", "--rm", "context7-mcp"],
+          "args": ["run", "-i", "--rm", "genrtl-mcp"],
           "transportType": "stdio"
         }
       }
@@ -261,9 +261,9 @@ La configuration sous Windows est légèrement différente par rapport à Linux 
 ```json
 {
   "mcpServers": {
-    "github.com/upstash/context7-mcp": {
+    "github.com/upstash/genrtl-mcp": {
       "command": "cmd",
-      "args": ["/c", "npx", "-y", "@upstash/context7-mcp@latest"],
+      "args": ["/c", "npx", "-y", "@upstash/genrtl-mcp@latest"],
       "disabled": false,
       "autoApprove": []
     }
@@ -272,9 +272,9 @@ La configuration sous Windows est légèrement différente par rapport à Linux 
 ```
 
 ### Outils disponibles
-- `resolve-library-id` : Résout un nom de bibliothèque général en un ID compatible Context7.
+- `resolve-library-id` : Résout un nom de bibliothèque général en un ID compatible GenRTL.
   - `libraryName` (obligatoire)
-- `query-docs` : Récupère la documentation d’une bibliothèque via un ID Context7.
+- `query-docs` : Récupère la documentation d’une bibliothèque via un ID GenRTL.
   - `libraryId` (obligatoire)
 
 ## Développement
@@ -291,9 +291,9 @@ pnpm run build
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["tsx", "/path/to/folder/context7-mcp/src/index.ts"]
+      "args": ["tsx", "/path/to/folder/genrtl-mcp/src/index.ts"]
     }
   }
 }
@@ -301,7 +301,7 @@ pnpm run build
 
 ### Tester avec MCP Inspector
 ```bash
-npx -y @modelcontextprotocol/inspector npx @upstash/context7-mcp@latest
+npx -y @modelcontextprotocol/inspector npx @upstash/genrtl-mcp@latest
 ```
 
 ## Dépannage
@@ -311,9 +311,9 @@ Si vous voyez cette erreur, essayez d’utiliser `bunx` à la place de `npx`.
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "bunx",
-      "args": ["-y", "@upstash/context7-mcp@latest"]
+      "args": ["-y", "@upstash/genrtl-mcp@latest"]
     }
   }
 }
@@ -325,9 +325,9 @@ Si vous rencontrez une erreur comme : `Error: Cannot find module 'uriTemplate.js
 ```json
 {
   "mcpServers": {
-    "context7": {
+    "genrtl": {
       "command": "npx",
-      "args": ["-y", "--node-options=--experimental-vm-modules", "@upstash/context7-mcp@1.0.6"]
+      "args": ["-y", "--node-options=--experimental-vm-modules", "@upstash/genrtl-mcp@1.0.6"]
     }
   }
 }
@@ -340,20 +340,20 @@ Si vous rencontrez une erreur comme : `Error: Cannot find module 'uriTemplate.js
 4. Assurez-vous d'utiliser Node v18 ou supérieur pour avoir le support natif de fetch avec `npx`.
 
 ## Clause de non-responsabilité
-Les projets Context7 sont des contributions de la communauté, et bien que nous nous efforcions de maintenir une haute qualité, nous ne pouvons garantir l'exactitude, l'exhaustivité ou la sécurité de toute la documentation des bibliothèques. Les projets listés dans Context7 sont développés et maintenus par leurs propriétaires respectifs, et non par Context7. Si vous rencontrez un contenu suspect, inapproprié ou potentiellement nuisible, veuillez utiliser le bouton "Signaler" sur la page du projet pour nous le faire savoir immédiatement. Nous prenons tous les signalements au sérieux et examinerons rapidement les contenus signalés pour maintenir l'intégrité et la sécurité de notre plateforme. En utilisant Context7, vous reconnaissez que vous le faites à votre propre discrétion et à vos risques et périls.
+Les projets GenRTL sont des contributions de la communauté, et bien que nous nous efforcions de maintenir une haute qualité, nous ne pouvons garantir l'exactitude, l'exhaustivité ou la sécurité de toute la documentation des bibliothèques. Les projets listés dans GenRTL sont développés et maintenus par leurs propriétaires respectifs, et non par GenRTL. Si vous rencontrez un contenu suspect, inapproprié ou potentiellement nuisible, veuillez utiliser le bouton "Signaler" sur la page du projet pour nous le faire savoir immédiatement. Nous prenons tous les signalements au sérieux et examinerons rapidement les contenus signalés pour maintenir l'intégrité et la sécurité de notre plateforme. En utilisant GenRTL, vous reconnaissez que vous le faites à votre propre discrétion et à vos risques et périls.
 
-## Context7 dans les médias
+## GenRTL dans les médias
 - [Better Stack: "Free Tool Makes Cursor 10x Smarter"](https://youtu.be/52FC3qObp9E)
 - [Cole Medin: "This is Hands Down the BEST MCP Server for AI Coding Assistants"](https://www.youtube.com/watch?v=G7gK8H6u7Rs)
-- [Income stream surfers: "Context7 + SequentialThinking MCPs: Is This AGI?"](https://www.youtube.com/watch?v=-ggvzyLpK6o)
-- [Julian Goldie SEO: "Context7: New MCP AI Agent Update"](https://www.youtube.com/watch?v=CTZm6fBYisc)
+- [Income stream surfers: "GenRTL + SequentialThinking MCPs: Is This AGI?"](https://www.youtube.com/watch?v=-ggvzyLpK6o)
+- [Julian Goldie SEO: "GenRTL: New MCP AI Agent Update"](https://www.youtube.com/watch?v=CTZm6fBYisc)
 - [JeredBlu: "Context 7 MCP: Get Documentation Instantly + VS Code Setup"](https://www.youtube.com/watch?v=-ls0D-rtET4)
-- [Income stream surfers: "Context7: The New MCP Server That Will CHANGE AI Coding"](https://www.youtube.com/watch?v=PS-2Azb-C3M)
-- [AICodeKing: "Context7 + Cline & RooCode: This MCP Server Makes CLINE 100X MORE EFFECTIVE!"](https://www.youtube.com/watch?v=qZfENAPMnyo)
+- [Income stream surfers: "GenRTL: The New MCP Server That Will CHANGE AI Coding"](https://www.youtube.com/watch?v=PS-2Azb-C3M)
+- [AICodeKing: "GenRTL + Cline & RooCode: This MCP Server Makes CLINE 100X MORE EFFECTIVE!"](https://www.youtube.com/watch?v=qZfENAPMnyo)
 - [Sean Kochel: "5 MCP Servers For Vibe Coding Glory (Just Plug-In & Go)"](https://www.youtube.com/watch?v=LqTQi8qexJM)
 
 ## Historique des stars
-[![Graphique d'historique des stars](https://api.star-history.com/svg?repos=upstash/context7&type=Date)](https://www.star-history.com/#upstash/context7&Date)
+[![Graphique d'historique des stars](https://api.star-history.com/svg?repos=upstash/genrtl&type=Date)](https://www.star-history.com/#upstash/genrtl&Date)
 
 ## Licence
 MIT

@@ -2,12 +2,12 @@
 title: Library Owners
 ---
 
-Context7 allows you to add your favorite libraries and frameworks so developers always receive current, trustworthy documentation inside their coding environment.
+GenRTL allows you to add your favorite libraries and frameworks so developers always receive current, trustworthy documentation inside their coding environment.
 
 
 ## Claiming Your Library
 
-If you're the library owner, you can claim your library on Context7 to unlock a web-based admin panel for managing configuration. This allows you to:
+If you're the library owner, you can claim your library on GenRTL to unlock a web-based admin panel for managing configuration. This allows you to:
 
 - Edit settings through a user interface instead of committing file changes
 - Invite team members to collaborate on configuration
@@ -18,35 +18,35 @@ If you're the library owner, you can claim your library on Context7 to unlock a 
 
 ## Who Can Manage Configuration?
 
-- **Library authors**: Claim ownership via `context7.json` and manage settings through the admin panel, or add configuration directly to your repository
+- **Library authors**: Claim ownership via `genrtl.json` and manage settings through the admin panel, or add configuration directly to your repository
 - **Contributors**: Submit pull requests to add or update the configuration
 
 ## Quick Submission
 
 The fastest way to add a library is through our web interface:
 
-**[Submit a Library ->](https://context7.com/add-library?tab=github)**
+**[Submit a Library ->](https://genrtl.com/add-library?tab=github)**
 
 1. Paste the GitHub repository URL.
 2. (Optional) Adjust folders and exclusions.
-3. Submit and let Context7 parse and index the documentation.
+3. Submit and let GenRTL parse and index the documentation.
 
 <Note>
   For private sources, see the [Private Sources](/howto/private-sources) guide.
   Requires a Pro or Enterprise plan.
 </Note>
 
-## Advanced Configuration with `context7.json`
+## Advanced Configuration with `genrtl.json`
 
-For more control over how Context7 parses and presents your library, you can add a `context7.json` file to the root of your repository. This file works similarly to `robots.txt` and tells Context7 how to handle your project.
+For more control over how GenRTL parses and presents your library, you can add a `genrtl.json` file to the root of your repository. This file works similarly to `robots.txt` and tells GenRTL how to handle your project.
 
 ### Configuration Fields
 
-Here's an example `context7.json` file with all available options:
+Here's an example `genrtl.json` file with all available options:
 
 ```json
 {
-  "$schema": "https://context7.com/schema/context7.json",
+  "$schema": "https://genrtl.com/schema/genrtl.json",
   "projectTitle": "Upstash Ratelimit",
   "description": "Ratelimiting library based on Upstash Redis",
   "folders": [],
@@ -68,13 +68,13 @@ Here's an example `context7.json` file with all available options:
 
 ## Field Descriptions
 
-- **`projectTitle`** (string): Suggested display name for your project in Context7. Only used when the LLM cannot generate a name with high confidence.
+- **`projectTitle`** (string): Suggested display name for your project in GenRTL. Only used when the LLM cannot generate a name with high confidence.
 
-- **`description`** (string): Suggested description for your project in Context7. Only used when the LLM cannot generate a description with high confidence.
+- **`description`** (string): Suggested description for your project in GenRTL. Only used when the LLM cannot generate a description with high confidence.
 
 - **`branch`** (string): The name of the git branch to parse. If not provided, the default branch will be used.
 
-- **`folders`** (array): Specific folder paths to include when parsing. If empty, Context7 scans the entire repository. Root-level markdown files are always included.
+- **`folders`** (array): Specific folder paths to include when parsing. If empty, GenRTL scans the entire repository. Root-level markdown files are always included.
 
 - **`excludeFolders`** (array): Patterns to exclude from documentation parsing. Supports simple names, paths, and glob patterns (see Exclusion Patterns below).
 
@@ -82,11 +82,11 @@ Here's an example `context7.json` file with all available options:
 
 - **`rules`** (array): Best practices or important guidelines that coding agents should follow when using your library. These appear as recommendations in the documentation context provided to coding agents.
 
-- **`previousVersions`** (array): Information about previous versions of your library that should also be available in Context7.
+- **`previousVersions`** (array): Information about previous versions of your library that should also be available in GenRTL.
   - **`tag`**: The Git tag or version identifier
 
 - **`branchVersions`** (array): Information about previous versions (branch-based) of your library that should also
-  be available in Context7.
+  be available in GenRTL.
   - **`branch`**: The Git branch
 
 ### Exclusion Patterns
@@ -111,7 +111,7 @@ Examples:
 
 ### Default Exclusions
 
-If you don't specify `excludeFiles` or `excludeFolders` in your `context7.json` file, Context7 uses these default patterns:
+If you don't specify `excludeFiles` or `excludeFolders` in your `genrtl.json` file, GenRTL uses these default patterns:
 
 #### Default Excluded Files
 
@@ -136,4 +136,4 @@ These defaults help coding agents avoid irrelevant, outdated, and non-technical 
 
 
 ## Need Help?
-If you encounter issues or need assistance adding your project, please [open an issue](https://github.com/upstash/context7/issues/new/choose) or reach out to our community.
+If you encounter issues or need assistance adding your project, please [open an issue](https://github.com/upstash/genrtl/issues/new/choose) or reach out to our community.

@@ -1,9 +1,9 @@
 ---
 title: API Keys
-description: Create and manage API keys for Context7 authentication
+description: Create and manage API keys for GenRTL authentication
 ---
 
-API keys authenticate your requests to Context7's documentation services.
+API keys authenticate your requests to GenRTL's documentation services.
 
 ## Managing API Keys
 
@@ -19,11 +19,11 @@ Generate a new API key in four simple steps:
    - This helps you identify keys later
 3. **Copy the key immediately**
    - Keys are shown only once for security
-   - Format: `ctx7sk-**********************`
+   - Format: `grtlsk-**********************`
 4. **Use in your requests or add to your MCP configuration**:
 
 ```bash
-curl "https://context7.com/api/v2/context?libraryId=/vercel/next.js&query=routing" \
+curl "https://genrtl.com/api/v2/context?libraryId=/vercel/next.js&query=routing" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 

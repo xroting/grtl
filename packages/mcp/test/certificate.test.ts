@@ -10,7 +10,7 @@ test("loadCustomCACerts returns undefined when no path is provided", () => {
 });
 
 test("loadCustomCACerts appends custom certs to Node default CAs", () => {
-  const tempDir = mkdtempSync(join(tmpdir(), "context7-ca-test-"));
+  const tempDir = mkdtempSync(join(tmpdir(), "genrtl-ca-test-"));
   const certPath = join(tempDir, "custom-ca.pem");
   const customCert = [
     "-----BEGIN CERTIFICATE-----",

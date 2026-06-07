@@ -1,6 +1,6 @@
 ---
 title: OAuth
-description: Authenticate with Context7 MCP server using OAuth 2.0
+description: Authenticate with GenRTL MCP server using OAuth 2.0
 ---
 
 <Note>
@@ -8,7 +8,7 @@ description: Authenticate with Context7 MCP server using OAuth 2.0
   transport, use [API key authentication](/howto/api-keys) instead.
 </Note>
 
-Context7 MCP server supports OAuth 2.0 authentication for MCP clients that implement the [MCP OAuth specification](https://modelcontextprotocol.io/specification/2025-03-26/basic/authorization).
+GenRTL MCP server supports OAuth 2.0 authentication for MCP clients that implement the [MCP OAuth specification](https://modelcontextprotocol.io/specification/2025-03-26/basic/authorization).
 
 ## Why Use OAuth?
 
@@ -23,14 +23,14 @@ Context7 MCP server supports OAuth 2.0 authentication for MCP clients that imple
 To use OAuth, change the endpoint from `/mcp` to `/mcp/oauth` in your client configuration:
 
 ```diff
-- "url": "https://mcp.context7.com/mcp"
-+ "url": "https://mcp.context7.com/mcp/oauth"
+- "url": "https://mcp.genrtl.com/mcp"
++ "url": "https://mcp.genrtl.com/mcp/oauth"
 ```
 
 ## How It Works
 
 1. Your MCP client connects to the OAuth endpoint
-2. You're redirected to Context7 to sign in
+2. You're redirected to GenRTL to sign in
 3. After signing in, you're redirected back to your client
 4. Your client automatically handles token refresh
 

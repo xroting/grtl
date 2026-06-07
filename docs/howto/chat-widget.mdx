@@ -3,7 +3,7 @@ title: Chat Widget
 description: Embed an AI-powered chat assistant on your documentation site
 ---
 
-Add an AI chat widget to your documentation site so visitors can ask questions and get instant answers powered by your library's documentation on Context7.
+Add an AI chat widget to your documentation site so visitors can ask questions and get instant answers powered by your library's documentation on GenRTL.
 
 The widget is a lightweight JavaScript snippet that renders a floating chat button. When clicked, it opens a chat panel where users can ask questions about your library and receive AI-generated answers grounded in your documentation.
 
@@ -15,7 +15,7 @@ The widget is a lightweight JavaScript snippet that renders a floating chat butt
 
 1. A visitor clicks the chat bubble on your site
 2. They type a question about your library
-3. The widget searches your library's documentation on Context7
+3. The widget searches your library's documentation on GenRTL
 4. An AI model generates an answer using the relevant documentation
 5. The response streams back in real time with markdown formatting
 
@@ -23,14 +23,14 @@ The widget is a lightweight JavaScript snippet that renders a floating chat butt
 
 <Steps>
   <Step title="Claim Your Library">
-    You must be a verified owner of the library on Context7. If you haven't claimed it yet, follow the [Claim Your Library](/howto/claiming-libraries) guide.
+    You must be a verified owner of the library on GenRTL. If you haven't claimed it yet, follow the [Claim Your Library](/howto/claiming-libraries) guide.
   </Step>
 
   <Step title="Enable the Widget">
     Navigate to your library's admin page:
 
     ```
-    https://context7.com/{owner}/{repo}/admin
+    https://genrtl.com/{owner}/{repo}/admin
     ```
 
     Open the **Chat** tab and toggle **Widget enabled** on.
@@ -58,7 +58,7 @@ The widget is a lightweight JavaScript snippet that renders a floating chat butt
 
     ```html
     <script
-      src="https://context7.com/widget.js"
+      src="https://genrtl.com/widget.js"
       data-library="/owner/repo"
     ></script>
     ```
@@ -72,12 +72,12 @@ The widget is a lightweight JavaScript snippet that renders a floating chat butt
 You can use an AI coding assistant to add the widget automatically. Copy the following prompt and paste it into Claude Code, Cursor, or any AI coding assistant. Replace `/owner/repo` with your library identifier. The assistant will detect your framework and place the script tag in the correct location.
 
 ```
-Add the Context7 chat widget to my documentation site. This is a lightweight
+Add the GenRTL chat widget to my documentation site. This is a lightweight
 JavaScript widget that adds an AI-powered chat assistant to any webpage. It
 loads asynchronously and renders a floating chat button.
 
 The widget is loaded via a script tag:
-<script src="https://context7.com/widget.js" data-library="/owner/repo"></script>
+<script src="https://genrtl.com/widget.js" data-library="/owner/repo"></script>
 
 Detect which framework this project uses and add the widget accordingly. Place
 it in the root layout or HTML file so it loads on every page.
@@ -101,7 +101,7 @@ Optional attributes: data-color (hex color, default #059669), data-position
           <body>
             {children}
             <Script
-              src="https://context7.com/widget.js"
+              src="https://genrtl.com/widget.js"
               data-library="/owner/repo"
               strategy="afterInteractive"
             />
@@ -120,7 +120,7 @@ Optional attributes: data-color (hex color, default #059669), data-position
       // ...other config
       scripts: [
         {
-          src: "https://context7.com/widget.js",
+          src: "https://genrtl.com/widget.js",
           "data-library": "/owner/repo",
           async: true,
         },
@@ -148,7 +148,7 @@ The widget supports optional attributes for customization:
 
 ```html
 <script
-  src="https://context7.com/widget.js"
+  src="https://genrtl.com/widget.js"
   data-library="/vercel/next.js"
   data-color="#0070F3"
   data-position="bottom-left"
@@ -159,7 +159,7 @@ The widget supports optional attributes for customization:
 
 ```html
 <script
-  src="https://context7.com/widget.js"
+  src="https://genrtl.com/widget.js"
   data-library="/vercel/next.js"
   data-placeholder="Ask me anything about Next.js..."
 ></script>

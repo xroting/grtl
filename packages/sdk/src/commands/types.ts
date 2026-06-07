@@ -1,12 +1,12 @@
-export interface Context7Config {
+export interface GenRTLConfig {
   apiKey?: string;
 }
 
 /**
- * A library available in Context7
+ * A library available in GenRTL
  */
 export interface Library {
-  /** Context7 library ID (e.g., "/facebook/react") */
+  /** GenRTL library ID (e.g., "/facebook/react") */
   id: string;
   /** Library display name */
   name: string;

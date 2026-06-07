@@ -2,22 +2,22 @@
 
 ## Supported Versions
 
-The following versions of Context7 MCP are currently supported with security updates:
+The following versions of GenRTL MCP are currently supported with security updates:
 
 | Version | Supported          |
 | ------- | ------------------ |
 | 1.0.x   | :white_check_mark: |
 
-We recommend always using the latest version (`@upstash/context7-mcp@latest`) to ensure you have the most recent security patches and features.
+We recommend always using the latest version (`@upstash/genrtl-mcp@latest`) to ensure you have the most recent security patches and features.
 
 ## Reporting a Vulnerability
 
-We take the security of Context7 seriously. If you discover a security vulnerability, please report it responsibly.
+We take the security of GenRTL seriously. If you discover a security vulnerability, please report it responsibly.
 
 ### How to Report
 
-- Please use GitHub's [private vulnerability reporting](https://github.com/upstash/context7/security/advisories/new) feature to submit your report
-- Alternatively, you can email security concerns to [context7@upstash.com](mailto:context7@upstash.com)
+- Please use GitHub's [private vulnerability reporting](https://github.com/upstash/genrtl/security/advisories/new) feature to submit your report
+- Alternatively, you can email security concerns to [genrtl@upstash.com](mailto:genrtl@upstash.com)
 
 ### What to Include
 

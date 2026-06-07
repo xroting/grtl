@@ -4,7 +4,7 @@ import { mkdir, readFile, writeFile } from "fs/promises";
 import { NAME, VERSION } from "../constants.js";
 
 const DEFAULT_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
-const UPDATE_STATE_FILE = join(homedir(), ".context7", "cli-state.json");
+const UPDATE_STATE_FILE = join(homedir(), ".genrtl", "cli-state.json");
 
 export type InstallMethod =
   | "npm-global"

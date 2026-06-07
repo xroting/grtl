@@ -2,20 +2,20 @@
 title: Data Privacy
 ---
 
-How Context7 handles privacy, retrieval scope, and data.
+How GenRTL handles privacy, retrieval scope, and data.
 
 ## Query Privacy
 
 **Your original prompts and code stay with your AI assistant.**
 
-When you use Context7 through an MCP client, the AI assistant (not the user directly) formulates search queries to retrieve relevant documentation. Here is what happens:
+When you use GenRTL through an MCP client, the AI assistant (not the user directly) formulates search queries to retrieve relevant documentation. Here is what happens:
 
 1. Your prompt is processed locally by your AI assistant (e.g., Cursor, Claude Code)
 2. The AI assistant formulates a search query and library name based on your request
-3. Only these formulated queries are sent to the Context7 API — your full prompt, source code, and conversation history are never transmitted
+3. Only these formulated queries are sent to the GenRTL API — your full prompt, source code, and conversation history are never transmitted
 4. The MCP tool descriptions explicitly instruct the AI assistant to strip sensitive information (API keys, passwords, credentials, personal data, and proprietary code) from queries before sending
 
-### What is sent to the Context7 API
+### What is sent to the GenRTL API
 
 - `query` — a search query formulated by the MCP client (not your original prompt)
 - `libraryName` or `libraryId` — the library to look up
@@ -27,7 +27,7 @@ When you use Context7 through an MCP client, the AI assistant (not the user dire
 <Note>
   The MCP client formulates search queries on your behalf and is instructed not to include
   sensitive or confidential information. Your full prompts, code, and conversation context
-  remain with your AI assistant and are never sent to Context7.
+  remain with your AI assistant and are never sent to GenRTL.
 </Note>
 
 ### Use of MCP Queries
@@ -36,7 +36,7 @@ The search queries formulated by the MCP client (not your original prompts) are 
 
 **Documentation Reranking**
 
-MCP-formulated queries are passed to LLMs to rerank and select the most relevant documentation for your request. Context7 uses well-known, trusted LLM providers for this purpose — including **OpenAI**, **Google Gemini**, and **Anthropic**.
+MCP-formulated queries are passed to LLMs to rerank and select the most relevant documentation for your request. GenRTL uses well-known, trusted LLM providers for this purpose — including **OpenAI**, **Google Gemini**, and **Anthropic**.
 
 **Benchmarking and Quality Improvement**
 
@@ -48,14 +48,14 @@ MCP-formulated queries are anonymously stored and used to benchmark retrieval ac
 - On-premise Enterprise plans can disable public documentation usage, limiting context retrieval to privately indexed documentation only
 - Enterprise plans can disable query storage for benchmarking — however, this may affect the quality of context retrieval over time
 
-Contact our sales team at [context7.com](https://context7.com/contact) for Enterprise and on-premise plan details.
+Contact our sales team at [genrtl.com](https://genrtl.com/contact) for Enterprise and on-premise plan details.
 
 ## Customizing What Is Shared
 
-The Context7 MCP server is [open source](https://github.com/upstash/context7). If you want full control over what is sent as the `query` parameter, you can:
+The GenRTL MCP server is [open source](https://github.com/upstash/genrtl). If you want full control over what is sent as the `query` parameter, you can:
 
-1. Fork the [Context7 MCP repository](https://github.com/upstash/context7)
-2. Edit the tool input descriptions in [`packages/mcp/src/index.ts`](https://github.com/upstash/context7/blob/master/packages/mcp/src/index.ts) — these descriptions instruct the AI assistant on how to formulate the query
+1. Fork the [GenRTL MCP repository](https://github.com/upstash/genrtl)
+2. Edit the tool input descriptions in [`packages/mcp/src/index.ts`](https://github.com/upstash/genrtl/blob/master/packages/mcp/src/index.ts) — these descriptions instruct the AI assistant on how to formulate the query
 3. Build and run your custom MCP server locally
 
 <Warning>
@@ -96,7 +96,7 @@ Restrict which libraries are accessible to your teamspace. You can choose betwee
 
 ### Data Storage
 
-**Context7 does not store your source files.**
+**GenRTL does not store your source files.**
 
 - We only index and store **documentation** and **code examples** from repositories
 - Your code, and source files are not stored or shared
@@ -125,7 +125,7 @@ Restrict which libraries are accessible to your teamspace. You can choose betwee
 
 ### GDPR Compliance
 
-Context7 provides:
+GenRTL provides:
 
 - The right to access your data
 - The right to delete your data

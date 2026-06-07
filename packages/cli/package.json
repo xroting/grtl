@@ -1,10 +1,10 @@
 {
-  "name": "ctx7",
-  "version": "0.5.1",
-  "description": "Context7 CLI - Fetch documentation context and configure Context7",
+  "name": "grtl",
+  "version": "0.1.0",
+  "description": "CLI for GenRTL RTL engineering knowledge and MCP setup",
   "type": "module",
   "bin": {
-    "ctx7": "./dist/index.js"
+    "grtl": "dist/index.js"
   },
   "files": [
     "dist"
@@ -19,15 +19,14 @@
     "format:check": "prettier --check src",
     "clean": "rm -rf dist node_modules",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run lint:check && npm run typecheck && npm test"
   },
   "dependencies": {
-    "@inquirer/core": "^11.1.1",
     "@inquirer/prompts": "^8.2.0",
-    "boxen": "^8.0.1",
     "commander": "^13.1.0",
     "figlet": "^1.9.4",
-    "open": "^10.1.0",
     "ora": "^9.0.0",
     "picocolors": "^1.1.1"
   },
@@ -45,25 +44,30 @@
     "vitest": "^4.0.13"
   },
   "keywords": [
-    "context7",
+    "genrtl",
     "cli",
     "ai",
-    "skills",
-    "documentation",
+    "rtl",
+    "systemverilog",
+    "verilog",
+    "verification",
     "mcp"
   ],
-  "author": "Upstash",
+  "author": "xroting",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/upstash/context7.git",
+    "url": "git+https://github.com/xroting/grtl.git",
     "directory": "packages/cli"
   },
   "bugs": {
-    "url": "https://github.com/upstash/context7/issues"
+    "url": "https://github.com/xroting/grtl/issues"
   },
-  "homepage": "https://context7.com",
+  "homepage": "https://www.genrtl.com",
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
-    "node": ">=18"
+    "node": ">=20.12.0"
   }
 }

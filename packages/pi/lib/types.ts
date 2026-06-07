@@ -1,4 +1,4 @@
-// Copied verbatim from @upstash/context7-mcp (packages/mcp/src/lib/types.ts)
+// Copied verbatim from @upstash/genrtl-mcp (packages/mcp/src/lib/types.ts)
 // to keep pi's wire format in lockstep with MCP. Update both together.
 
 export interface SearchResult {

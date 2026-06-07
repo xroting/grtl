@@ -30,13 +30,13 @@ function encryptClientIp(clientIp: string): string {
 }
 
 /**
- * Generate headers for Context7 API requests.
+ * Generate headers for GenRTL API requests.
  * Handles client IP encryption, authentication, and telemetry headers.
  */
 export function generateHeaders(context: ClientContext): Record<string, string> {
   const headers: Record<string, string> = {
-    "X-Context7-Source": "mcp-server",
-    "X-Context7-Server-Version": SERVER_VERSION,
+    "X-GenRTL-Source": "mcp-server",
+    "X-GenRTL-Server-Version": SERVER_VERSION,
   };
 
   if (context.clientIp) {
@@ -49,13 +49,13 @@ export function generateHeaders(context: ClientContext): Record<string, string> 
     headers["Authorization"] = `Bearer ${context.apiKey}`;
   }
   if (context.clientInfo?.ide) {
-    headers["X-Context7-Client-IDE"] = context.clientInfo.ide;
+    headers["X-GenRTL-Client-IDE"] = context.clientInfo.ide;
   }
   if (context.clientInfo?.version) {
-    headers["X-Context7-Client-Version"] = context.clientInfo.version;
+    headers["X-GenRTL-Client-Version"] = context.clientInfo.version;
   }
   if (context.transport) {
-    headers["X-Context7-Transport"] = context.transport;
+    headers["X-GenRTL-Transport"] = context.transport;
   }
 
   return headers;

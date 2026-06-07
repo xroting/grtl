@@ -36,7 +36,7 @@ interface QueryLogEntry {
 }
 
 // TODO(deprecate-skills-phase-2): Remove this deprecated Skill Hub generation
-// subcommand after legacy `ctx7 skills generate` support is dropped.
+// subcommand after legacy `grtl skills generate` support is dropped.
 export function registerGenerateCommand(skillCommand: Command): void {
   skillCommand
     .command("generate")
@@ -96,7 +96,7 @@ async function generateCommand(options: GenerateOptions): Promise<void> {
       console.log(
         `  ${pc.yellow("Tip:")} Upgrade to Pro for ${pc.bold("10")} generations per week.`
       );
-      console.log(`  Visit ${pc.green("https://context7.com/dashboard")} to upgrade.`);
+      console.log(`  Visit ${pc.green("https://genrtl.com/dashboard")} to upgrade.`);
     }
     return;
   }
@@ -143,7 +143,7 @@ async function generateCommand(options: GenerateOptions): Promise<void> {
   log.blank();
   console.log(
     pc.dim(
-      "To generate this skill, we will read relevant documentation and examples\nfrom Context7.\n"
+      "To generate this skill, we will read relevant documentation and examples\nfrom GenRTL.\n"
     )
   );
   console.log(
@@ -167,7 +167,7 @@ async function generateCommand(options: GenerateOptions): Promise<void> {
 
   if (searchResult.searchFilterApplied) {
     log.warn(
-      "Your results only include libraries matching your teamspace's library filters. To adjust quality thresholds or blocked libraries, update your filters at https://context7.com/dashboard?tab=policies"
+      "Your results only include libraries matching your teamspace's library filters. To adjust quality thresholds or blocked libraries, update your filters at https://genrtl.com/dashboard?tab=policies"
     );
     log.blank();
   }
@@ -196,11 +196,11 @@ async function generateCommand(options: GenerateOptions): Promise<void> {
       const indexStr = pc.dim(`${(index + 1).toString().padStart(indexWidth)}.`);
       const paddedName = lib.title.padEnd(maxNameLen);
 
-      const libUrl = `https://context7.com${lib.id}`;
+      const libUrl = `https://genrtl.com${lib.id}`;
       const libLink = terminalLink(lib.title, libUrl, pc.white);
       const sourceUrl = isGitHub
         ? `https://github.com/${projectId}`
-        : `https://context7.com${lib.id}`;
+        : `https://genrtl.com${lib.id}`;
       const repoLink = terminalLink(projectId, sourceUrl, pc.white);
 
       const starsLine =
@@ -342,7 +342,7 @@ async function generateCommand(options: GenerateOptions): Promise<void> {
   };
 
   let isGeneratingContent = false;
-  let initialStatus = "Reading selected Context7 sources to generate the skill...";
+  let initialStatus = "Reading selected GenRTL sources to generate the skill...";
 
   const handleStreamEvent = (event: GenerateStreamEvent) => {
     if (event.type === "progress") {
@@ -350,7 +350,7 @@ async function generateCommand(options: GenerateOptions): Promise<void> {
         if (event.message.startsWith("Generating skill content...") && !isGeneratingContent) {
           isGeneratingContent = true;
           if (queryLog.length > 0) {
-            genSpinner.succeed(pc.green(`Read Context7 sources`));
+            genSpinner.succeed(pc.green(`Read GenRTL sources`));
           } else {
             genSpinner.succeed(pc.green(`Ready to generate`));
           }
@@ -385,7 +385,7 @@ async function generateCommand(options: GenerateOptions): Promise<void> {
     previewFileWritten = false;
     initialStatus = feedback
       ? "Regenerating skill with your feedback..."
-      : "Reading selected Context7 sources to generate the skill...";
+      : "Reading selected GenRTL sources to generate the skill...";
 
     genSpinner = ora(initialStatus).start();
 
@@ -428,7 +428,7 @@ async function generateCommand(options: GenerateOptions): Promise<void> {
     };
 
     const openInEditor = async () => {
-      const previewDir = join(homedir(), ".context7", "previews");
+      const previewDir = join(homedir(), ".genrtl", "previews");
       await mkdir(previewDir, { recursive: true });
       previewFile = join(previewDir, `${skillName}.md`);
       if (!previewFileWritten) {

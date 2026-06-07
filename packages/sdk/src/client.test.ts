@@ -1,45 +1,45 @@
 import { describe, test, expect } from "vitest";
-import { Context7 } from "./client";
-import { Context7Error } from "@error";
+import { GenRTL } from "./client";
+import { GenRTLError } from "@error";
 
-describe("Context7 Client", () => {
-  const apiKey = process.env.CONTEXT7_API_KEY || process.env.API_KEY!;
+describe("GenRTL Client", () => {
+  const apiKey = process.env.GENRTL_API_KEY || process.env.API_KEY!;
 
   describe("constructor", () => {
     test("should create client with API key", () => {
-      const client = new Context7({ apiKey });
+      const client = new GenRTL({ apiKey });
       expect(client).toBeDefined();
     });
 
     test("should create client from environment variables", () => {
-      const client = new Context7();
+      const client = new GenRTL();
       expect(client).toBeDefined();
     });
 
     test("should throw error when API key is missing", () => {
-      const originalEnv = process.env.CONTEXT7_API_KEY;
+      const originalEnv = process.env.GENRTL_API_KEY;
       const originalApiKey = process.env.API_KEY;
 
-      delete process.env.CONTEXT7_API_KEY;
+      delete process.env.GENRTL_API_KEY;
       delete process.env.API_KEY;
 
-      expect(() => new Context7({ apiKey: "" })).toThrow(Context7Error);
-      expect(() => new Context7({})).toThrow(Context7Error);
-      expect(() => new Context7()).toThrow("API key is required");
+      expect(() => new GenRTL({ apiKey: "" })).toThrow(GenRTLError);
+      expect(() => new GenRTL({})).toThrow(GenRTLError);
+      expect(() => new GenRTL()).toThrow("API key is required");
 
-      if (originalEnv) process.env.CONTEXT7_API_KEY = originalEnv;
+      if (originalEnv) process.env.GENRTL_API_KEY = originalEnv;
       if (originalApiKey) process.env.API_KEY = originalApiKey;
     });
 
     test("should prefer config API key over environment variable", () => {
-      const customApiKey = "ctx7sk-custom-key";
-      const client = new Context7({ apiKey: customApiKey });
+      const customApiKey = "grtlsk-custom-key";
+      const client = new GenRTL({ apiKey: customApiKey });
       expect(client).toBeDefined();
     });
   });
 
   describe("searchLibrary", () => {
-    const client = new Context7({ apiKey });
+    const client = new GenRTL({ apiKey });
 
     test("should search for libraries and return array directly", async () => {
       const result = await client.searchLibrary("I need to build a UI", "react");
@@ -74,7 +74,7 @@ describe("Context7 Client", () => {
   });
 
   describe("getContext - JSON format (default)", () => {
-    const client = new Context7({ apiKey });
+    const client = new GenRTL({ apiKey });
 
     test("should get context as Documentation array (default)", async () => {
       const result = await client.getContext("How to use hooks", "/facebook/react");
@@ -111,7 +111,7 @@ describe("Context7 Client", () => {
   });
 
   describe("getContext - text format", () => {
-    const client = new Context7({ apiKey });
+    const client = new GenRTL({ apiKey });
 
     test("should get context as text string with type: txt", async () => {
       const result = await client.getContext("How to use hooks", "/facebook/react", {
@@ -125,7 +125,7 @@ describe("Context7 Client", () => {
   });
 
   describe("getContext - different libraries", () => {
-    const client = new Context7({ apiKey });
+    const client = new GenRTL({ apiKey });
 
     test("should get context for Vue", async () => {
       const result = await client.getContext("How to create components", "/vuejs/core");
@@ -145,19 +145,19 @@ describe("Context7 Client", () => {
   });
 
   describe("error handling", () => {
-    const client = new Context7({ apiKey });
+    const client = new GenRTL({ apiKey });
 
     test("should handle invalid library ID gracefully", async () => {
       await expect(client.getContext("test query", "/nonexistent/library")).rejects.toThrow();
     });
 
     test("should handle invalid search query", async () => {
-      await expect(client.searchLibrary("", "")).rejects.toThrow(Context7Error);
+      await expect(client.searchLibrary("", "")).rejects.toThrow(GenRTLError);
     });
   });
 
   describe("type inference", () => {
-    const client = new Context7({ apiKey });
+    const client = new GenRTL({ apiKey });
 
     test("should infer Documentation[] for default (json) format", async () => {
       const result = await client.getContext("How to use hooks", "/facebook/react");
