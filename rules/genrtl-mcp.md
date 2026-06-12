@@ -4,6 +4,7 @@ Choose one tool based on the task:
 
 - `genrtl_knowledge_search` for cross-domain RTL questions.
 - `genrtl_spec2rtl_search` for requirements, protocols, control logic, or algorithm-to-RTL work.
+- `genrtl_spec2plan_search` for turning a specification into an actionable implementation plan.
 - `genrtl_verification_search` for testbenches and verification.
 - `genrtl_debug_search` for lint, CDC, compile, synthesis, or RTL bugs.
 

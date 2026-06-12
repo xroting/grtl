@@ -5,6 +5,7 @@ const FALLBACK_MCP = `Use GenRTL MCP tools for grounded RTL engineering knowledg
 Choose one tool:
 - \`genrtl_knowledge_search\` for cross-domain RTL questions
 - \`genrtl_spec2rtl_search\` for requirements and RTL design
+- \`genrtl_spec2plan_search\` for implementation planning from a specification
 - \`genrtl_verification_search\` for testbenches and verification
 - \`genrtl_debug_search\` for lint, CDC, compile, synthesis, and RTL bugs
 
@@ -15,6 +16,7 @@ const FALLBACK_CLI = `Use the \`grtl\` CLI for grounded RTL engineering knowledg
 Choose one command:
 - \`npx @genrtl/grtl@latest knowledge-search "<query>"\`
 - \`npx @genrtl/grtl@latest spec2rtl-search "<query>"\`
+- \`npx @genrtl/grtl@latest spec2plan-search "<query>"\`
 - \`npx @genrtl/grtl@latest verification-search "<query>"\`
 - \`npx @genrtl/grtl@latest debug-search "<query>"\`
 
@@ -41,6 +43,7 @@ Choose exactly one MCP tool:
 
 - \`genrtl_knowledge_search\` for cross-domain RTL questions.
 - \`genrtl_spec2rtl_search\` for requirements, protocols, control logic, or algorithm-to-RTL work.
+- \`genrtl_spec2plan_search\` for turning a specification into an actionable implementation plan.
 - \`genrtl_verification_search\` for testbenches and verification.
 - \`genrtl_debug_search\` for lint, CDC, compile, synthesis, or RTL bugs.
 
@@ -62,6 +65,7 @@ Choose exactly one command:
 
 - \`grtl knowledge-search "<query>" --json\` for cross-domain RTL questions.
 - \`grtl spec2rtl-search "<query>" --json\` for requirements, protocols, control logic, or algorithm-to-RTL work.
+- \`grtl spec2plan-search "<query>" --json\` for turning a specification into an actionable implementation plan.
 - \`grtl verification-search "<query>" --json\` for testbenches and verification.
 - \`grtl debug-search "<query>" --json\` for lint, CDC, compile, synthesis, or RTL bugs.
 

@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
+import { Command } from "commander";
 
-import { buildKnowledgeSearchInput } from "../commands/knowledge.js";
+import { buildKnowledgeSearchInput, registerKnowledgeCommands } from "../commands/knowledge.js";
 import { callGenrtlKnowledgeTool, setBaseUrl } from "../utils/knowledge-api.js";
 
 describe("GenRTL knowledge commands", () => {
@@ -38,6 +39,25 @@ describe("GenRTL knowledge commands", () => {
       min_score: 0.2,
       workspace_id: "workspace-1",
     });
+  });
+
+  test("accepts the Spec2Plan knowledge type", () => {
+    expect(
+      buildKnowledgeSearchInput("plan an AXI stream implementation", {
+        type: ["spec2plan"],
+      })
+    ).toEqual({
+      query: "plan an AXI stream implementation",
+      filters: { types: ["spec2plan"] },
+    });
+  });
+
+  test("registers the Spec2Plan tool name and short alias", () => {
+    const program = new Command();
+    registerKnowledgeCommands(program);
+
+    const command = program.commands.find((item) => item.name() === "genrtl_spec2plan_search");
+    expect(command?.aliases()).toContain("spec2plan-search");
   });
 
   test("calls the requested MCP tool and returns structured content", async () => {
@@ -82,6 +102,26 @@ describe("GenRTL knowledge commands", () => {
         arguments: { query: "CDC warning" },
       },
     });
+  });
+
+  test("calls the Spec2Plan MCP tool", async () => {
+    process.env.GRTL_API_KEY = validTestKey;
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: 1,
+          result: { content: [], structuredContent: { summary: "Plan", matched_cards: [] } },
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      )
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    await callGenrtlKnowledgeTool("genrtl_spec2plan_search", { query: "Plan an APB block" });
+
+    const request = fetchMock.mock.calls[0][1] as RequestInit;
+    expect(JSON.parse(String(request.body)).params.name).toBe("genrtl_spec2plan_search");
   });
 
   test("rejects a truncated API key before sending a request", async () => {

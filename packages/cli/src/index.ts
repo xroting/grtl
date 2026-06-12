@@ -41,9 +41,10 @@ Examples:
   ${brand.primary("npx @genrtl/grtl setup --cli --codex --project")}
   ${brand.primary("GRTL_API_KEY=your_key npx @genrtl/grtl setup --mcp --codex --project")}
 
-  ${brand.dim("# Search the same four tools exposed by the GenRTL MCP server")}
+  ${brand.dim("# Search the same five tools exposed by the GenRTL MCP server")}
   ${brand.primary('npx @genrtl/grtl knowledge-search "AXI stream backpressure design"')}
   ${brand.primary('npx @genrtl/grtl spec2rtl-search "Generate an APB register block"')}
+  ${brand.primary('npx @genrtl/grtl spec2plan-search "Plan an APB register block implementation"')}
   ${brand.primary('npx @genrtl/grtl verification-search "Verify an async FIFO"')}
   ${brand.primary('npx @genrtl/grtl debug-search "Explain this Vivado CDC warning"')}
 `

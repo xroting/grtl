@@ -49,11 +49,12 @@ https://genrtl.com/api/mcp
 ```bash
 grtl knowledge-search "AXI stream backpressure design"
 grtl spec2rtl-search "Design an APB register block"
+grtl spec2plan-search "Plan an APB register block implementation"
 grtl verification-search "Verify an async FIFO"
 grtl debug-search "Explain this Vivado CDC warning"
 ```
 
-Use `--json` for structured output. Available filters include `--type`,
+Use `--json` for structured output. `--type` accepts `spec2rtl`, `spec2plan`, `verification`, or `debug`; other filters include
 `--domain`, `--tool`, `--tool-version`, `--error-type`, `--severity`,
 `--interface`, `--target`, `--tag`, `--top-k`, `--min-score`, and
 `--workspace-id`.

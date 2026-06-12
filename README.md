@@ -117,11 +117,12 @@ the user profile.
 
 ## Knowledge Commands
 
-The CLI exposes the same four operations as the MCP server:
+The CLI exposes the same five operations as the MCP server:
 
 ```bash
 grtl knowledge-search "How should AXI stream backpressure be implemented?"
 grtl spec2rtl-search "Design an APB register block with byte enables"
+grtl spec2plan-search "Create an implementation plan for an APB register block"
 grtl verification-search "Verify an asynchronous FIFO"
 grtl debug-search "Explain this Vivado CDC warning"
 ```
@@ -131,6 +132,7 @@ The exact MCP tool names are also valid CLI commands:
 ```bash
 grtl genrtl_knowledge_search "<query>"
 grtl genrtl_spec2rtl_search "<query>"
+grtl genrtl_spec2plan_search "<query>"
 grtl genrtl_verification_search "<query>"
 grtl genrtl_debug_search "<query>"
 ```
@@ -166,6 +168,7 @@ of these tools:
 
 - `genrtl_knowledge_search`
 - `genrtl_spec2rtl_search`
+- `genrtl_spec2plan_search`
 - `genrtl_verification_search`
 - `genrtl_debug_search`
 

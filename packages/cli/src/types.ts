@@ -254,10 +254,11 @@ export interface ContextResponse {
 export type GenrtlKnowledgeToolName =
   | "genrtl_knowledge_search"
   | "genrtl_spec2rtl_search"
+  | "genrtl_spec2plan_search"
   | "genrtl_verification_search"
   | "genrtl_debug_search";
 
-export type KnowledgeCardType = "spec2rtl" | "verification" | "debug";
+export type KnowledgeCardType = "spec2rtl" | "spec2plan" | "verification" | "debug";
 
 export interface KnowledgeSearchInput {
   query: string;

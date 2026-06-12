@@ -4,6 +4,7 @@ Choose exactly one command based on the task:
 
 - `grtl knowledge-search "<query>"` for cross-domain RTL questions.
 - `grtl spec2rtl-search "<query>"` for requirements, protocols, control logic, or algorithm-to-RTL work.
+- `grtl spec2plan-search "<query>"` for turning a specification into an actionable implementation plan.
 - `grtl verification-search "<query>"` for testbenches and verification.
 - `grtl debug-search "<query>"` for lint, CDC, compile, synthesis, or RTL bugs.
 

@@ -1,6 +1,6 @@
 ---
 name: find-genrtl-knowledge
-description: Search GenRTL for grounded RTL design, verification, lint, CDC, synthesis, compile, and debugging knowledge.
+description: Search GenRTL for grounded RTL design, specification planning, verification, lint, CDC, synthesis, compile, and debugging knowledge.
 ---
 
 # GenRTL Knowledge Search
@@ -10,6 +10,7 @@ Use one CLI command per task:
 ```bash
 grtl knowledge-search "<cross-domain RTL question>"
 grtl spec2rtl-search "<specification or RTL design question>"
+grtl spec2plan-search "<specification that needs an implementation plan>"
 grtl verification-search "<testbench or verification question>"
 grtl debug-search "<lint, CDC, compile, synthesis, or RTL bug question>"
 ```
