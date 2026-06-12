@@ -2,7 +2,7 @@
  * @type {import('prettier').Config}
  */
 const config = {
-  endOfLine: "lf",
+  endOfLine: "auto",
   singleQuote: false,
   tabWidth: 2,
   trailingComma: "es5",

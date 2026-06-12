@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "pnpm -r run build",
+    "build": "npm run build --workspaces --if-present",
     "build:sdk": "pnpm --filter @upstash/genrtl-sdk build",
     "build:mcp": "pnpm --filter @upstash/genrtl-mcp build",
     "build:ai-sdk": "pnpm --filter @upstash/genrtl-tools-ai-sdk build",
@@ -20,8 +20,8 @@
     "lint:check": "pnpm -r run lint:check",
     "format": "pnpm -r run format",
     "format:check": "pnpm -r run format:check",
-    "release": "pnpm build && changeset publish",
-    "release:snapshot": "changeset version --snapshot canary && pnpm build && changeset publish --tag canary --no-git-tag"
+    "release": "changeset version && npm run build && changeset publish",
+    "release:snapshot": "changeset version --snapshot canary && npm run build && changeset publish --tag canary --no-git-tag"
   },
   "repository": {
     "type": "git",

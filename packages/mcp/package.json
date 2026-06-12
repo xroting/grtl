@@ -4,7 +4,7 @@
   "mcpName": "io.github.upstash/genrtl",
   "description": "MCP server for GenRTL",
   "scripts": {
-    "build": "tsc && chmod 755 dist/index.js",
+    "build": "tsc && node -e \"require('node:fs').chmodSync('dist/index.js', 0o755)\"",
     "test": "pnpm exec vitest run",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

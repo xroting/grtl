@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+### Minor Changes
+
+- 23032fb: Add Spec2Plan knowledge search commands and filtering to the CLI and generated agent Skills.
+
 ## Unreleased
 
 - Add `spec2plan-search` and `genrtl_spec2plan_search` commands, plus `--type spec2plan` filtering.
