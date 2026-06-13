@@ -276,6 +276,7 @@ export interface KnowledgeSearchInput {
   top_k?: number;
   min_score?: number;
   workspace_id?: string;
+  idempotency_key?: string;
 }
 
 export interface KnowledgeMatch {
@@ -298,4 +299,28 @@ export interface KnowledgeSearchResponse {
   matched_cards: KnowledgeMatch[];
   recommended_next_action?: string;
   usage?: Record<string, unknown>;
+}
+
+export interface CbbAcquireInput {
+  cbb_id: string;
+  version: string;
+  target_dir: string;
+  workspace_id: string;
+  job_id: string;
+  idempotency_key: string;
+}
+
+export interface CbbAcquireResponse {
+  cbb_id: string;
+  version: string;
+  artifact_url: string;
+  sha256: string;
+  file_size: number;
+  format: "zip";
+  expires_in: number;
+  expires_at: string;
+  suggested_target: string;
+  receipt_id: string;
+  trace_id: string;
+  manifest_summary: string;
 }

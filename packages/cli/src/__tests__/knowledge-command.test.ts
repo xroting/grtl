@@ -93,15 +93,20 @@ describe("GenRTL knowledge commands", () => {
       })
     );
     const request = fetchMock.mock.calls[0][1] as RequestInit;
-    expect(JSON.parse(String(request.body))).toEqual({
+    const requestBody = JSON.parse(String(request.body));
+    expect(requestBody).toEqual({
       jsonrpc: "2.0",
       id: 1,
       method: "tools/call",
       params: {
         name: "genrtl_debug_search",
-        arguments: { query: "CDC warning" },
+        arguments: {
+          query: "CDC warning",
+          idempotency_key: expect.any(String),
+        },
       },
     });
+    expect(requestBody.params.arguments.idempotency_key).toHaveLength(36);
   });
 
   test("calls the Spec2Plan MCP tool", async () => {

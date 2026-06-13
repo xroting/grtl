@@ -3,6 +3,7 @@ import pc from "picocolors";
 import figlet from "figlet";
 import { registerSetupCommand } from "./commands/setup.js";
 import { registerKnowledgeCommands } from "./commands/knowledge.js";
+import { registerCbbCommands } from "./commands/cbb.js";
 import { maybeShowUpgradeNotice, registerUpgradeCommand } from "./commands/upgrade.js";
 import { setMcpBaseUrl } from "./setup/agents.js";
 import { setBaseUrl } from "./utils/knowledge-api.js";
@@ -47,11 +48,15 @@ Examples:
   ${brand.primary('npx @genrtl/grtl spec2plan-search "Plan an APB register block implementation"')}
   ${brand.primary('npx @genrtl/grtl verification-search "Verify an async FIFO"')}
   ${brand.primary('npx @genrtl/grtl debug-search "Explain this Vivado CDC warning"')}
+
+  ${brand.dim("# Acquire and install a reusable RTL CBB")}
+  ${brand.primary("npx @genrtl/grtl cbb install cbb_uart@1.2.0")}
 `
   );
 
 registerSetupCommand(program);
 registerKnowledgeCommands(program);
+registerCbbCommands(program);
 registerUpgradeCommand(program);
 
 program.action(() => {

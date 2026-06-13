@@ -59,6 +59,25 @@ Use `--json` for structured output. `--type` accepts `spec2rtl`, `spec2plan`, `v
 `--interface`, `--target`, `--tag`, `--top-k`, `--min-score`, and
 `--workspace-id`.
 
+## CBB Installation
+
+Install an exact reusable RTL CBB version into the current project:
+
+```bash
+grtl cbb install cbb_uart@1.2.0
+grtl cbb install cbb_uart@1.2.0 --target rtl/vendor/uart
+```
+
+The command calls the hosted `genrtl_cbb_acquire` MCP tool with
+`GRTL_API_KEY`, downloads the short-lived ZIP artifact, verifies its size and
+SHA-256, safely extracts it, and atomically installs it. The default target is
+`rtl/cbb/<cbb_id>_<version>`.
+
+Installed packages are recorded in `.genrtl/cbb-lock.json`. Existing targets
+are left untouched unless `--force` is provided; replacement occurs only after
+the new archive has been fully verified and extracted. Use `--json` for
+machine-readable output.
+
 ## Development
 
 ```bash

@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { VERSION } from "../constants.js";
 import type {
   GenrtlKnowledgeToolName,
@@ -52,10 +53,7 @@ function getStructuredMcpError(content: unknown): { error?: string; code?: strin
   };
 }
 
-export async function callGenrtlKnowledgeTool(
-  toolName: GenrtlKnowledgeToolName,
-  input: KnowledgeSearchInput
-): Promise<KnowledgeSearchResponse> {
+export async function callGenrtlMcpTool<T>(toolName: string, input: object): Promise<T> {
   const apiKey = getApiKey();
   if (!apiKey) {
     throw new Error("Authentication required. Set GRTL_API_KEY or GENRTL_API_KEY.");
@@ -84,7 +82,7 @@ export async function callGenrtlKnowledgeTool(
     result?: {
       isError?: boolean;
       content?: unknown;
-      structuredContent?: KnowledgeSearchResponse | { error?: string; code?: string };
+      structuredContent?: T | { error?: string; code?: string };
     };
   } | null;
 
@@ -102,11 +100,19 @@ export async function callGenrtlKnowledgeTool(
     const message =
       structuredError?.error ||
       getMcpErrorMessage(result.content) ||
-      "GenRTL knowledge search failed.";
+      "GenRTL MCP tool call failed.";
     throw new Error(structuredError?.code ? `${message} (${structuredError.code})` : message);
   }
   if (!result.structuredContent) {
-    throw new Error("GenRTL MCP response did not include structured knowledge results.");
+    throw new Error("GenRTL MCP response did not include structured results.");
   }
-  return result.structuredContent as KnowledgeSearchResponse;
+  return result.structuredContent as T;
+}
+
+export async function callGenrtlKnowledgeTool(
+  toolName: GenrtlKnowledgeToolName,
+  input: KnowledgeSearchInput
+): Promise<KnowledgeSearchResponse> {
+  const requestInput = input.idempotency_key ? input : { ...input, idempotency_key: randomUUID() };
+  return callGenrtlMcpTool<KnowledgeSearchResponse>(toolName, requestInput);
 }
