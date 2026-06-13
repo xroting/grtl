@@ -76,7 +76,7 @@ describe("getRuleContent", () => {
 });
 
 describe("getSkillContent", () => {
-  test("builds a CLI skill that invokes all five grtl commands", () => {
+  test("builds a CLI skill for knowledge search and CBB installation", () => {
     const content = getSkillContent("cli");
     expect(content).toContain("name: genrtl-cli");
     expect(content).toContain("grtl knowledge-search");
@@ -84,6 +84,8 @@ describe("getSkillContent", () => {
     expect(content).toContain("grtl spec2plan-search");
     expect(content).toContain("grtl verification-search");
     expect(content).toContain("grtl debug-search");
+    expect(content).toContain("grtl cbb install <cbb_id>@<version>");
+    expect(content).toContain("verifies SHA-256");
     expect(content).toContain("GRTL_API_KEY");
   });
 

@@ -34,6 +34,15 @@ grtl setup --mcp --cursor --project
 
 Without `--cli` or `--mcp`, setup asks which mode to install.
 
+Installing a newer npm package does not modify Skills already written to an
+agent configuration directory. Run the matching setup command again after an
+upgrade to refresh the Skill. For example:
+
+```bash
+grtl setup --cli --cursor
+grtl setup --cli --cursor --project
+```
+
 For Codex, Skills are installed under `.agents/skills` for project setup or
 `~/.agents/skills` for global setup. MCP mode also updates
 `.codex/config.toml` or `~/.codex/config.toml`.

@@ -11,14 +11,18 @@ Choose one tool:
 
 Pass the complete engineering question in \`query\`. Add filters only when useful.`;
 
-const FALLBACK_CLI = `Use the \`grtl\` CLI for grounded RTL engineering knowledge.
+const FALLBACK_CLI = `Use the \`grtl\` CLI for grounded RTL engineering knowledge and reusable CBB installation.
 
-Choose one command:
+For knowledge retrieval, choose one command:
 - \`npx @genrtl/grtl@latest knowledge-search "<query>"\`
 - \`npx @genrtl/grtl@latest spec2rtl-search "<query>"\`
 - \`npx @genrtl/grtl@latest spec2plan-search "<query>"\`
 - \`npx @genrtl/grtl@latest verification-search "<query>"\`
 - \`npx @genrtl/grtl@latest debug-search "<query>"\`
+
+To install a reusable RTL block into the current project:
+- \`npx @genrtl/grtl@latest cbb install <cbb_id>@<version>\`
+- Add \`--target <relative-dir>\` only when a non-default install path is needed.
 
 Pass the complete engineering question. Add filters such as \`--tool\`,
 \`--tool-version\`, \`--target\`, \`--interface\`, or \`--tag\` when known.
@@ -53,21 +57,27 @@ Pass the complete engineering question in \`query\`. Add \`filters\`, \`top_k\`,
 
 const CLI_SKILL = `---
 name: genrtl-cli
-description: Use the grtl CLI for grounded RTL design, verification, lint, CDC, synthesis, compile, and debugging knowledge.
+description: Use the grtl CLI for grounded RTL design, verification, debugging knowledge, and secure installation of reusable RTL CBBs.
 ---
 
 # GenRTL CLI
 
-Use this skill when an RTL engineering task needs grounded GenRTL knowledge and
-the GenRTL MCP server is not configured.
+Use this skill when an RTL engineering task needs grounded GenRTL knowledge or
+a reusable CBB must be installed into the user's local project.
 
-Choose exactly one command:
+For knowledge retrieval, choose exactly one command:
 
 - \`grtl knowledge-search "<query>" --json\` for cross-domain RTL questions.
 - \`grtl spec2rtl-search "<query>" --json\` for requirements, protocols, control logic, or algorithm-to-RTL work.
 - \`grtl spec2plan-search "<query>" --json\` for turning a specification into an actionable implementation plan.
 - \`grtl verification-search "<query>" --json\` for testbenches and verification.
 - \`grtl debug-search "<query>" --json\` for lint, CDC, compile, synthesis, or RTL bugs.
+
+For a CBB selected from GenRTL search results:
+
+- \`grtl cbb install <cbb_id>@<version>\` downloads, verifies, and safely extracts it.
+- Add \`--target <relative-dir>\` only when the user requests a specific project path.
+- Do not download or extract the artifact manually; the CLI verifies SHA-256 and prevents unsafe ZIP paths.
 
 Pass the complete engineering question. Add filters such as \`--tool\`,
 \`--tool-version\`, \`--target\`, \`--interface\`, or \`--tag\` only when useful.

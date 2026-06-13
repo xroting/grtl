@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.1
+
+### Patch Changes
+
+- Document `grtl cbb install <cbb_id>@<version>` in generated CLI Skills and
+  published GenRTL agent guidance.
+
+## 0.4.0
+
+### Minor Changes
+
+- 82f6908: Add `grtl cbb install <cbb_id>@<version>` with MCP artifact acquisition,
+  SHA256 verification, safe ZIP extraction, atomic target replacement, and a
+  project-local CBB lockfile.
+
 ## 0.3.0
 
 ### Minor Changes

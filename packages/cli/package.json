@@ -1,6 +1,6 @@
 {
   "name": "@genrtl/grtl",
-  "version": "0.3.0",
+  "version": "0.4.1",
   "description": "CLI, MCP, and coding-agent Skills for GenRTL RTL engineering knowledge",
   "type": "module",
   "bin": {

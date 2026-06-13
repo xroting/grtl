@@ -1,6 +1,6 @@
 ---
 name: genrtl-cli
-description: Use the grtl CLI to search grounded RTL engineering knowledge, fetch library documentation, manage AI coding skills, and configure GenRTL MCP. Activate when the user mentions "grtl" or "genrtl", needs Spec2RTL or Spec2Plan guidance, verification or debug knowledge, current library docs, skill management, or GenRTL agent setup.
+description: Use the grtl CLI to search grounded RTL engineering knowledge, securely install reusable RTL CBBs, fetch library documentation, manage AI coding skills, and configure GenRTL MCP. Activate when the user mentions "grtl" or "genrtl", needs Spec2RTL or Spec2Plan guidance, verification or debug knowledge, CBB installation, current library docs, skill management, or GenRTL agent setup.
 ---
 
 # grtl CLI
@@ -10,13 +10,13 @@ The GenRTL CLI searches RTL engineering knowledge, fetches up-to-date library do
 Make sure the CLI is up to date before running commands:
 
 ```bash
-npm install -g grtl@latest
+npm install -g @genrtl/grtl@latest
 ```
 
 Or run directly without installing:
 
 ```bash
-npx grtl@latest <command>
+npx @genrtl/grtl@latest <command>
 ```
 
 ## What this skill covers
@@ -39,6 +39,10 @@ grtl spec2rtl-search <query>          # Search specification-to-RTL guidance
 grtl spec2plan-search <query>         # Search specification-to-plan guidance
 grtl verification-search <query>      # Search verification knowledge
 grtl debug-search <query>             # Search debug knowledge
+
+# Reusable RTL CBBs
+grtl cbb install <cbb_id>@<version>   # Install to rtl/cbb/<cbb_id>_<version>
+grtl cbb install <cbb_id>@<version> --target rtl/vendor/<name>
 
 # Skills
 grtl skills install /owner/repo       # Install from a repo (interactive)
@@ -74,6 +78,7 @@ export GENRTL_API_KEY=your_key
 
 ## Common Mistakes
 
+- Do not manually download or extract CBB ZIP files; `grtl cbb install` verifies SHA-256 and rejects unsafe paths
 - Library IDs require a `/` prefix — `/facebook/react` not `facebook/react`
 - Always run `grtl library` first — `grtl docs react "hooks"` will fail without a valid ID
 - Repository format for skills is `/owner/repo` — e.g., `grtl skills install /anthropics/skills`
