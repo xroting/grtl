@@ -83,19 +83,21 @@ describe("getSkillContent", () => {
     expect(content).toContain("grtl spec2rtl-search");
     expect(content).toContain("grtl spec2plan-search");
     expect(content).toContain("grtl verification-search");
+    expect(content).toContain("grtl compile-search");
     expect(content).toContain("grtl debug-search");
     expect(content).toContain("grtl cbb install <cbb_id>@<version>");
     expect(content).toContain("verifies SHA-256");
     expect(content).toContain("GRTL_API_KEY");
   });
 
-  test("builds an MCP skill that invokes all five GenRTL tools", () => {
+  test("builds an MCP skill that invokes all six GenRTL knowledge tools", () => {
     const content = getSkillContent("mcp");
     expect(content).toContain("name: genrtl-mcp");
     expect(content).toContain("genrtl_knowledge_search");
     expect(content).toContain("genrtl_spec2rtl_search");
     expect(content).toContain("genrtl_spec2plan_search");
     expect(content).toContain("genrtl_verification_search");
+    expect(content).toContain("genrtl_compile_search");
     expect(content).toContain("genrtl_debug_search");
   });
 });

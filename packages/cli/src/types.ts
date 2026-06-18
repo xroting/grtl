@@ -256,9 +256,16 @@ export type GenrtlKnowledgeToolName =
   | "genrtl_spec2rtl_search"
   | "genrtl_spec2plan_search"
   | "genrtl_verification_search"
+  | "genrtl_compile_search"
   | "genrtl_debug_search";
 
-export type KnowledgeCardType = "spec2rtl" | "spec2plan" | "verification" | "debug";
+export type KnowledgeCardType =
+  | "spec2rtl"
+  | "spec2plan"
+  | "verification"
+  | "compile"
+  | "debug"
+  | "coding_style";
 
 export interface KnowledgeSearchInput {
   query: string;

@@ -60,10 +60,11 @@ grtl knowledge-search "AXI stream backpressure design"
 grtl spec2rtl-search "Design an APB register block"
 grtl spec2plan-search "Plan an APB register block implementation"
 grtl verification-search "Verify an async FIFO"
-grtl debug-search "Explain this Vivado CDC warning"
+grtl compile-search "Explain this Vivado CDC warning"
+grtl debug-search "Fix this RTL bug from bad code and error message"
 ```
 
-Use `--json` for structured output. `--type` accepts `spec2rtl`, `spec2plan`, `verification`, or `debug`; other filters include
+Use `--json` for structured output. `--type` accepts `spec2rtl`, `spec2plan`, `verification`, `compile`, `debug`, or `coding_style`; other filters include
 `--domain`, `--tool`, `--tool-version`, `--error-type`, `--severity`,
 `--interface`, `--target`, `--tag`, `--top-k`, `--min-score`, and
 `--workspace-id`.

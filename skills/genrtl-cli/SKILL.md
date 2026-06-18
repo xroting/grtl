@@ -1,6 +1,6 @@
 ---
 name: genrtl-cli
-description: Use the grtl CLI to search grounded RTL engineering knowledge, securely install reusable RTL CBBs, fetch library documentation, manage AI coding skills, and configure GenRTL MCP. Activate when the user mentions "grtl" or "genrtl", needs Spec2RTL or Spec2Plan guidance, verification or debug knowledge, CBB installation, current library docs, skill management, or GenRTL agent setup.
+description: Use the grtl CLI to search grounded RTL engineering knowledge, securely install reusable RTL CBBs, fetch library documentation, manage AI coding skills, and configure GenRTL MCP. Activate when the user mentions "grtl" or "genrtl", needs Spec2RTL or Spec2Plan guidance, verification, compile, or debug knowledge, CBB installation, current library docs, skill management, or GenRTL agent setup.
 ---
 
 # grtl CLI
@@ -22,7 +22,7 @@ npx @genrtl/grtl@latest <command>
 ## What this skill covers
 
 - **[Documentation](references/docs.md)** — Fetch current docs for any library. Use when writing code, verifying API signatures, or when training data may be outdated.
-- **RTL knowledge** — Search Spec2RTL, Spec2Plan, verification, and debug knowledge cards.
+- **RTL knowledge** — Search Spec2RTL, Spec2Plan, verification, compile, debug, and coding style knowledge cards.
 - **[Skills management](references/skills.md)** — Install, search, suggest, list, remove, and generate AI coding skills.
 - **[Setup](references/setup.md)** — Configure GenRTL MCP for Claude Code / Cursor / OpenCode.
 
@@ -38,7 +38,8 @@ grtl knowledge-search <query>         # Search all knowledge categories
 grtl spec2rtl-search <query>          # Search specification-to-RTL guidance
 grtl spec2plan-search <query>         # Search specification-to-plan guidance
 grtl verification-search <query>      # Search verification knowledge
-grtl debug-search <query>             # Search debug knowledge
+grtl compile-search <query>           # Search compile/synthesis/lint/CDC diagnostics
+grtl debug-search <query>             # Search issue/code/fix debug knowledge
 
 # Reusable RTL CBBs
 grtl cbb install <cbb_id>@<version>   # Install to rtl/cbb/<cbb_id>_<version>

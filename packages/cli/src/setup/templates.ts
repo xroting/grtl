@@ -7,7 +7,8 @@ Choose one tool:
 - \`genrtl_spec2rtl_search\` for requirements and RTL design
 - \`genrtl_spec2plan_search\` for implementation planning from a specification
 - \`genrtl_verification_search\` for testbenches and verification
-- \`genrtl_debug_search\` for lint, CDC, compile, synthesis, and RTL bugs
+- \`genrtl_compile_search\` for lint, CDC, compile, synthesis, implementation, and simulator diagnostics
+- \`genrtl_debug_search\` for issue descriptions, erroneous code, solutions, and corrected RTL
 
 Pass the complete engineering question in \`query\`. Add filters only when useful.`;
 
@@ -18,6 +19,7 @@ For knowledge retrieval, choose one command:
 - \`npx @genrtl/grtl@latest spec2rtl-search "<query>"\`
 - \`npx @genrtl/grtl@latest spec2plan-search "<query>"\`
 - \`npx @genrtl/grtl@latest verification-search "<query>"\`
+- \`npx @genrtl/grtl@latest compile-search "<query>"\`
 - \`npx @genrtl/grtl@latest debug-search "<query>"\`
 
 To install a reusable RTL block into the current project:
@@ -36,7 +38,7 @@ export type RuleMode = "mcp" | "cli";
 
 const MCP_SKILL = `---
 name: genrtl-mcp
-description: Use GenRTL MCP tools for grounded RTL design, verification, lint, CDC, synthesis, compile, and debugging knowledge.
+description: Use GenRTL MCP tools for grounded RTL design, verification, compile/synthesis diagnostics, debugging, and coding style knowledge.
 ---
 
 # GenRTL MCP
@@ -49,7 +51,8 @@ Choose exactly one MCP tool:
 - \`genrtl_spec2rtl_search\` for requirements, protocols, control logic, or algorithm-to-RTL work.
 - \`genrtl_spec2plan_search\` for turning a specification into an actionable implementation plan.
 - \`genrtl_verification_search\` for testbenches and verification.
-- \`genrtl_debug_search\` for lint, CDC, compile, synthesis, or RTL bugs.
+- \`genrtl_compile_search\` for lint, CDC, compile, synthesis, implementation, or simulator diagnostics.
+- \`genrtl_debug_search\` for issue descriptions, erroneous code, solutions, and corrected RTL.
 
 Pass the complete engineering question in \`query\`. Add \`filters\`, \`top_k\`,
 \`min_score\`, or \`workspace_id\` only when useful.
@@ -57,7 +60,7 @@ Pass the complete engineering question in \`query\`. Add \`filters\`, \`top_k\`,
 
 const CLI_SKILL = `---
 name: genrtl-cli
-description: Use the grtl CLI for grounded RTL design, verification, debugging knowledge, and secure installation of reusable RTL CBBs.
+description: Use the grtl CLI for grounded RTL design, verification, compile/synthesis diagnostics, debugging knowledge, and secure installation of reusable RTL CBBs.
 ---
 
 # GenRTL CLI
@@ -71,7 +74,8 @@ For knowledge retrieval, choose exactly one command:
 - \`grtl spec2rtl-search "<query>" --json\` for requirements, protocols, control logic, or algorithm-to-RTL work.
 - \`grtl spec2plan-search "<query>" --json\` for turning a specification into an actionable implementation plan.
 - \`grtl verification-search "<query>" --json\` for testbenches and verification.
-- \`grtl debug-search "<query>" --json\` for lint, CDC, compile, synthesis, or RTL bugs.
+- \`grtl compile-search "<query>" --json\` for lint, CDC, compile, synthesis, implementation, or simulator diagnostics.
+- \`grtl debug-search "<query>" --json\` for issue descriptions, erroneous code, solutions, and corrected RTL.
 
 For a CBB selected from GenRTL search results:
 

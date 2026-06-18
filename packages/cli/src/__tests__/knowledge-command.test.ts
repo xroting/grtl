@@ -52,12 +52,31 @@ describe("GenRTL knowledge commands", () => {
     });
   });
 
+  test("accepts Compile, Debug, and Coding Style knowledge types", () => {
+    expect(
+      buildKnowledgeSearchInput("find coding and debug guidance", {
+        type: ["compile", "debug", "coding_style"],
+      })
+    ).toEqual({
+      query: "find coding and debug guidance",
+      filters: { types: ["compile", "debug", "coding_style"] },
+    });
+  });
+
   test("registers the Spec2Plan tool name and short alias", () => {
     const program = new Command();
     registerKnowledgeCommands(program);
 
     const command = program.commands.find((item) => item.name() === "genrtl_spec2plan_search");
     expect(command?.aliases()).toContain("spec2plan-search");
+  });
+
+  test("registers the Compile tool name and short alias", () => {
+    const program = new Command();
+    registerKnowledgeCommands(program);
+
+    const command = program.commands.find((item) => item.name() === "genrtl_compile_search");
+    expect(command?.aliases()).toContain("compile-search");
   });
 
   test("calls the requested MCP tool and returns structured content", async () => {

@@ -1,6 +1,6 @@
 ---
 name: find-genrtl-knowledge
-description: Search GenRTL for grounded RTL design, specification planning, verification, lint, CDC, synthesis, compile, and debugging knowledge.
+description: Search GenRTL for grounded RTL design, specification planning, verification, compile/synthesis diagnostics, debugging, and coding style knowledge.
 ---
 
 # GenRTL Knowledge Search
@@ -12,7 +12,8 @@ grtl knowledge-search "<cross-domain RTL question>"
 grtl spec2rtl-search "<specification or RTL design question>"
 grtl spec2plan-search "<specification that needs an implementation plan>"
 grtl verification-search "<testbench or verification question>"
-grtl debug-search "<lint, CDC, compile, synthesis, or RTL bug question>"
+grtl compile-search "<lint, CDC, compile, synthesis, implementation, or simulator diagnostic>"
+grtl debug-search "<issue description, erroneous code, solution, or corrected RTL question>"
 ```
 
 Useful options:

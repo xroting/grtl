@@ -56,9 +56,14 @@ const TOOL_COMMANDS: Array<{
     description: "Search verification and testbench knowledge cards",
   },
   {
+    name: "genrtl_compile_search",
+    alias: "compile-search",
+    description: "Search compile, lint, CDC, synthesis, implementation, and simulator diagnostic knowledge cards",
+  },
+  {
     name: "genrtl_debug_search",
     alias: "debug-search",
-    description: "Search lint, CDC, compile, synthesis, and RTL debug knowledge cards",
+    description: "Search RTL debug cards with issue description, erroneous code, solution, and corrected code",
   },
 ];
 
@@ -94,7 +99,14 @@ export function buildKnowledgeSearchInput(
 
   const filters: NonNullable<KnowledgeSearchInput["filters"]> = {};
   if (options.type?.length) {
-    const allowed = new Set(["spec2rtl", "spec2plan", "verification", "debug"]);
+    const allowed = new Set([
+      "spec2rtl",
+      "spec2plan",
+      "verification",
+      "compile",
+      "debug",
+      "coding_style",
+    ]);
     const invalid = options.type.find((type) => !allowed.has(type));
     if (invalid) {
       throw new InvalidArgumentError(`Invalid knowledge type: ${invalid}`);
@@ -185,7 +197,10 @@ function printKnowledgeResult(result: KnowledgeSearchResponse): void {
 function addSearchOptions(command: Command): Command {
   return command
     .argument("<query>", "Natural-language RTL engineering question or diagnostic")
-    .option("--type <type...>", "Knowledge types: spec2rtl, spec2plan, verification, debug")
+    .option(
+      "--type <type...>",
+      "Knowledge types: spec2rtl, spec2plan, verification, compile, debug, coding_style"
+    )
     .option("--domain <domain>", "Filter by engineering domain")
     .option("--tool <tool>", "Filter by EDA tool")
     .option("--tool-version <version>", "Filter by EDA tool version")
