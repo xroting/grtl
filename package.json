@@ -20,7 +20,7 @@
     "lint:check": "pnpm -r run lint:check",
     "format": "pnpm -r run format",
     "format:check": "pnpm -r run format:check",
-    "release": "changeset version && npm run build && changeset publish",
+    "release": "changeset version && npm run build --workspace @genrtl/grtl && npm publish --workspace @genrtl/grtl --access public",
     "release:snapshot": "changeset version --snapshot canary && npm run build && changeset publish --tag canary --no-git-tag"
   },
   "repository": {

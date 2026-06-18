@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0
+
+### Major Changes
+
+- update KB format
+
 ## 0.4.1
 
 ### Patch Changes

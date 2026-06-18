@@ -7,7 +7,12 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": [],
+  "ignore": [
+    "@upstash/genrtl-mcp",
+    "@upstash/genrtl-pi",
+    "@upstash/genrtl-sdk",
+    "@upstash/genrtl-tools-ai-sdk"
+  ],
   "snapshot": {
     "useCalculatedVersion": true,
     "prereleaseTemplate": "{tag}-{datetime}"

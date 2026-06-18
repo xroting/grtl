@@ -58,12 +58,14 @@ const TOOL_COMMANDS: Array<{
   {
     name: "genrtl_compile_search",
     alias: "compile-search",
-    description: "Search compile, lint, CDC, synthesis, implementation, and simulator diagnostic knowledge cards",
+    description:
+      "Search compile, lint, CDC, synthesis, implementation, and simulator diagnostic knowledge cards",
   },
   {
     name: "genrtl_debug_search",
     alias: "debug-search",
-    description: "Search RTL debug cards with issue description, erroneous code, solution, and corrected code",
+    description:
+      "Search RTL debug cards with issue description, erroneous code, solution, and corrected code",
   },
 ];
 
