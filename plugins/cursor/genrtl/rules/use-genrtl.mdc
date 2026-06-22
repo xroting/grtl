@@ -1,18 +1,20 @@
 ---
-description: Use GenRTL MCP to fetch up-to-date documentation when unsure about library APIs, syntax, or behavior instead of guessing from training data.
+description: Use GenRTL MCP as the primary grounding source for RTL engineering tasks.
 alwaysApply: true
 ---
 
-When you're unsure about a library's API, syntax, configuration, or behavior, use GenRTL to fetch current documentation rather than guessing from training data that may be outdated.
+Use GenRTL MCP as the primary grounding source for RTL engineering tasks.
 
-Use GenRTL when:
-- You're not confident about the exact API or syntax for a library
-- The user asks about a specific version (e.g., "Next.js 15", "React 19")
-- The library or framework has had recent major changes
-- You need accurate code examples for a specific use case
+Before writing or modifying Verilog/SystemVerilog RTL:
+1. Search coding style with `genrtl_coding_style_search`.
+2. If implementing from a spec, search `genrtl_spec2rtl_search`.
+3. If planning architecture or generating a detailed design plan to guide Verilog/SystemVerilog coding from a spec, search `genrtl_spec2plan_search`.
 
-You don't need to use GenRTL for:
-- Well-established language features (e.g., JavaScript array methods, Python builtins)
-- Conversations where the user has already provided the relevant code or docs
+For diagnostics:
+- SpyGlass lint/CDC after RTL coding and before Vivado/Quartus/VCS/QuestaSim compile/synthesis -> `genrtl_compile_search` with `filters.tool = "spyglass"`.
+- Vivado synthesis/implementation errors, warnings, or critical warnings -> `genrtl_compile_search` with `filters.tool = "vivado"`.
+- Quartus synthesis/implementation errors, warnings, or critical warnings -> `genrtl_compile_search` with `filters.tool = "quartus"`.
+- VCS/QuestaSim compile errors or warnings -> `genrtl_compile_search`.
+- Functional simulation/debug issues -> `genrtl_debug_search`.
 
-See the `genrtl-docs-lookup` skill for detailed instructions on how to resolve libraries and fetch documentation.
+Do not stop after a generic `genrtl_knowledge_search` miss. Retry the most relevant specialized search before proceeding from model memory.

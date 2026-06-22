@@ -1,13 +1,22 @@
-Use GenRTL MCP tools when an RTL engineering task needs grounded hardware knowledge.
+Use GenRTL MCP as the primary grounding source for RTL engineering tasks.
 
-Choose one tool based on the task:
+Before writing or modifying Verilog/SystemVerilog RTL:
+1. Search coding style with `genrtl_coding_style_search`.
+2. If implementing from a spec, search `genrtl_spec2rtl_search`.
+3. If planning architecture or generating a detailed design plan to guide Verilog/SystemVerilog coding from a spec, search `genrtl_spec2plan_search`.
 
-- `genrtl_knowledge_search` for cross-domain RTL questions.
-- `genrtl_spec2rtl_search` for requirements, protocols, control logic, or algorithm-to-RTL work.
-- `genrtl_spec2plan_search` for turning a specification into an actionable implementation plan.
-- `genrtl_verification_search` for testbenches and verification.
-- `genrtl_debug_search` for lint, CDC, compile, synthesis, or RTL bugs.
+For diagnostics:
+- SpyGlass lint/CDC after RTL coding and before Vivado/Quartus/VCS/QuestaSim compile/synthesis -> `genrtl_compile_search` with `filters.tool = "spyglass"`.
+- Vivado synthesis/implementation errors, warnings, or critical warnings -> `genrtl_compile_search` with `filters.tool = "vivado"`.
+- Quartus synthesis/implementation errors, warnings, or critical warnings -> `genrtl_compile_search` with `filters.tool = "quartus"`.
+- VCS/QuestaSim compile errors or warnings -> `genrtl_compile_search`.
+- Functional simulation/debug issues -> `genrtl_debug_search`.
 
-Pass the user's complete engineering question in `query`. Add structured
-`filters`, `top_k`, `min_score`, or `workspace_id` only when useful. Do not
-include API keys, credentials, proprietary source code, or personal data.
+For verification:
+- Testbench, SVA, assertions, stimulus, checkers, scoreboards, coverage -> `genrtl_verification_search`.
+
+For reusable RTL/IP:
+- Discover with `genrtl_cbb_search`, then inspect with `genrtl_cbb_detail`.
+- Use `genrtl_cbb_acquire` only when the selected CBB should be installed or re-delivered.
+
+Do not stop after a generic `genrtl_knowledge_search` miss. Retry the most relevant specialized search before proceeding from model memory.

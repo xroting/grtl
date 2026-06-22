@@ -1,53 +1,28 @@
 ---
 name: genrtl-mcp
-description: This skill should be used when the user asks about libraries, frameworks, API references, or needs code examples. Activates for setup questions, code generation involving libraries, or mentions of specific frameworks like React, Vue, Next.js, Prisma, Supabase, etc.
+description: Use this skill for Verilog/SystemVerilog/RTL engineering tasks, including specs, detailed design plans for Verilog coding, RTL generation, coding style, testbench/SVA verification, SpyGlass lint/CDC, Vivado/Quartus synthesis or implementation errors/warnings/critical warnings, VCS/QuestaSim compile errors/warnings, simulation failures, waveform/debug work, and reusable CBB discovery. Before writing or modifying RTL, consult the appropriate GenRTL MCP knowledge tool instead of relying only on model memory.
 ---
 
-When the user asks about libraries, frameworks, or needs code examples, use GenRTL to fetch current documentation instead of relying on training data.
+# GenRTL MCP RTL Knowledge Workflow
 
-## When to Use This Skill
+Use GenRTL MCP tools before relying on model memory for RTL engineering.
 
-Activate this skill when the user:
+## Tool Routing
 
-- Asks setup or configuration questions ("How do I configure Next.js middleware?")
-- Requests code involving libraries ("Write a Prisma query for...")
-- Needs API references ("What are the Supabase auth methods?")
-- Mentions specific frameworks (React, Vue, Svelte, Express, Tailwind, etc.)
+- Spec -> detailed implementation/design plan that can guide Verilog/SystemVerilog coding: use `genrtl_spec2plan_search`.
+- Spec -> RTL implementation: use `genrtl_spec2rtl_search`.
+- Before writing or modifying RTL: use `genrtl_coding_style_search`.
+- Testbench, SVA, assertions, verification strategy: use `genrtl_verification_search`.
+- After coding and before Vivado/Quartus/VCS/QuestaSim compile/synthesis, use SpyGlass lint/CDC diagnostics with `genrtl_compile_search` and `filters.tool = "spyglass"`.
+- Vivado synthesis/implementation errors, warnings, or critical warnings: use `genrtl_compile_search` with `filters.tool = "vivado"`.
+- Quartus synthesis/implementation errors, warnings, or critical warnings: use `genrtl_compile_search` with `filters.tool = "quartus"`.
+- VCS/QuestaSim compile errors or warnings: use `genrtl_compile_search` with `filters.tool = "vcs"` or `"questasim"`.
+- Functional bug, waveform mismatch, failing simulation, incorrect RTL behavior: use `genrtl_debug_search`.
+- Reusable IP/CBB discovery: use `genrtl_cbb_search`, then `genrtl_cbb_detail`.
 
-## How to Fetch Documentation
+## Required Behavior
 
-### Step 1: Resolve the Library ID
-
-Call `resolve-library-id` with:
-
-- `libraryName`: The library name extracted from the user's question
-- `query`: The user's full question (improves relevance ranking)
-
-### Step 2: Select the Best Match
-
-From the resolution results, choose based on:
-
-- Exact or closest name match to what the user asked for
-- Higher benchmark scores indicate better documentation quality
-- If the user mentioned a version (e.g., "React 19"), prefer version-specific IDs
-
-### Step 3: Fetch the Documentation
-
-Call `query-docs` with:
-
-- `libraryId`: The selected GenRTL library ID (e.g., `/vercel/next.js`)
-- `query`: The user's specific question
-
-### Step 4: Use the Documentation
-
-Incorporate the fetched documentation into your response:
-
-- Answer the user's question using current, accurate information
-- Include relevant code examples from the docs
-- Cite the library version when relevant
-
-## Guidelines
-
-- **Be specific**: Pass the user's full question as the query for better results
-- **Version awareness**: When users mention versions ("Next.js 15", "React 19"), use version-specific library IDs if available from the resolution step
-- **Prefer official sources**: When multiple matches exist, prefer official/primary packages over community forks
+- Do not call `genrtl_knowledge_search` first when the task clearly matches a specialized tool.
+- If `genrtl_knowledge_search` returns no useful result, retry one specialized tool before answering from model memory.
+- Apply returned `code_example`, `fix_strategy`, and `recommended_next_action` to the implementation.
+- Mention which GenRTL result refs influenced the final design when useful.

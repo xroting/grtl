@@ -1,16 +1,27 @@
 const GITHUB_RAW_URLS = ["https://raw.githubusercontent.com/xroting/grtl/main/rules"];
 
-const FALLBACK_MCP = `Use GenRTL MCP tools for grounded RTL engineering knowledge.
+const FALLBACK_MCP = `Use GenRTL MCP as the primary grounding source for RTL engineering tasks.
 
-Choose one tool:
-- \`genrtl_knowledge_search\` for cross-domain RTL questions
-- \`genrtl_spec2rtl_search\` for requirements and RTL design
-- \`genrtl_spec2plan_search\` for implementation planning from a specification
-- \`genrtl_verification_search\` for testbenches and verification
-- \`genrtl_compile_search\` for lint, CDC, compile, synthesis, implementation, and simulator diagnostics
-- \`genrtl_debug_search\` for issue descriptions, erroneous code, solutions, and corrected RTL
+Before writing or modifying Verilog/SystemVerilog RTL:
+1. Search coding style with \`genrtl_coding_style_search\`.
+2. If implementing from a spec, search \`genrtl_spec2rtl_search\`.
+3. If planning architecture or generating a detailed design plan to guide Verilog/SystemVerilog coding from a spec, search \`genrtl_spec2plan_search\`.
 
-Pass the complete engineering question in \`query\`. Add filters only when useful.`;
+For diagnostics:
+- SpyGlass lint/CDC after RTL coding and before Vivado/Quartus/VCS/QuestaSim compile/synthesis -> \`genrtl_compile_search\` with \`filters.tool = "spyglass"\`.
+- Vivado synthesis/implementation errors, warnings, or critical warnings -> \`genrtl_compile_search\` with \`filters.tool = "vivado"\`.
+- Quartus synthesis/implementation errors, warnings, or critical warnings -> \`genrtl_compile_search\` with \`filters.tool = "quartus"\`.
+- VCS/QuestaSim compile errors or warnings -> \`genrtl_compile_search\`.
+- Functional simulation/debug issues -> \`genrtl_debug_search\`.
+
+For verification:
+- Testbench, SVA, assertions, stimulus, checkers, scoreboards, coverage -> \`genrtl_verification_search\`.
+
+For reusable RTL/IP:
+- Discover with \`genrtl_cbb_search\`, then inspect with \`genrtl_cbb_detail\`.
+- Use \`genrtl_cbb_acquire\` only when the selected CBB should be installed or re-delivered.
+
+Do not stop after a generic \`genrtl_knowledge_search\` miss. Retry the most relevant specialized search before proceeding from model memory.`;
 
 const FALLBACK_CLI = `Use the \`grtl\` CLI to configure GenRTL MCP and install reusable RTL CBBs.
 
@@ -32,24 +43,31 @@ export type RuleMode = "mcp" | "cli";
 
 const MCP_SKILL = `---
 name: genrtl-mcp
-description: Use GenRTL MCP tools for grounded RTL design, verification, compile/synthesis diagnostics, debugging, and coding style knowledge.
+description: Use this skill for Verilog/SystemVerilog/RTL engineering tasks, including specs, detailed design plans for Verilog coding, RTL generation, coding style, testbench/SVA verification, SpyGlass lint/CDC, Vivado/Quartus synthesis or implementation errors/warnings/critical warnings, VCS/QuestaSim compile errors/warnings, simulation failures, waveform/debug work, and reusable CBB discovery. Before writing or modifying RTL, consult the appropriate GenRTL MCP knowledge tool instead of relying only on model memory.
 ---
 
-# GenRTL MCP
+# GenRTL MCP RTL Knowledge Workflow
 
-Use this skill when an RTL engineering task needs grounded GenRTL knowledge.
+Use GenRTL MCP tools before relying on model memory for RTL engineering.
 
-Choose exactly one MCP tool:
+## Tool Routing
 
-- \`genrtl_knowledge_search\` for cross-domain RTL questions.
-- \`genrtl_spec2rtl_search\` for requirements, protocols, control logic, or algorithm-to-RTL work.
-- \`genrtl_spec2plan_search\` for turning a specification into an actionable implementation plan.
-- \`genrtl_verification_search\` for testbenches and verification.
-- \`genrtl_compile_search\` for lint, CDC, compile, synthesis, implementation, or simulator diagnostics.
-- \`genrtl_debug_search\` for issue descriptions, erroneous code, solutions, and corrected RTL.
+- \`genrtl_spec2plan_search\` for turning a specification into an actionable implementation/design plan or detailed design plan that can guide Verilog/SystemVerilog coding.
+- \`genrtl_spec2rtl_search\` for spec-to-RTL implementation, protocol logic, control logic, datapath, algorithm acceleration, or interface implementation.
+- \`genrtl_coding_style_search\` before writing or modifying Verilog/SystemVerilog RTL.
+- \`genrtl_verification_search\` for testbench, SVA, assertions, stimulus, checkers, scoreboards, coverage, and verification strategy.
+- \`genrtl_compile_search\` for SpyGlass lint/CDC after coding and for Vivado/Quartus/VCS/QuestaSim diagnostics, including errors, warnings, and critical warnings.
+- \`genrtl_debug_search\` for functional RTL bugs, waveform mismatch, failing simulations, failing testcases, or incorrect behavior.
+- \`genrtl_cbb_search\`, then \`genrtl_cbb_detail\`, for reusable IP/CBB discovery.
 
-Pass the complete engineering question in \`query\`. Add \`filters\`, \`top_k\`,
-\`min_score\`, or \`workspace_id\` only when useful.
+## Required Behavior
+
+- Do not call \`genrtl_knowledge_search\` first when the task clearly matches a specialized tool.
+- If \`genrtl_knowledge_search\` returns no useful result, retry one specialized tool before answering from model memory.
+- For SpyGlass lint/CDC logs after RTL coding and before Vivado/Quartus/VCS/QuestaSim compile/synthesis, call \`genrtl_compile_search\` with \`filters.tool = "spyglass"\`.
+- For Vivado/Quartus synthesis or implementation errors, warnings, and critical warnings, call \`genrtl_compile_search\` with the matching \`filters.tool\`.
+- For VCS/QuestaSim compile errors or warnings, call \`genrtl_compile_search\` with the matching \`filters.tool\` when known.
+- Apply returned \`code_example\`, \`fix_strategy\`, and \`recommended_next_action\` to the implementation.
 `;
 
 const CLI_SKILL = `---
