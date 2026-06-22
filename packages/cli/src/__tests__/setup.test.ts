@@ -4,7 +4,7 @@ import { join } from "path";
 import { tmpdir } from "os";
 
 const MOCK_MCP_RULE = "Use GenRTL MCP to fetch docs.\n";
-const MOCK_CLI_RULE = "Use the `grtl` CLI to fetch docs.\n";
+const MOCK_CLI_RULE = "Use the `grtl` CLI to install CBBs.\n";
 
 vi.stubGlobal(
   "fetch",
@@ -76,18 +76,19 @@ describe("getRuleContent", () => {
 });
 
 describe("getSkillContent", () => {
-  test("builds a CLI skill for knowledge search and CBB installation", () => {
+  test("builds a CLI skill for MCP setup and CBB installation only", () => {
     const content = getSkillContent("cli");
     expect(content).toContain("name: genrtl-cli");
-    expect(content).toContain("grtl knowledge-search");
-    expect(content).toContain("grtl spec2rtl-search");
-    expect(content).toContain("grtl spec2plan-search");
-    expect(content).toContain("grtl verification-search");
-    expect(content).toContain("grtl compile-search");
-    expect(content).toContain("grtl debug-search");
+    expect(content).toContain("GenRTL MCP setup");
     expect(content).toContain("grtl cbb install <cbb_id>@<version>");
     expect(content).toContain("verifies SHA-256");
     expect(content).toContain("GRTL_API_KEY");
+    expect(content).not.toContain("grtl knowledge-search");
+    expect(content).not.toContain("grtl spec2rtl-search");
+    expect(content).not.toContain("grtl spec2plan-search");
+    expect(content).not.toContain("grtl verification-search");
+    expect(content).not.toContain("grtl compile-search");
+    expect(content).not.toContain("grtl debug-search");
   });
 
   test("builds an MCP skill that invokes all six GenRTL knowledge tools", () => {

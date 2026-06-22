@@ -18,30 +18,20 @@ $env:GRTL_API_KEY = "gtr_live_your_api_key"
 
 ## Agent Setup
 
-Install a Skill that tells the agent to call the `grtl` CLI:
-
-```bash
-grtl setup --cli --codex
-grtl setup --cli --cursor --project
-```
-
-Configure hosted MCP and install a Skill for the four MCP tools:
+Configure hosted MCP and install the MCP-oriented Skill for your coding agent:
 
 ```bash
 grtl setup --mcp --codex
 grtl setup --mcp --cursor --project
 ```
 
-Without `--cli` or `--mcp`, setup asks which mode to install.
+Without `--mcp`, setup asks which mode to install. Knowledge retrieval, CBB
+search, and CBB detail lookup are supported through MCP tools only, not through
+CLI commands.
 
 Installing a newer npm package does not modify Skills already written to an
-agent configuration directory. Run the matching setup command again after an
-upgrade to refresh the Skill. For example:
-
-```bash
-grtl setup --cli --cursor
-grtl setup --cli --cursor --project
-```
+agent configuration directory. Run setup again after an upgrade to refresh the
+Skill.
 
 For Codex, Skills are installed under `.agents/skills` for project setup or
 `~/.agents/skills` for global setup. MCP mode also updates
@@ -52,22 +42,6 @@ The hosted MCP endpoint is:
 ```text
 https://genrtl.com/api/mcp
 ```
-
-## Knowledge Commands
-
-```bash
-grtl knowledge-search "AXI stream backpressure design"
-grtl spec2rtl-search "Design an APB register block"
-grtl spec2plan-search "Plan an APB register block implementation"
-grtl verification-search "Verify an async FIFO"
-grtl compile-search "Explain this Vivado CDC warning"
-grtl debug-search "Fix this RTL bug from bad code and error message"
-```
-
-Use `--json` for structured output. `--type` accepts `spec2rtl`, `spec2plan`, `verification`, `compile`, `debug`, or `coding_style`; other filters include
-`--domain`, `--tool`, `--tool-version`, `--error-type`, `--severity`,
-`--interface`, `--target`, `--tag`, `--top-k`, `--min-score`, and
-`--workspace-id`.
 
 ## CBB Installation
 

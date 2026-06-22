@@ -1,10 +1,4 @@
-import { randomUUID } from "node:crypto";
 import { VERSION } from "../constants.js";
-import type {
-  GenrtlKnowledgeToolName,
-  KnowledgeSearchInput,
-  KnowledgeSearchResponse,
-} from "../types.js";
 
 let baseUrl = "https://genrtl.com";
 
@@ -107,12 +101,4 @@ export async function callGenrtlMcpTool<T>(toolName: string, input: object): Pro
     throw new Error("GenRTL MCP response did not include structured results.");
   }
   return result.structuredContent as T;
-}
-
-export async function callGenrtlKnowledgeTool(
-  toolName: GenrtlKnowledgeToolName,
-  input: KnowledgeSearchInput
-): Promise<KnowledgeSearchResponse> {
-  const requestInput = input.idempotency_key ? input : { ...input, idempotency_key: randomUUID() };
-  return callGenrtlMcpTool<KnowledgeSearchResponse>(toolName, requestInput);
 }

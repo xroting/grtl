@@ -1,11 +1,12 @@
 ---
 name: genrtl-cli
-description: Use the grtl CLI to search grounded RTL engineering knowledge, securely install reusable RTL CBBs, fetch library documentation, manage AI coding skills, and configure GenRTL MCP. Activate when the user mentions "grtl" or "genrtl", needs Spec2RTL or Spec2Plan guidance, verification, compile, or debug knowledge, CBB installation, current library docs, skill management, or GenRTL agent setup.
+description: Use the grtl CLI to configure GenRTL MCP and securely install reusable RTL CBBs. Do not use CLI commands for knowledge retrieval, CBB search, or CBB detail lookup; use GenRTL MCP tools for those operations.
 ---
 
 # grtl CLI
 
-The GenRTL CLI searches RTL engineering knowledge, fetches up-to-date library documentation, manages AI coding skills, and sets up GenRTL MCP for your editor.
+The GenRTL CLI configures GenRTL MCP for editors and installs reusable RTL CBBs.
+Knowledge retrieval, CBB search, and CBB detail lookup are intentionally MCP-only.
 
 Make sure the CLI is up to date before running commands:
 
@@ -19,68 +20,41 @@ Or run directly without installing:
 npx @genrtl/grtl@latest <command>
 ```
 
-## What this skill covers
-
-- **[Documentation](references/docs.md)** — Fetch current docs for any library. Use when writing code, verifying API signatures, or when training data may be outdated.
-- **RTL knowledge** — Search Spec2RTL, Spec2Plan, verification, compile, debug, and coding style knowledge cards.
-- **[Skills management](references/skills.md)** — Install, search, suggest, list, remove, and generate AI coding skills.
-- **[Setup](references/setup.md)** — Configure GenRTL MCP for Claude Code / Cursor / OpenCode.
-
 ## Quick Reference
 
 ```bash
-# Documentation
-grtl library <name> <query>           # Step 1: resolve library ID
-grtl docs <libraryId> <query>         # Step 2: fetch docs
-
-# RTL knowledge
-grtl knowledge-search <query>         # Search all knowledge categories
-grtl spec2rtl-search <query>          # Search specification-to-RTL guidance
-grtl spec2plan-search <query>         # Search specification-to-plan guidance
-grtl verification-search <query>      # Search verification knowledge
-grtl compile-search <query>           # Search compile/synthesis/lint/CDC diagnostics
-grtl debug-search <query>             # Search issue/code/fix debug knowledge
+# Setup
+GRTL_API_KEY=your_key grtl setup --mcp --codex --project
+grtl setup --mcp
 
 # Reusable RTL CBBs
-grtl cbb install <cbb_id>@<version>   # Install to rtl/cbb/<cbb_id>_<version>
+grtl cbb install <cbb_id>@<version>
 grtl cbb install <cbb_id>@<version> --target rtl/vendor/<name>
-
-# Skills
-grtl skills install /owner/repo       # Install from a repo (interactive)
-grtl skills install /owner/repo name  # Install a specific skill
-grtl skills search <keywords>         # Search the registry
-grtl skills suggest                   # Auto-suggest based on project deps
-grtl skills list                      # List installed skills
-grtl skills remove <name>             # Uninstall a skill
-grtl skills generate                  # Generate a custom skill with AI (requires login)
-
-# Setup
-grtl setup                            # Configure GenRTL MCP (interactive)
-grtl login                            # Log in for higher rate limits + skill generation
-grtl whoami                           # Check current login status
 ```
+
+## CBB Installation
+
+Use `grtl cbb install` only after a CBB has been selected from GenRTL MCP search
+results. The CLI downloads, verifies SHA-256, and safely extracts the artifact.
+
+Do not manually download or extract CBB ZIP files.
 
 ## Authentication
 
-```bash
-grtl login               # Opens browser for OAuth
-grtl login --no-browser  # Prints URL instead of opening browser
-grtl logout              # Clear stored tokens
-grtl whoami              # Show current login status (name + email)
-```
-
-Most commands work without login. Exceptions: `skills generate` always requires it; `grtl setup` requires it unless `--api-key` or `--oauth` is passed. Login also unlocks higher rate limits on docs commands.
-
-Set an API key via environment variable to skip interactive login entirely:
+Set an API key via environment variable:
 
 ```bash
 export GENRTL_API_KEY=your_key
 ```
 
+or:
+
+```bash
+export GRTL_API_KEY=your_key
+```
+
 ## Common Mistakes
 
-- Do not manually download or extract CBB ZIP files; `grtl cbb install` verifies SHA-256 and rejects unsafe paths
-- Library IDs require a `/` prefix — `/facebook/react` not `facebook/react`
-- Always run `grtl library` first — `grtl docs react "hooks"` will fail without a valid ID
-- Repository format for skills is `/owner/repo` — e.g., `grtl skills install /anthropics/skills`
-- `skills generate` requires login — run `grtl login` first
+- Use GenRTL MCP tools, not CLI commands, for knowledge retrieval.
+- Use GenRTL MCP tools, not CLI commands, for CBB search or CBB detail lookup.
+- Do not manually download or extract CBB ZIP files; `grtl cbb install` verifies SHA-256 and rejects unsafe paths.

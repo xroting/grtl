@@ -1,13 +1,9 @@
 # grtl
 
-`grtl` gives AI coding agents access to GenRTL's RTL engineering knowledge in
-two supported ways:
-
-1. CLI mode: the agent invokes the installed `grtl` command.
-2. MCP mode: the agent invokes the four hosted GenRTL MCP tools.
-
-Both setup modes install an agent Skill that explains when and how to use
-GenRTL.
+`grtl` configures AI coding agents for GenRTL MCP and installs reusable RTL
+CBB artifacts. Knowledge retrieval, CBB search, and CBB detail lookup are
+supported through hosted GenRTL MCP tools only; the CLI no longer exposes search
+or detail commands.
 
 ## Installation
 
@@ -35,31 +31,19 @@ $env:GRTL_API_KEY = "gtr_live_your_api_key"
 
 `GENRTL_API_KEY` is also supported.
 
-## CLI Mode
+## CLI Use
 
-CLI mode installs a `genrtl-cli` Skill. The Skill instructs the coding agent to
-run the four `grtl` search commands directly.
+The CLI is intentionally limited to agent setup and reusable RTL CBB installation.
+It does not provide knowledge search, CBB search, or CBB detail lookup commands.
+Use MCP mode for retrieval.
 
 ```bash
-grtl setup --cli --codex
-grtl setup --cli --cursor --project
+grtl setup --mcp --codex
+grtl cbb install cbb_uart@1.2.0
 ```
 
-Codex global setup installs:
-
-```text
-~/.agents/skills/genrtl-cli/SKILL.md
-~/.codex/AGENTS.md
-```
-
-Codex project setup installs:
-
-```text
-.agents/skills/genrtl-cli/SKILL.md
-AGENTS.md
-```
-
-The coding agent must inherit `GRTL_API_KEY` or `GENRTL_API_KEY` when it runs.
+The coding agent or shell must inherit `GRTL_API_KEY` or `GENRTL_API_KEY` when it
+runs setup or installs CBBs.
 
 ## MCP Mode
 
@@ -97,7 +81,7 @@ the `Authorization` header.
 
 ## Interactive Setup
 
-Run `grtl setup` without a mode to choose CLI or MCP interactively:
+Run `grtl setup` without a mode to choose setup options interactively:
 
 ```bash
 grtl setup
@@ -115,46 +99,15 @@ Supported agents:
 Use `--project` for project-local configuration. Without it, setup installs to
 the user profile.
 
-## Knowledge Commands
+## Knowledge Retrieval
 
-The CLI exposes the same six knowledge operations as the MCP server:
+Knowledge retrieval, CBB search, and CBB detail lookup are MCP-only. Configure
+GenRTL MCP for your agent instead of using CLI search commands.
 
-```bash
-grtl knowledge-search "How should AXI stream backpressure be implemented?"
-grtl spec2rtl-search "Design an APB register block with byte enables"
-grtl spec2plan-search "Create an implementation plan for an APB register block"
-grtl verification-search "Verify an asynchronous FIFO"
-grtl compile-search "Explain this Vivado CDC warning"
-grtl debug-search "Fix this RTL bug from bad code and error message"
-```
-
-The exact MCP tool names are also valid CLI commands:
+Use `--base-url` for another GenRTL deployment when setting up MCP:
 
 ```bash
-grtl genrtl_knowledge_search "<query>"
-grtl genrtl_spec2rtl_search "<query>"
-grtl genrtl_spec2plan_search "<query>"
-grtl genrtl_verification_search "<query>"
-grtl genrtl_compile_search "<query>"
-grtl genrtl_debug_search "<query>"
-```
-
-Use `--json` for structured output. Filters include:
-
-```text
---type --domain --tool --tool-version --error-type --severity
---interface --target --tag --top-k --min-score --workspace-id
-```
-
-Example:
-
-```bash
-grtl compile-search "Vivado synthesis warning" \
-  --tool Vivado \
-  --target fpga \
-  --tag synthesis vivado \
-  --top-k 8 \
-  --json
+grtl --base-url http://localhost:3005 setup --mcp --codex --project
 ```
 
 ## Codex Verification
@@ -165,8 +118,7 @@ After setup, restart Codex and ask:
 Use GenRTL to find safe implementation guidance for an AD7606 controller.
 ```
 
-CLI mode should invoke a `grtl ...-search` command. MCP mode should invoke one
-of these tools:
+The agent should invoke one of these MCP tools:
 
 - `genrtl_knowledge_search`
 - `genrtl_spec2rtl_search`
@@ -189,7 +141,6 @@ Use `--base-url` for another GenRTL deployment:
 
 ```bash
 grtl --base-url http://localhost:3005 setup --mcp --codex --project
-grtl --base-url http://localhost:3005 compile-search "compile error"
 ```
 
 ## Development

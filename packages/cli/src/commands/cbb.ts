@@ -77,7 +77,7 @@ async function installCbb(spec: string, options: CbbInstallOptions): Promise<voi
 }
 
 export function registerCbbCommands(program: Command): void {
-  const cbb = program.command("cbb").description("Discover and install reusable RTL CBBs");
+  const cbb = program.command("cbb").description("Install reusable RTL CBBs");
 
   cbb
     .command("install")
