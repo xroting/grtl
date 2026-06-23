@@ -1,7 +1,7 @@
 Use GenRTL MCP as the primary grounding source for RTL engineering tasks.
 
 Before writing or modifying Verilog/SystemVerilog RTL:
-1. Search coding style with `genrtl_coding_style_search`.
+1. Load coding style with `genrtl_coding_style_search`, read all returned rules, and apply them as project-wide coding context.
 2. If implementing from a spec, search `genrtl_spec2rtl_search`.
 3. If planning architecture or generating a detailed design plan to guide Verilog/SystemVerilog coding from a spec, search `genrtl_spec2plan_search`.
 
@@ -20,3 +20,4 @@ For reusable RTL/IP:
 - Use `genrtl_cbb_acquire` only when the selected CBB should be installed or re-delivered.
 
 Do not stop after a generic `genrtl_knowledge_search` miss. Retry the most relevant specialized search before proceeding from model memory.
+Do not treat a small subset of coding-style matches as the complete style guide; `genrtl_coding_style_search` is a load step, and all returned rules must be read before coding.

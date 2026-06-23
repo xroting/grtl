@@ -3,7 +3,7 @@ const GITHUB_RAW_URLS = ["https://raw.githubusercontent.com/xroting/grtl/main/ru
 const FALLBACK_MCP = `Use GenRTL MCP as the primary grounding source for RTL engineering tasks.
 
 Before writing or modifying Verilog/SystemVerilog RTL:
-1. Search coding style with \`genrtl_coding_style_search\`.
+1. Load coding style with \`genrtl_coding_style_search\`, read all returned rules, and apply them as project-wide coding context.
 2. If implementing from a spec, search \`genrtl_spec2rtl_search\`.
 3. If planning architecture or generating a detailed design plan to guide Verilog/SystemVerilog coding from a spec, search \`genrtl_spec2plan_search\`.
 
@@ -54,7 +54,7 @@ Use GenRTL MCP tools before relying on model memory for RTL engineering.
 
 - \`genrtl_spec2plan_search\` for turning a specification into an actionable implementation/design plan or detailed design plan that can guide Verilog/SystemVerilog coding.
 - \`genrtl_spec2rtl_search\` for spec-to-RTL implementation, protocol logic, control logic, datapath, algorithm acceleration, or interface implementation.
-- \`genrtl_coding_style_search\` before writing or modifying Verilog/SystemVerilog RTL.
+- \`genrtl_coding_style_search\` before writing or modifying Verilog/SystemVerilog RTL; read all returned coding style rules and treat them as project-wide coding context.
 - \`genrtl_verification_search\` for testbench, SVA, assertions, stimulus, checkers, scoreboards, coverage, and verification strategy.
 - \`genrtl_compile_search\` for SpyGlass lint/CDC after coding and for Vivado/Quartus/VCS/QuestaSim diagnostics, including errors, warnings, and critical warnings.
 - \`genrtl_debug_search\` for functional RTL bugs, waveform mismatch, failing simulations, failing testcases, or incorrect behavior.
@@ -64,6 +64,7 @@ Use GenRTL MCP tools before relying on model memory for RTL engineering.
 
 - Do not call \`genrtl_knowledge_search\` first when the task clearly matches a specialized tool.
 - If \`genrtl_knowledge_search\` returns no useful result, retry one specialized tool before answering from model memory.
+- Before coding, call \`genrtl_coding_style_search\`, read the full returned style guide, and apply every relevant rule consistently across the generated RTL.
 - For SpyGlass lint/CDC logs after RTL coding and before Vivado/Quartus/VCS/QuestaSim compile/synthesis, call \`genrtl_compile_search\` with \`filters.tool = "spyglass"\`.
 - For Vivado/Quartus synthesis or implementation errors, warnings, and critical warnings, call \`genrtl_compile_search\` with the matching \`filters.tool\`.
 - For VCS/QuestaSim compile errors or warnings, call \`genrtl_compile_search\` with the matching \`filters.tool\` when known.

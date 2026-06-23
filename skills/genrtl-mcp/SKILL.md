@@ -11,7 +11,7 @@ Use GenRTL MCP tools before relying on model memory for RTL engineering.
 
 - Spec -> detailed implementation/design plan that can guide Verilog/SystemVerilog coding: use `genrtl_spec2plan_search`.
 - Spec -> RTL implementation: use `genrtl_spec2rtl_search`.
-- Before writing or modifying RTL: use `genrtl_coding_style_search`.
+- Before writing or modifying RTL: use `genrtl_coding_style_search`, read all returned coding style rules, and apply them as project-wide coding context.
 - Testbench, SVA, assertions, verification strategy: use `genrtl_verification_search`.
 - After coding and before Vivado/Quartus/VCS/QuestaSim compile/synthesis, use SpyGlass lint/CDC diagnostics with `genrtl_compile_search` and `filters.tool = "spyglass"`.
 - Vivado synthesis/implementation errors, warnings, or critical warnings: use `genrtl_compile_search` with `filters.tool = "vivado"`.
@@ -24,5 +24,6 @@ Use GenRTL MCP tools before relying on model memory for RTL engineering.
 
 - Do not call `genrtl_knowledge_search` first when the task clearly matches a specialized tool.
 - If `genrtl_knowledge_search` returns no useful result, retry one specialized tool before answering from model memory.
+- Before coding, call `genrtl_coding_style_search`, read the full returned style guide, and apply every relevant rule consistently across the generated RTL.
 - Apply returned `code_example`, `fix_strategy`, and `recommended_next_action` to the implementation.
 - Mention which GenRTL result refs influenced the final design when useful.
