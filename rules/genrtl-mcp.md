@@ -5,6 +5,8 @@ Before writing or modifying Verilog/SystemVerilog RTL:
 2. If implementing from a spec, search `genrtl_spec2rtl_search`.
 3. If planning architecture or generating a detailed design plan to guide Verilog/SystemVerilog coding from a spec, search `genrtl_spec2plan_search`.
 
+When either `genrtl_spec2rtl_search` or `genrtl_spec2plan_search` is called for a spec, the other companion tool must also be called before proceeding.
+
 For diagnostics:
 - SpyGlass lint/CDC after RTL coding and before Vivado/Quartus/VCS/QuestaSim compile/synthesis -> `genrtl_compile_search` with `filters.tool = "spyglass"`.
 - Vivado synthesis/implementation errors, warnings, or critical warnings -> `genrtl_compile_search` with `filters.tool = "vivado"`.

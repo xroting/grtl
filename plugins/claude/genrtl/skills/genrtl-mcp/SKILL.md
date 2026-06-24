@@ -24,6 +24,7 @@ Use GenRTL MCP tools before relying on model memory for RTL engineering.
 
 - Do not call `genrtl_knowledge_search` first when the task clearly matches a specialized tool.
 - If `genrtl_knowledge_search` returns no useful result, retry one specialized tool before answering from model memory.
+- When using either `genrtl_spec2rtl_search` or `genrtl_spec2plan_search` for a spec, also call the other companion tool before proceeding.
 - Before coding, call `genrtl_coding_style_search`, read the full returned style guide, and apply every relevant rule consistently across the generated RTL.
 - Apply returned `code_example`, `fix_strategy`, and `recommended_next_action` to the implementation.
 - Mention which GenRTL result refs influenced the final design when useful.
