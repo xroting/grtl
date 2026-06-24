@@ -20,6 +20,7 @@ vi.stubGlobal(
 );
 
 import { getRuleContent, getSkillContent } from "../setup/templates.js";
+import { resolveMode } from "../commands/setup.js";
 import {
   mergeServerEntry,
   removeServerEntry,
@@ -35,6 +36,24 @@ import {
   patchStdioApiKey,
 } from "../setup/mcp-writer.js";
 import { getAgent, ALL_AGENT_NAMES, type AuthOptions } from "../setup/agents.js";
+
+describe("resolveMode", () => {
+  test("defaults setup --codex to MCP + Skill mode", async () => {
+    await expect(resolveMode({ codex: true })).resolves.toBe("mcp");
+  });
+
+  test("keeps explicit --cli mode", async () => {
+    await expect(resolveMode({ codex: true, cli: true })).resolves.toBe("cli");
+  });
+
+  test("rejects --cli and --mcp together", async () => {
+    const previousExitCode = process.exitCode;
+    process.exitCode = undefined;
+    await expect(resolveMode({ cli: true, mcp: true })).resolves.toBeNull();
+    expect(process.exitCode).toBe(1);
+    process.exitCode = previousExitCode;
+  });
+});
 
 describe("getRuleContent", () => {
   test("returns correct content per mode", async () => {

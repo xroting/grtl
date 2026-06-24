@@ -1,4 +1,3 @@
-import { select } from "@inquirer/prompts";
 import { Command } from "commander";
 import { dirname, join } from "path";
 import { mkdir, readFile, writeFile } from "fs/promises";
@@ -105,35 +104,14 @@ export function registerSetupCommand(program: Command): void {
     });
 }
 
-async function resolveMode(options: SetupOptions): Promise<SetupMode | null> {
+export async function resolveMode(options: SetupOptions): Promise<SetupMode | null> {
   if (options.cli && options.mcp) {
     log.error("Choose either --cli or --mcp, not both.");
     process.exitCode = 1;
     return null;
   }
   if (options.cli) return "cli";
-  if (options.mcp || options.yes) return "mcp";
-
-  try {
-    return await select<SetupMode>({
-      message: "How should your coding agent access GenRTL?",
-      choices: [
-        {
-          name: "CLI Skill",
-          value: "cli",
-          description: "The agent runs the installed grtl command.",
-        },
-        {
-          name: "MCP Server + Skill",
-          value: "mcp",
-          description: "The agent calls the four hosted GenRTL MCP tools.",
-        },
-      ],
-    });
-  } catch {
-    log.warn("Setup cancelled");
-    return null;
-  }
+  return "mcp";
 }
 
 async function promptAgents(): Promise<SetupAgent[] | null> {

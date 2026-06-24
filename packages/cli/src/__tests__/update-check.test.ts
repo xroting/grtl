@@ -8,6 +8,7 @@ import {
   compareVersions,
   detectInstallMethod,
   getUpgradePlan,
+  markUpdateNotificationIgnored,
   markUpdateNotificationShown,
   shouldShowUpdateNotification,
   shouldSkipUpdateNotifier,
@@ -218,6 +219,25 @@ describe("update notifications", () => {
     ).toBe(true);
   });
 
+  test("can ignore notifications until the next version", async () => {
+    const info = {
+      currentVersion: "0.3.13",
+      latestVersion: "9.9.9",
+      updateAvailable: true,
+      installMethod: "npm-global" as const,
+      upgradePlan: getUpgradePlan("npm-global"),
+    };
+
+    await markUpdateNotificationIgnored("9.9.9", { stateFile });
+
+    expect(await shouldShowUpdateNotification(info, { stateFile, now: 1000 })).toBe(false);
+    expect(
+      await shouldShowUpdateNotification(
+        { ...info, latestVersion: "10.0.0" },
+        { stateFile, now: 1000 }
+      )
+    ).toBe(true);
+  });
   test("skips notifier for json and version argv", () => {
     expect(shouldSkipUpdateNotifier(["node", "grtl", "library", "react", "--json"])).toBe(true);
     expect(shouldSkipUpdateNotifier(["node", "grtl", "--version"])).toBe(true);

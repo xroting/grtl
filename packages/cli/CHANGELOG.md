@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.2.1
+
+### Patch Changes
+
+- MCP + SKILL first
+
+## 2.2.0
+
+### Minor Changes
+
+- add cbb_list
+
 ## 2.1.0
 
 ### Minor Changes

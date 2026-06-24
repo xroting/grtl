@@ -105,7 +105,7 @@ grtl docs /vercel/next.js "How to add middleware for route protection" | grep -A
 
 ## Setup
 
-Configure GenRTL for your AI coding agent. On first run, prompts you to choose between two modes:
+Configure GenRTL for your AI coding agent. MCP server + Skill is the default setup mode:
 
 - **MCP server** — registers the GenRTL MCP server in your agent's config so it can call `resolve-library-id` and `get-library-docs` tools natively
 - **CLI + Skills** — installs a `docs` skill that guides your agent to fetch up-to-date library docs using `grtl` CLI commands (no MCP required)
@@ -113,11 +113,11 @@ Configure GenRTL for your AI coding agent. On first run, prompts you to choose b
 ### grtl setup
 
 ```bash
-# Interactive — prompts for mode, then agent/install target
+# Interactive — uses MCP mode by default, then prompts for agent/install target
 grtl setup
 
-# Skip the mode prompt
-grtl setup --mcp            # MCP server mode
+# Mode selection
+grtl setup --mcp            # MCP server mode (default)
 grtl setup --cli            # CLI + Skills mode
 
 # Target a specific agent (MCP mode)

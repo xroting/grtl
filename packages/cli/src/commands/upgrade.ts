@@ -1,4 +1,4 @@
-import { confirm } from "@inquirer/prompts";
+import { confirm, select } from "@inquirer/prompts";
 import { spawn } from "child_process";
 import { Command } from "commander";
 import pc from "picocolors";
@@ -8,11 +8,14 @@ import { trackEvent } from "../utils/tracking.js";
 import {
   checkForUpdates,
   getUpgradePlan,
+  markUpdateNotificationIgnored,
   markUpdateNotificationShown,
   shouldShowUpdateNotification,
   shouldSkipUpdateNotifier,
   type UpgradePlan,
 } from "../utils/update-check.js";
+
+const RELEASE_NOTES_URL = "https://github.com/xroting/grtl/releases/latest";
 
 interface UpgradeOptions {
   yes?: boolean;
@@ -89,37 +92,77 @@ export async function maybeShowUpgradeNotice(
     return;
   }
 
+  type UpgradeNoticeChoice = "update" | "skip" | "skip-version";
+  const choices: Array<{
+    name: string;
+    value: UpgradeNoticeChoice;
+    description?: string;
+  }> = [];
+
   log.blank();
-  if (info.upgradePlan.needsExplicitVersion) {
-    log.box([
-      `${pc.white(pc.bold("Update available:"))} ${pc.green(pc.bold(`v${info.currentVersion}`))} ${pc.dim("->")} ${pc.green(pc.bold(`v${info.latestVersion}`))}`,
-      `${pc.white("Use")} ${pc.yellow(pc.bold(info.upgradePlan.displayCommand))} ${pc.white("to run the latest version")}`,
-    ]);
+  log.plain(`${pc.dim("Release notes:")} ${pc.underline(pc.dim(RELEASE_NOTES_URL))}`);
+
+  if (info.upgradePlan.canRun) {
+    choices.push({
+      name: `Update now (runs \`${info.upgradePlan.displayCommand}\`)`,
+      value: "update",
+    });
+  } else {
+    const verb = info.upgradePlan.needsExplicitVersion ? "Use" : "Run";
+    log.info(`${verb} ${pc.cyan(info.upgradePlan.displayCommand)} to update.`);
+  }
+
+  choices.push(
+    { name: "Skip", value: "skip" },
+    {
+      name: "Skip until next version",
+      value: "skip-version",
+      description: `Do not show this prompt again for v${info.latestVersion}.`,
+    }
+  );
+
+  let choice: UpgradeNoticeChoice;
+  try {
+    choice = await select<UpgradeNoticeChoice>({
+      message: `Update available: v${info.currentVersion} -> v${info.latestVersion}`,
+      choices,
+    });
+  } catch {
     await markUpdateNotificationShown(info.latestVersion);
     log.blank();
     return;
   }
 
-  if (!info.upgradePlan.canRun) {
-    log.box([
-      `${pc.white(pc.bold("Update available:"))} ${pc.green(pc.bold(`v${info.currentVersion}`))} ${pc.dim("->")} ${pc.green(pc.bold(`v${info.latestVersion}`))}`,
-      `${pc.white("Run")} ${pc.yellow(pc.bold("grtl upgrade"))} ${pc.white("for update steps")}`,
-      `${pc.white("Or run")} ${pc.yellow(info.upgradePlan.displayCommand)}`,
-    ]);
+  if (choice === "skip-version") {
+    await markUpdateNotificationIgnored(info.latestVersion);
+    log.blank();
+    return;
+  }
+
+  if (choice === "skip") {
     await markUpdateNotificationShown(info.latestVersion);
     log.blank();
     return;
   }
 
-  log.box([
-    `${pc.white(pc.bold("Update available:"))} ${pc.green(pc.bold(`v${info.currentVersion}`))} ${pc.dim("->")} ${pc.green(pc.bold(`v${info.latestVersion}`))}`,
-    `${pc.white("Run")} ${pc.yellow(pc.bold("grtl upgrade"))} ${pc.white("to update now")}`,
-    `${pc.white("Or run")} ${pc.yellow(info.upgradePlan.displayCommand)}`,
-  ]);
   await markUpdateNotificationShown(info.latestVersion);
   log.blank();
-}
+  const exitCode = await runUpgradePlan(info.upgradePlan);
 
+  if (exitCode === 0) {
+    log.blank();
+    log.success("Upgrade complete.");
+    log.info(`Restart your terminal or run ${pc.cyan("grtl --version")} to verify.`);
+    log.blank();
+    return;
+  }
+
+  log.blank();
+  log.error(`Upgrade command exited with code ${exitCode ?? "unknown"}.`);
+  showUpgradeFailureHelp(info.upgradePlan);
+  process.exitCode = 1;
+  log.blank();
+}
 async function upgradeCommand(options: UpgradeOptions): Promise<void> {
   trackEvent("command", { name: "upgrade" });
 

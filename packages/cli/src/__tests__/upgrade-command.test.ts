@@ -5,9 +5,11 @@ const trackEvent = vi.fn();
 const checkForUpdates = vi.fn();
 const getUpgradePlan = vi.fn();
 const markUpdateNotificationShown = vi.fn();
+const markUpdateNotificationIgnored = vi.fn();
 const shouldShowUpdateNotification = vi.fn();
 const shouldSkipUpdateNotifier = vi.fn();
 const confirm = vi.fn();
+const select = vi.fn();
 const spawn = vi.fn();
 
 vi.mock("../utils/tracking.js", () => ({
@@ -17,6 +19,7 @@ vi.mock("../utils/tracking.js", () => ({
 vi.mock("../utils/update-check.js", () => ({
   checkForUpdates: (...args: unknown[]) => checkForUpdates(...args),
   getUpgradePlan: (...args: unknown[]) => getUpgradePlan(...args),
+  markUpdateNotificationIgnored: (...args: unknown[]) => markUpdateNotificationIgnored(...args),
   markUpdateNotificationShown: (...args: unknown[]) => markUpdateNotificationShown(...args),
   shouldShowUpdateNotification: (...args: unknown[]) => shouldShowUpdateNotification(...args),
   shouldSkipUpdateNotifier: (...args: unknown[]) => shouldSkipUpdateNotifier(...args),
@@ -24,6 +27,7 @@ vi.mock("../utils/update-check.js", () => ({
 
 vi.mock("@inquirer/prompts", () => ({
   confirm: (...args: unknown[]) => confirm(...args),
+  select: (...args: unknown[]) => select(...args),
 }));
 
 vi.mock("child_process", () => ({
@@ -51,6 +55,7 @@ beforeEach(() => {
   logOutput = [];
   shouldShowUpdateNotification.mockResolvedValue(true);
   shouldSkipUpdateNotifier.mockReturnValue(false);
+  select.mockResolvedValue("skip");
   vi.spyOn(console, "log").mockImplementation((...args: unknown[]) => {
     logOutput.push(args.join(" "));
   });
@@ -229,7 +234,8 @@ describe("upgrade command", () => {
 });
 
 describe("pre-command upgrade notice", () => {
-  test("shows a non-blocking notice for upgradeable installs", async () => {
+  test("prompts and runs the upgrade command for upgradeable installs", async () => {
+    select.mockResolvedValue("update");
     checkForUpdates.mockResolvedValue({
       currentVersion: "0.3.11",
       latestVersion: "0.3.13",
@@ -248,15 +254,17 @@ describe("pre-command upgrade notice", () => {
       isInteractive: true,
     });
 
-    expect(plainLogOutput().some((line) => line.includes("Update available:"))).toBe(true);
-    expect(plainLogOutput().some((line) => line.includes("Run grtl upgrade to update now"))).toBe(
-      true
+    expect(plainLogOutput().some((line) => line.includes("Release notes:"))).toBe(true);
+    expect(select).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: "Update available: v0.3.11 -> v0.3.13",
+      })
     );
-    expect(
-      plainLogOutput().some((line) => line.includes("npm install -g @genrtl/grtl@latest"))
-    ).toBe(true);
-    expect(confirm).not.toHaveBeenCalled();
-    expect(spawn).not.toHaveBeenCalled();
+    expect(spawn).toHaveBeenCalledWith(
+      "npm",
+      ["install", "-g", "@genrtl/grtl@latest"],
+      expect.objectContaining({ stdio: "inherit" })
+    );
     expect(markUpdateNotificationShown).toHaveBeenCalledWith("0.3.13");
   });
 
@@ -281,7 +289,9 @@ describe("pre-command upgrade notice", () => {
     });
 
     expect(
-      plainLogOutput().some((line) => line.includes("Run grtl upgrade for update steps"))
+      plainLogOutput().some((line) =>
+        line.includes("Run npm install -g @genrtl/grtl@latest to update.")
+      )
     ).toBe(true);
     expect(
       plainLogOutput().some((line) => line.includes("npm install -g @genrtl/grtl@latest"))
@@ -290,7 +300,8 @@ describe("pre-command upgrade notice", () => {
     expect(markUpdateNotificationShown).toHaveBeenCalledWith("0.3.13");
   });
 
-  test("shows runner-specific guidance for ephemeral installs", async () => {
+  test("can skip runner-specific guidance until the next version", async () => {
+    select.mockResolvedValue("skip-version");
     checkForUpdates.mockResolvedValue({
       currentVersion: "0.3.11",
       latestVersion: "0.3.13",
@@ -314,7 +325,8 @@ describe("pre-command upgrade notice", () => {
     expect(plainLogOutput().some((line) => line.includes("grtl upgrade"))).toBe(false);
     expect(confirm).not.toHaveBeenCalled();
     expect(spawn).not.toHaveBeenCalled();
-    expect(markUpdateNotificationShown).toHaveBeenCalledWith("0.3.13");
+    expect(markUpdateNotificationIgnored).toHaveBeenCalledWith("0.3.13");
+    expect(markUpdateNotificationShown).not.toHaveBeenCalled();
   });
 
   test("skips notice for upgrade command", async () => {

@@ -2,13 +2,14 @@
 
 ## grtl setup
 
-One-time command to configure GenRTL for your AI coding agent. Prompts for mode on first run:
+One-time command to configure GenRTL for your AI coding agent. MCP server + Skill is the default setup mode:
+
 - **MCP server** — registers the GenRTL MCP server so the agent can call tools natively
 - **CLI + Skills** — installs a `find-docs` skill that guides the agent to use `grtl` CLI commands (no MCP required)
 
 ```bash
-grtl setup                     # Interactive — prompts for mode, then agent/install target
-grtl setup --mcp               # Skip prompt, use MCP server mode
+grtl setup                     # Interactive — uses MCP mode by default, then prompts for agent/install target
+grtl setup --mcp               # MCP server mode (default)
 grtl setup --cli               # Skip prompt, use CLI + Skills mode
 
 # MCP mode — target a specific agent
@@ -27,6 +28,7 @@ grtl setup --yes               # Skip confirmation prompts
 ```
 
 **Authentication options:**
+
 ```bash
 grtl setup --api-key YOUR_KEY  # Use an existing API key (both MCP and CLI + Skills mode)
 grtl setup --oauth             # OAuth endpoint — MCP mode only (IDE handles the auth flow)
@@ -35,9 +37,11 @@ grtl setup --oauth             # OAuth endpoint — MCP mode only (IDE handles t
 Without `--api-key` or `--oauth`, setup opens a browser for OAuth login. MCP mode additionally generates a new API key after login. `--oauth` is MCP-only.
 
 **What gets written — MCP mode:**
+
 - MCP server entry in the agent's config file (`.mcp.json` for Claude, `.cursor/mcp.json` for Cursor, `.opencode.json` for OpenCode)
 - A GenRTL rule file instructing the agent to use GenRTL for library docs
 - A `genrtl-mcp` skill in the agent's skills directory
 
 **What gets written — CLI + Skills mode:**
+
 - A `find-docs` skill in the chosen agent's skills directory, guiding the agent to use `grtl library` and `grtl docs` commands

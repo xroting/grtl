@@ -20,6 +20,7 @@ interface UpdateState {
   lastCheckedAt?: number;
   notifiedVersion?: string;
   lastNotifiedAt?: number;
+  ignoredVersion?: string;
 }
 
 export interface UpgradePlan {
@@ -247,6 +248,10 @@ export async function shouldShowUpdateNotification(
   const cooldownMs = options.cooldownMs ?? DEFAULT_CACHE_TTL_MS;
   const state = await readUpdateState(options.stateFile);
 
+  if (state.ignoredVersion === info.latestVersion) {
+    return false;
+  }
+
   if (
     state.notifiedVersion === info.latestVersion &&
     state.lastNotifiedAt &&
@@ -256,6 +261,20 @@ export async function shouldShowUpdateNotification(
   }
 
   return true;
+}
+
+export async function markUpdateNotificationIgnored(
+  latestVersion: string,
+  options: { stateFile?: string } = {}
+): Promise<void> {
+  const state = await readUpdateState(options.stateFile);
+  await writeUpdateState(
+    {
+      ...state,
+      ignoredVersion: latestVersion,
+    },
+    options.stateFile
+  );
 }
 
 export async function markUpdateNotificationShown(

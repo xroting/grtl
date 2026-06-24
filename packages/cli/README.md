@@ -21,13 +21,13 @@ $env:GRTL_API_KEY = "gtr_live_your_api_key"
 Configure hosted MCP and install the MCP-oriented Skill for your coding agent:
 
 ```bash
-grtl setup --mcp --codex
-grtl setup --mcp --cursor --project
+grtl setup --codex
+grtl setup --cursor --project
 ```
 
-Without `--mcp`, setup asks which mode to install. Knowledge retrieval, CBB
-search, and CBB detail lookup are supported through MCP tools only, not through
-CLI commands.
+MCP + Skill is the default setup mode. Use `--cli` only when you explicitly want
+the CLI-only Skill. Knowledge retrieval, CBB search, and CBB detail lookup are
+supported through MCP tools only, not through CLI commands.
 
 Installing a newer npm package does not modify Skills already written to an
 agent configuration directory. Run setup again after an upgrade to refresh the
