@@ -14,6 +14,7 @@ Prefer specialized MCP tools based on the task:
 - `genrtl_verification_search` for testbench, SVA, assertions, stimulus, checkers, scoreboards, coverage, or verification strategy.
 - `genrtl_compile_search` for SpyGlass lint/CDC after coding and for Vivado/Quartus/VCS/QuestaSim diagnostics, including errors, warnings, and critical warnings.
 - `genrtl_debug_search` for functional bugs, waveform mismatches, failing simulations, failing testcases, or incorrect RTL behavior.
+- `genrtl_cbb_list` before producing an RTL architecture, implementation strategy, or design plan without RTL code, so existing reusable CBB names are considered first.
 - `genrtl_cbb_search` then `genrtl_cbb_detail` for reusable RTL/IP discovery.
 - `genrtl_knowledge_search` only when the RTL task category is unclear.
 

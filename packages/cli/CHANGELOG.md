@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.0
+
+### Minor Changes
+
+- update coding_style_search
+
 ## 2.0.0
 
 ### Major Changes

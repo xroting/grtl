@@ -18,6 +18,7 @@ Use GenRTL MCP tools before relying on model memory for RTL engineering.
 - Quartus synthesis/implementation errors, warnings, or critical warnings: use `genrtl_compile_search` with `filters.tool = "quartus"`.
 - VCS/QuestaSim compile errors or warnings: use `genrtl_compile_search` with `filters.tool = "vcs"` or `"questasim"`.
 - Functional bug, waveform mismatch, failing simulation, incorrect RTL behavior: use `genrtl_debug_search`.
+- Reusable IP/CBB awareness for design planning: when the user asks for an RTL architecture, implementation strategy, or design plan without requesting RTL code, call `genrtl_cbb_list` first to see which reusable CBB names already exist before proposing a from-scratch design.
 - Reusable IP/CBB discovery: use `genrtl_cbb_search`, then `genrtl_cbb_detail`.
 
 ## Required Behavior
