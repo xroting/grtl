@@ -13,7 +13,8 @@ Before writing or modifying Verilog/SystemVerilog RTL:
 When either `genrtl_spec2rtl_search` or `genrtl_spec2plan_search` is called for a spec, the other companion tool must also be called before proceeding.
 
 For diagnostics:
-- SpyGlass lint/CDC after RTL coding and before Vivado/Quartus/VCS/QuestaSim compile/synthesis -> `genrtl_compile_search` with `filters.tool = "spyglass"`.
+- After RTL coding -> `genrtl_lint_load`; read all returned Lint knowledge card titles, scan the generated/modified RTL for syntax mistakes, lint violations, and CDC risks implied by those titles, then fix obvious issues before compile/synthesis.
+- Lint syntax/CDC diagnostics with actual logs -> `genrtl_lint_search`.
 - Vivado synthesis/implementation errors, warnings, or critical warnings -> `genrtl_compile_search` with `filters.tool = "vivado"`.
 - Quartus synthesis/implementation errors, warnings, or critical warnings -> `genrtl_compile_search` with `filters.tool = "quartus"`.
 - VCS/QuestaSim compile errors or warnings -> `genrtl_compile_search`.

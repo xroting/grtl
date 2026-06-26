@@ -110,13 +110,15 @@ describe("getSkillContent", () => {
     expect(content).not.toContain("grtl debug-search");
   });
 
-  test("builds an MCP skill that invokes all six GenRTL knowledge tools", () => {
+  test("builds an MCP skill that invokes GenRTL knowledge tools", () => {
     const content = getSkillContent("mcp");
     expect(content).toContain("name: genrtl-mcp");
     expect(content).toContain("genrtl_knowledge_search");
     expect(content).toContain("genrtl_spec2rtl_search");
     expect(content).toContain("genrtl_spec2plan_search");
     expect(content).toContain("genrtl_verification_search");
+    expect(content).toContain("genrtl_lint_load");
+    expect(content).toContain("genrtl_lint_search");
     expect(content).toContain("genrtl_compile_search");
     expect(content).toContain("genrtl_debug_search");
   });

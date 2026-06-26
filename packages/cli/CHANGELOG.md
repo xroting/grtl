@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.4.0
+
+### Minor Changes
+
+- add genrtl_lint_load
+
+## 2.3.1
+
+### Patch Changes
+
+- spec2rtl must with spec2plan
+
 ## 2.3.0
 
 ### Minor Changes
