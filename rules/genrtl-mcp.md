@@ -10,13 +10,13 @@ When either `genrtl_spec2rtl_search` or `genrtl_spec2plan_search` is called for 
 For diagnostics:
 - After RTL coding -> `genrtl_lint_load`; read all returned Lint knowledge card titles, scan the generated/modified RTL for syntax mistakes, lint violations, and CDC risks implied by those titles, then fix obvious issues before compile/synthesis.
 - Lint syntax/CDC diagnostics with actual logs -> `genrtl_lint_search`.
-- Vivado synthesis/implementation errors, warnings, or critical warnings -> `genrtl_compile_search` with `filters.tool = "vivado"`.
-- Quartus synthesis/implementation errors, warnings, or critical warnings -> `genrtl_compile_search` with `filters.tool = "quartus"`.
-- VCS/QuestaSim compile errors or warnings -> `genrtl_compile_search`.
-- Functional simulation/debug issues -> `genrtl_debug_search`.
+- After running Vivado synthesis/implementation, use `genrtl_compile_search` with `filters.tool = "vivado"` to fix errors, warnings, and critical warnings.
+- After running Quartus synthesis/implementation, use `genrtl_compile_search` with `filters.tool = "quartus"` to fix errors, warnings, and critical warnings.
+- After running VCS/QuestaSim compile, use `genrtl_compile_search` with `filters.tool = "vcs"` or `"questasim"` to fix compile errors and warnings.
+- For failing simulations, waveform mismatches, incorrect RTL behavior, or functional code bugs -> `genrtl_debug_search`.
 
 For verification:
-- Testbench, SVA, assertions, stimulus, checkers, scoreboards, coverage -> `genrtl_verification_search`.
+- Before building a simulation environment or writing/modifying testbench, SVA, assertions, stimulus, checkers, scoreboards, or coverage -> `genrtl_verification_search`.
 
 For reusable RTL/IP:
 - When the user asks for an RTL architecture, implementation strategy, or design plan without requesting RTL code, call `genrtl_cbb_list` first to see which reusable CBB names already exist before proposing a from-scratch design.
